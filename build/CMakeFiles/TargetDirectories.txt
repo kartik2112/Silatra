@@ -1,0 +1,3 @@
+/home/kartik/Documents/OPENCV/Silatra/build/CMakeFiles/edit_cache.dir
+/home/kartik/Documents/OPENCV/Silatra/build/CMakeFiles/rebuild_cache.dir
+/home/kartik/Documents/OPENCV/Silatra/build/CMakeFiles/skinDetection.dir
