@@ -60,39 +60,39 @@ CMAKE_SOURCE_DIR = "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra"
 CMAKE_BINARY_DIR = "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build"
 
 #=============================================================================
-# Target rules for target CMakeFiles/skinDetection.dir
+# Target rules for target CMakeFiles/SiLaTra.dir
 
 # All Build rule for target.
-CMakeFiles/skinDetection.dir/all:
-	$(MAKE) -f CMakeFiles/skinDetection.dir/build.make CMakeFiles/skinDetection.dir/depend
-	$(MAKE) -f CMakeFiles/skinDetection.dir/build.make CMakeFiles/skinDetection.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir="/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles" --progress-num=1,2 "Built target skinDetection"
-.PHONY : CMakeFiles/skinDetection.dir/all
+CMakeFiles/SiLaTra.dir/all:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/depend
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir="/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles" --progress-num=1,2,3,4 "Built target SiLaTra"
+.PHONY : CMakeFiles/SiLaTra.dir/all
 
 # Include target in all.
-all: CMakeFiles/skinDetection.dir/all
+all: CMakeFiles/SiLaTra.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/skinDetection.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles" 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/skinDetection.dir/all
+CMakeFiles/SiLaTra.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles" 4
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/SiLaTra.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles" 0
-.PHONY : CMakeFiles/skinDetection.dir/rule
+.PHONY : CMakeFiles/SiLaTra.dir/rule
 
 # Convenience name for target.
-skinDetection: CMakeFiles/skinDetection.dir/rule
+SiLaTra: CMakeFiles/SiLaTra.dir/rule
 
-.PHONY : skinDetection
-
-# clean rule for target.
-CMakeFiles/skinDetection.dir/clean:
-	$(MAKE) -f CMakeFiles/skinDetection.dir/build.make CMakeFiles/skinDetection.dir/clean
-.PHONY : CMakeFiles/skinDetection.dir/clean
+.PHONY : SiLaTra
 
 # clean rule for target.
-clean: CMakeFiles/skinDetection.dir/clean
+CMakeFiles/SiLaTra.dir/clean:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/clean
+.PHONY : CMakeFiles/SiLaTra.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/SiLaTra.dir/clean
 
 .PHONY : clean
 

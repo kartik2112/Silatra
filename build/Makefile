@@ -111,44 +111,98 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named skinDetection
+# Target rules for targets named SiLaTra
 
 # Build rule for target.
-skinDetection: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 skinDetection
-.PHONY : skinDetection
+SiLaTra: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 SiLaTra
+.PHONY : SiLaTra
 
 # fast build rule for target.
-skinDetection/fast:
-	$(MAKE) -f CMakeFiles/skinDetection.dir/build.make CMakeFiles/skinDetection.dir/build
-.PHONY : skinDetection/fast
+SiLaTra/fast:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/build
+.PHONY : SiLaTra/fast
 
-skinDetection.o: skinDetection.cpp.o
+GetMyContours/getMyContours.o: GetMyContours/getMyContours.cpp.o
 
-.PHONY : skinDetection.o
+.PHONY : GetMyContours/getMyContours.o
 
 # target to build an object file
-skinDetection.cpp.o:
-	$(MAKE) -f CMakeFiles/skinDetection.dir/build.make CMakeFiles/skinDetection.dir/skinDetection.cpp.o
-.PHONY : skinDetection.cpp.o
+GetMyContours/getMyContours.cpp.o:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o
+.PHONY : GetMyContours/getMyContours.cpp.o
 
-skinDetection.i: skinDetection.cpp.i
+GetMyContours/getMyContours.i: GetMyContours/getMyContours.cpp.i
 
-.PHONY : skinDetection.i
+.PHONY : GetMyContours/getMyContours.i
 
 # target to preprocess a source file
-skinDetection.cpp.i:
-	$(MAKE) -f CMakeFiles/skinDetection.dir/build.make CMakeFiles/skinDetection.dir/skinDetection.cpp.i
-.PHONY : skinDetection.cpp.i
+GetMyContours/getMyContours.cpp.i:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.i
+.PHONY : GetMyContours/getMyContours.cpp.i
 
-skinDetection.s: skinDetection.cpp.s
+GetMyContours/getMyContours.s: GetMyContours/getMyContours.cpp.s
 
-.PHONY : skinDetection.s
+.PHONY : GetMyContours/getMyContours.s
 
 # target to generate assembly for a file
-skinDetection.cpp.s:
-	$(MAKE) -f CMakeFiles/skinDetection.dir/build.make CMakeFiles/skinDetection.dir/skinDetection.cpp.s
-.PHONY : skinDetection.cpp.s
+GetMyContours/getMyContours.cpp.s:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.s
+.PHONY : GetMyContours/getMyContours.cpp.s
+
+GetMyContours/skinColorSegmentation.o: GetMyContours/skinColorSegmentation.cpp.o
+
+.PHONY : GetMyContours/skinColorSegmentation.o
+
+# target to build an object file
+GetMyContours/skinColorSegmentation.cpp.o:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o
+.PHONY : GetMyContours/skinColorSegmentation.cpp.o
+
+GetMyContours/skinColorSegmentation.i: GetMyContours/skinColorSegmentation.cpp.i
+
+.PHONY : GetMyContours/skinColorSegmentation.i
+
+# target to preprocess a source file
+GetMyContours/skinColorSegmentation.cpp.i:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.i
+.PHONY : GetMyContours/skinColorSegmentation.cpp.i
+
+GetMyContours/skinColorSegmentation.s: GetMyContours/skinColorSegmentation.cpp.s
+
+.PHONY : GetMyContours/skinColorSegmentation.s
+
+# target to generate assembly for a file
+GetMyContours/skinColorSegmentation.cpp.s:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.s
+.PHONY : GetMyContours/skinColorSegmentation.cpp.s
+
+SiLaTra.o: SiLaTra.cpp.o
+
+.PHONY : SiLaTra.o
+
+# target to build an object file
+SiLaTra.cpp.o:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o
+.PHONY : SiLaTra.cpp.o
+
+SiLaTra.i: SiLaTra.cpp.i
+
+.PHONY : SiLaTra.i
+
+# target to preprocess a source file
+SiLaTra.cpp.i:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/SiLaTra.cpp.i
+.PHONY : SiLaTra.cpp.i
+
+SiLaTra.s: SiLaTra.cpp.s
+
+.PHONY : SiLaTra.s
+
+# target to generate assembly for a file
+SiLaTra.cpp.s:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/SiLaTra.cpp.s
+.PHONY : SiLaTra.cpp.s
 
 # Help Target
 help:
@@ -158,10 +212,16 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... skinDetection"
-	@echo "... skinDetection.o"
-	@echo "... skinDetection.i"
-	@echo "... skinDetection.s"
+	@echo "... SiLaTra"
+	@echo "... GetMyContours/getMyContours.o"
+	@echo "... GetMyContours/getMyContours.i"
+	@echo "... GetMyContours/getMyContours.s"
+	@echo "... GetMyContours/skinColorSegmentation.o"
+	@echo "... GetMyContours/skinColorSegmentation.i"
+	@echo "... GetMyContours/skinColorSegmentation.s"
+	@echo "... SiLaTra.o"
+	@echo "... SiLaTra.i"
+	@echo "... SiLaTra.s"
 .PHONY : help
 
 

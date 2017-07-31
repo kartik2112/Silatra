@@ -1,0 +1,128 @@
+/*
+ * Copyright (c) 2011. Philipp Wagner <bytefish[at]gmx[dot]de>.
+ * Released to public domain under terms of the BSD Simplified license.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *   * Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ *   * Neither the name of the organization nor the names of its contributors
+ *     may be used to endorse or promote products derived from this software
+ *     without specific prior written permission.
+ *
+ *   See <http:www.opensource.org/licenses/bsd-license>
+ */
+ 
+/**
+* This file contains the color extraction functions
+*/
+
+#include <opencv2/opencv.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
+
+using namespace std;
+using namespace cv;
+
+
+void displayTrackbarsIfNeeded();
+Mat extractSkinColorRange(Mat& srcBGR,Mat& srcHSV,Mat& srcYCrCb);
+bool isInSkinRangeBGR(const u_char& B,const u_char& G,const u_char& R);
+bool isInSkinRangeHSV(const u_char& H,const u_char& S,const u_char& V);
+bool isInSkinRangeYCrCb(const u_char& Y, const u_char& Cr, const u_char& Cb);
+
+
+
+int YMax=0,YMin=255,CrMax=0,CrMin=255,CbMax=0,CbMin=255;
+int lH=0,hH=20,lS=20,hS=154,lV=50,hV=255;
+int Rlow=60,Glow=40,Blow=20,gap=15,Rhigh=220,Ghigh=210,Bhigh=170;
+//int Rlow=95,Glow=40,Blow=20,gap=15,Rhigh=220,Ghigh=210,Bhigh=170;    //OG Values
+
+
+
+
+/**
+* Comment the contents of this function if trackbars need not be displayed
+*/
+void displayTrackbarsIfNeeded(){
+
+	namedWindow("Skin Color Segmentation Controllers",WINDOW_AUTOSIZE);
+	
+	createTrackbar("Low Hue","Skin Color Segmentation Controllers",&lH,180);
+	createTrackbar("High Hue","Skin Color Segmentation Controllers",&hH,180);
+	createTrackbar("Low Saturation","Skin Color Segmentation Controllers",&lS,255);
+	createTrackbar("High Saturation","Skin Color Segmentation Controllers",&hS,255);
+	createTrackbar("Low Value","Skin Color Segmentation Controllers",&lV,255);
+	createTrackbar("High Value","Skin Color Segmentation Controllers",&hV,255);
+	
+	createTrackbar("I - R low","Skin Color Segmentation Controllers",&Rlow,255);
+	createTrackbar("I - G low","Skin Color Segmentation Controllers",&Glow,255);
+	createTrackbar("I - B low","Skin Color Segmentation Controllers",&Blow,255);
+	createTrackbar("I - gap"  ,"Skin Color Segmentation Controllers",&gap,255);
+	createTrackbar("II - R high","Skin Color Segmentation Controllers",&Rhigh,255);
+	createTrackbar("II - G high","Skin Color Segmentation Controllers",&Ghigh,255);
+	createTrackbar("II - B high","Skin Color Segmentation Controllers",&Bhigh,255);
+}
+
+
+Mat extractSkinColorRange(Mat& srcBGR,Mat& srcHSV,Mat& srcYCrCb){
+	int nRows=srcBGR.rows;
+	int nCols=srcBGR.cols*3;
+	
+	Mat dst(nRows,srcBGR.cols,CV_8UC1,Scalar(0));
+		
+	uchar *bgrRow, *hsvRow, *YCrCbRow, *dstRow;
+	for(int i=0;i<nRows;i++){
+		bgrRow = srcBGR.ptr<uchar>(i);
+		hsvRow = srcHSV.ptr<uchar>(i);
+		YCrCbRow = srcYCrCb.ptr<uchar>(i);
+		dstRow = dst.ptr<uchar>(i);
+		
+		for(int j=0;j<nCols;j+=3){
+			if( isInSkinRangeBGR(bgrRow[j],bgrRow[j+1],bgrRow[j+2])
+				/*&& isInSkinRangeYCrCb(YCrCbRow[j],YCrCbRow[j+1],YCrCbRow[j+2])*/
+				&& isInSkinRangeHSV(hsvRow[j],hsvRow[j+1],hsvRow[j+2]) ){
+				dstRow[j/3]=255;
+			}
+		}
+	}
+	
+	return dst;
+}
+
+
+bool isInSkinRangeYCrCb(const u_char& Y, const u_char& Cr, const u_char& Cb){
+	//return Y>80 && Cb>85 && Cb<135 && Cr>135 && Cr<180;
+	//cout<<Y<<" "<<Cr<<" "<<Cb<<endl;
+	YMax=Y>YMax?Y:YMax;
+	CrMax=Cr>CrMax?Cr:CrMax;
+	CbMax=Cb>CbMax?Cb:CbMax;
+	
+	YMin=Y<YMin?Y:YMin;
+	CrMin=Cr<CrMin?Cr:CrMin;
+	CbMin=Cb<CbMin?Cb:CbMin;
+	
+	//return 1;
+	bool e3 = Cr <= 1.5862*Cb+20;
+    bool e4 = Cr >= 0.3448*Cb+76.2069;
+    bool e5 = Cr >= -4.5652*Cb+234.5652;
+    bool e6 = Cr <= -1.15*Cb+301.75;
+    bool e7 = Cr <= -2.2857*Cb+432.85;
+    return e3 && e4 && e5 && e6 && e7;
+}
+
+
+bool isInSkinRangeBGR(const u_char& B,const u_char& G,const u_char& R){	 	
+	bool e1 = (R>Rlow) && (G>Glow) && (B>Blow) && ((max(R,max(G,B)) - min(R, min(G,B)))>gap) && (abs(R-G)>gap) && (R>G) && (R>B);
+    bool e2 = (R>Rhigh) && (G>Ghigh) && (B>Bhigh) && (abs(R-G)<=gap) && (R>B) && (G>B);
+/*    bool e1 = (R>95) && (G>40) && (B>20) && ((max(R,max(G,B)) - min(R, min(G,B)))>15) && (abs(R-G)>15) && (R>G) && (R>B);
+    bool e2 = (R>220) && (G>210) && (B>170) && (abs(R-G)<=15) && (R>B) && (G>B);*/
+    return (e1||e2);
+}
+
+bool isInSkinRangeHSV(const u_char& H,const u_char& S,const u_char& V){
+	return ((H<hH) || (H > 155)) && S>=lS && S<=hS && V>=lV && V<=hV;
+}

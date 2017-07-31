@@ -6,13 +6,53 @@
 
 #IncludeRegexTransform: 
 
-/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/skinDetection.cpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyContours/getMyContours.cpp
 opencv2/opencv.hpp
 -
 opencv2/imgproc.hpp
 -
 opencv2/highgui.hpp
 -
+skinColorSegmentation.hpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyContours/skinColorSegmentation.hpp
+iostream
+-
+ctime
+-
+
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyContours/getMyContours.hpp
+opencv2/opencv.hpp
+-
+opencv2/imgproc.hpp
+-
+opencv2/highgui.hpp
+-
+
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyContours/skinColorSegmentation.cpp
+opencv2/opencv.hpp
+-
+opencv2/imgproc.hpp
+-
+opencv2/highgui.hpp
+-
+
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyContours/skinColorSegmentation.hpp
+opencv2/opencv.hpp
+-
+opencv2/imgproc.hpp
+-
+opencv2/highgui.hpp
+-
+
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/SiLaTra.cpp
+opencv2/opencv.hpp
+-
+opencv2/imgproc.hpp
+-
+opencv2/highgui.hpp
+-
+GetMyContours/getMyContours.hpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyContours/getMyContours.hpp
 iostream
 -
 ctime
