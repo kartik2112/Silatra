@@ -1,4 +1,4 @@
-# Install script for directory: /home/kartik/Documents/OPENCV/Silatra
+# Install script for directory: /home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/kartik/Documents/OPENCV/Silatra/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

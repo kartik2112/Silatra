@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/kartik/Documents/OPENCV/Silatra/skinDetection.cpp" "/home/kartik/Documents/OPENCV/Silatra/build/CMakeFiles/skinDetection.dir/skinDetection.cpp.o"
+  "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/skinDetection.cpp" "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles/skinDetection.dir/skinDetection.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

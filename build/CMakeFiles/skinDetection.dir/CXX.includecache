@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/kartik/Documents/OPENCV/Silatra/skinDetection.cpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/skinDetection.cpp
 opencv2/opencv.hpp
 -
 opencv2/imgproc.hpp

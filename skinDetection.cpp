@@ -9,14 +9,16 @@ using namespace std;
 using namespace cv;
 
 
-Mat extractSkinColorRange(Mat& srcBGR,Mat& srcHSV);
-bool isInSkinRangeBGR(const char& B,const char& G,const char& R);
-bool isInSkinRangeHSV(const char& H,const char& S,const char& V);
+Mat extractSkinColorRange(Mat& srcBGR,Mat& srcHSV,Mat& srcYCrCb);
+bool isInSkinRangeBGR(const u_char& B,const u_char& G,const u_char& R);
+bool isInSkinRangeHSV(const u_char& H,const u_char& S,const u_char& V);
+bool isInSkinRangeYCrCb(const u_char& Y, const u_char& Cr, const u_char& Cb);
 Mat findHandContours(Mat& src);
 Mat combineExtractedWithMain(Mat& maskedImg,Mat& image);
 
+int YMax=0,YMin=255,CrMax=0,CrMin=255,CbMax=0,CbMin=255;
 
-int lH=0,hH=23,lS=50,hS=154,lV=50,hV=255,kernSize=2;
+int lH=0,hH=20,lS=20,hS=154,lV=50,hV=255,kernSize=2;
 int Rlow=60,Glow=40,Blow=20,gap=15,Rhigh=220,Ghigh=210,Bhigh=170;
 //OG Values
 //int Rlow=95,Glow=40,Blow=20,gap=15,Rhigh=220,Ghigh=210,Bhigh=170;
@@ -91,13 +93,16 @@ int main(int argc, char** argv){
 		//medianBlur(image,image,2*kernSize+1);
 		
 		/* Convert BGR Image into HSV Image */
-		Mat imageHSV;
+		Mat imageHSV,imageYCrCb;
 		cvtColor(image,imageHSV,CV_BGR2HSV);	
+		cvtColor(image,imageYCrCb,CV_BGR2YCrCb);
+		//cvtColor(imageYCrCb,imageYCrCb,CV_YCrCb2BGR);
+		imshow("YCrCb Im",imageYCrCb);
 	
 		Mat dstHSV;
 		inRange(imageHSV,Scalar(lH,lS,lV),Scalar(hH,hS,hV),dstHSV);
 		
-		Mat dst=extractSkinColorRange(image,imageHSV);
+		Mat dst=extractSkinColorRange(image,imageHSV,imageYCrCb);
 		
 		
 		Mat morphOpenElement = getStructuringElement(MORPH_CROSS,Size(morphOpenKernSize*2+1,morphOpenKernSize*2+1),Point(morphOpenKernSize,morphOpenKernSize));
@@ -131,15 +136,16 @@ int main(int argc, char** argv){
 		//cout<<dst.type()<<" "<<image.type()<<endl;
 		
 		
-		Mat morphCloseElement1 = getStructuringElement(MORPH_ELLIPSE,Size(15,15),Point(2,2));
+		Mat morphCloseElement1 = getStructuringElement(MORPH_ELLIPSE,Size(15,15),Point(7,7));
 		/* AND this eroded mask with HSV */
 		bitwise_and(dstEroded,dstHSV,dstEroded);
 		
 		morphologyEx(dstEroded,dstEroded,MORPH_CLOSE,morphCloseElement1);
 		
-		Mat dilateElement = getStructuringElement(MORPH_ELLIPSE,Size(8,8),Point(2,2));
+		Mat dilateElement = getStructuringElement(MORPH_ELLIPSE,Size(8,8),Point(4,4));
 		/* This will enlarge white areas */
 		dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
+		//dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
 	
 		Mat maskedImg;
 		cvtColor(dstEroded,dstEroded,CV_GRAY2BGR);
@@ -168,6 +174,7 @@ int main(int argc, char** argv){
 	
 	cout<<"Maximum time taken by one frame processing is "<<maxTimeTaken<<"s"<<endl;
 	cout<<"Minimum time taken by one frame processing is "<<minTimeTaken<<"s"<<endl;
+	cout<<YMax<<" "<<YMin<<" "<<CrMax<<" "<<CrMin<<" "<<CbMax<<" "<<CbMin<<endl;
 	
 	return 0;
 }
@@ -220,24 +227,39 @@ Mat findHandContours(Mat& src){
 	   Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
 	   drawContours( drawing, contours, i, color, 2, 8, hierarchy, 0, Point() );
 	 }
+	 
+	 
+   	/*vector<vector<Point> >hull( contours.size() );
+	for( size_t i = 0; i < contours.size(); i++ )
+	{   convexHull( Mat(contours[i]), hull[i], false ); }
+	Mat drawing = Mat::zeros( canny_output.size(), CV_8UC3 );
+	for( size_t i = 0; i< contours.size(); i++ )
+	{
+	Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
+	drawContours( drawing, contours, (int)i, color, 1, 8, vector<Vec4i>(), 0, Point() );
+	drawContours( drawing, hull, (int)i, color, 1, 8, vector<Vec4i>(), 0, Point() );
+	}*/
 
   	return drawing;
 }
 
-Mat extractSkinColorRange(Mat& srcBGR,Mat& srcHSV){
+Mat extractSkinColorRange(Mat& srcBGR,Mat& srcHSV,Mat& srcYCrCb){
 	int nRows=srcBGR.rows;
 	int nCols=srcBGR.cols*3;
 	
 	Mat dst(nRows,srcBGR.cols,CV_8UC1,Scalar(0));
 		
-	uchar *bgrRow,*hsvRow,*dstRow;
+	uchar *bgrRow,*hsvRow,*YCrCbRow,*dstRow;
 	for(int i=0;i<nRows;i++){
 		bgrRow = srcBGR.ptr<uchar>(i);
 		hsvRow = srcHSV.ptr<uchar>(i);
+		YCrCbRow = srcYCrCb.ptr<uchar>(i);
 		dstRow = dst.ptr<uchar>(i);
 		
 		for(int j=0;j<nCols;j+=3){
-			if( isInSkinRangeBGR(bgrRow[j],bgrRow[j+1],bgrRow[j+2]) && isInSkinRangeHSV(hsvRow[j],hsvRow[j+1],hsvRow[j+2]) ){
+			if( isInSkinRangeBGR(bgrRow[j],bgrRow[j+1],bgrRow[j+2])
+				/*&& isInSkinRangeYCrCb(YCrCbRow[j],YCrCbRow[j+1],YCrCbRow[j+2])*/
+				&& isInSkinRangeHSV(hsvRow[j],hsvRow[j+1],hsvRow[j+2]) ){
 				dstRow[j/3]=255;
 			}
 		}
@@ -247,7 +269,28 @@ Mat extractSkinColorRange(Mat& srcBGR,Mat& srcHSV){
 }
 
 
-bool isInSkinRangeBGR(const char& B,const char& G,const char& R){
+bool isInSkinRangeYCrCb(const u_char& Y, const u_char& Cr, const u_char& Cb){
+	//return Y>80 && Cb>85 && Cb<135 && Cr>135 && Cr<180;
+	//cout<<Y<<" "<<Cr<<" "<<Cb<<endl;
+	YMax=Y>YMax?Y:YMax;
+	CrMax=Cr>CrMax?Cr:CrMax;
+	CbMax=Cb>CbMax?Cb:CbMax;
+	
+	YMin=Y<YMin?Y:YMin;
+	CrMin=Cr<CrMin?Cr:CrMin;
+	CbMin=Cb<CbMin?Cb:CbMin;
+	
+	//return 1;
+	bool e3 = Cr <= 1.5862*Cb+20;
+    bool e4 = Cr >= 0.3448*Cb+76.2069;
+    bool e5 = Cr >= -4.5652*Cb+234.5652;
+    bool e6 = Cr <= -1.15*Cb+301.75;
+    bool e7 = Cr <= -2.2857*Cb+432.85;
+    return e3 && e4 && e5 && e6 && e7;
+}
+
+
+bool isInSkinRangeBGR(const u_char& B,const u_char& G,const u_char& R){
 	/*
 	 * Copyright (c) 2011. Philipp Wagner <bytefish[at]gmx[dot]de>.
 	 * Released to public domain under terms of the BSD Simplified license.
@@ -268,9 +311,11 @@ bool isInSkinRangeBGR(const char& B,const char& G,const char& R){
 	 	
 	bool e1 = (R>Rlow) && (G>Glow) && (B>Blow) && ((max(R,max(G,B)) - min(R, min(G,B)))>gap) && (abs(R-G)>gap) && (R>G) && (R>B);
     bool e2 = (R>Rhigh) && (G>Ghigh) && (B>Bhigh) && (abs(R-G)<=gap) && (R>B) && (G>B);
+/*    bool e1 = (R>95) && (G>40) && (B>20) && ((max(R,max(G,B)) - min(R, min(G,B)))>15) && (abs(R-G)>15) && (R>G) && (R>B);
+    bool e2 = (R>220) && (G>210) && (B>170) && (abs(R-G)<=15) && (R>B) && (G>B);*/
     return (e1||e2);
 }
 
-bool isInSkinRangeHSV(const char& H,const char& S,const char& V){
-	return ((H<hH) || (H > 165)) && S>=lS && S<=hS && V>=lV && V<=hV;
+bool isInSkinRangeHSV(const u_char& H,const u_char& S,const u_char& V){
+	return ((H<hH) || (H > 155)) && S>=lS && S<=hS && V>=lV && V<=hV;
 }
