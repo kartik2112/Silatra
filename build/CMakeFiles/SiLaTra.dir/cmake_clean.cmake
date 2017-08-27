@@ -1,7 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o"
-  "CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o"
-  "CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o"
+  "CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o"
+  "CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o"
+  "CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o"
   "SiLaTra.pdb"
   "SiLaTra"
 )

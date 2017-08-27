@@ -123,59 +123,86 @@ SiLaTra/fast:
 	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/build
 .PHONY : SiLaTra/fast
 
-GetMyContours/getMyContours.o: GetMyContours/getMyContours.cpp.o
+GetMyHand/handDetection.o: GetMyHand/handDetection.cpp.o
 
-.PHONY : GetMyContours/getMyContours.o
-
-# target to build an object file
-GetMyContours/getMyContours.cpp.o:
-	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o
-.PHONY : GetMyContours/getMyContours.cpp.o
-
-GetMyContours/getMyContours.i: GetMyContours/getMyContours.cpp.i
-
-.PHONY : GetMyContours/getMyContours.i
-
-# target to preprocess a source file
-GetMyContours/getMyContours.cpp.i:
-	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.i
-.PHONY : GetMyContours/getMyContours.cpp.i
-
-GetMyContours/getMyContours.s: GetMyContours/getMyContours.cpp.s
-
-.PHONY : GetMyContours/getMyContours.s
-
-# target to generate assembly for a file
-GetMyContours/getMyContours.cpp.s:
-	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.s
-.PHONY : GetMyContours/getMyContours.cpp.s
-
-GetMyContours/skinColorSegmentation.o: GetMyContours/skinColorSegmentation.cpp.o
-
-.PHONY : GetMyContours/skinColorSegmentation.o
+.PHONY : GetMyHand/handDetection.o
 
 # target to build an object file
-GetMyContours/skinColorSegmentation.cpp.o:
-	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o
-.PHONY : GetMyContours/skinColorSegmentation.cpp.o
+GetMyHand/handDetection.cpp.o:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o
+.PHONY : GetMyHand/handDetection.cpp.o
 
-GetMyContours/skinColorSegmentation.i: GetMyContours/skinColorSegmentation.cpp.i
+GetMyHand/handDetection.i: GetMyHand/handDetection.cpp.i
 
-.PHONY : GetMyContours/skinColorSegmentation.i
+.PHONY : GetMyHand/handDetection.i
 
 # target to preprocess a source file
-GetMyContours/skinColorSegmentation.cpp.i:
-	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.i
-.PHONY : GetMyContours/skinColorSegmentation.cpp.i
+GetMyHand/handDetection.cpp.i:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.i
+.PHONY : GetMyHand/handDetection.cpp.i
 
-GetMyContours/skinColorSegmentation.s: GetMyContours/skinColorSegmentation.cpp.s
+GetMyHand/handDetection.s: GetMyHand/handDetection.cpp.s
 
-.PHONY : GetMyContours/skinColorSegmentation.s
+.PHONY : GetMyHand/handDetection.s
 
 # target to generate assembly for a file
-GetMyContours/skinColorSegmentation.cpp.s:
-	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.s
-.PHONY : GetMyContours/skinColorSegmentation.cpp.s
+GetMyHand/handDetection.cpp.s:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.s
+.PHONY : GetMyHand/handDetection.cpp.s
+
+GetMyHand/skinColorSegmentation.o: GetMyHand/skinColorSegmentation.cpp.o
+
+.PHONY : GetMyHand/skinColorSegmentation.o
+
+# target to build an object file
+GetMyHand/skinColorSegmentation.cpp.o:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o
+.PHONY : GetMyHand/skinColorSegmentation.cpp.o
+
+GetMyHand/skinColorSegmentation.i: GetMyHand/skinColorSegmentation.cpp.i
+
+.PHONY : GetMyHand/skinColorSegmentation.i
+
+# target to preprocess a source file
+GetMyHand/skinColorSegmentation.cpp.i:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.i
+.PHONY : GetMyHand/skinColorSegmentation.cpp.i
+
+GetMyHand/skinColorSegmentation.s: GetMyHand/skinColorSegmentation.cpp.s
+
+.PHONY : GetMyHand/skinColorSegmentation.s
+
+# target to generate assembly for a file
+GetMyHand/skinColorSegmentation.cpp.s:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.s
+.PHONY : GetMyHand/skinColorSegmentation.cpp.s
+
+GetMyHand/trackBarHandling.o: GetMyHand/trackBarHandling.cpp.o
+
+.PHONY : GetMyHand/trackBarHandling.o
+
+# target to build an object file
+GetMyHand/trackBarHandling.cpp.o:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o
+.PHONY : GetMyHand/trackBarHandling.cpp.o
+
+GetMyHand/trackBarHandling.i: GetMyHand/trackBarHandling.cpp.i
+
+.PHONY : GetMyHand/trackBarHandling.i
+
+# target to preprocess a source file
+GetMyHand/trackBarHandling.cpp.i:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.i
+.PHONY : GetMyHand/trackBarHandling.cpp.i
+
+GetMyHand/trackBarHandling.s: GetMyHand/trackBarHandling.cpp.s
+
+.PHONY : GetMyHand/trackBarHandling.s
+
+# target to generate assembly for a file
+GetMyHand/trackBarHandling.cpp.s:
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.s
+.PHONY : GetMyHand/trackBarHandling.cpp.s
 
 SiLaTra.o: SiLaTra.cpp.o
 
@@ -213,12 +240,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... SiLaTra"
-	@echo "... GetMyContours/getMyContours.o"
-	@echo "... GetMyContours/getMyContours.i"
-	@echo "... GetMyContours/getMyContours.s"
-	@echo "... GetMyContours/skinColorSegmentation.o"
-	@echo "... GetMyContours/skinColorSegmentation.i"
-	@echo "... GetMyContours/skinColorSegmentation.s"
+	@echo "... GetMyHand/handDetection.o"
+	@echo "... GetMyHand/handDetection.i"
+	@echo "... GetMyHand/handDetection.s"
+	@echo "... GetMyHand/skinColorSegmentation.o"
+	@echo "... GetMyHand/skinColorSegmentation.i"
+	@echo "... GetMyHand/skinColorSegmentation.s"
+	@echo "... GetMyHand/trackBarHandling.o"
+	@echo "... GetMyHand/trackBarHandling.i"
+	@echo "... GetMyHand/trackBarHandling.s"
 	@echo "... SiLaTra.o"
 	@echo "... SiLaTra.i"
 	@echo "... SiLaTra.s"

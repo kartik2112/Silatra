@@ -24,11 +24,14 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
+#include "trackBarHandling.hpp"
+
+#include <iostream>
+
 using namespace std;
 using namespace cv;
 
 
-void displayTrackbarsIfNeeded();
 Mat extractSkinColorRange(Mat& srcBGR,Mat& srcHSV,Mat& srcYCrCb);
 bool isInSkinRangeBGR(const u_char& B,const u_char& G,const u_char& R);
 bool isInSkinRangeHSV(const u_char& H,const u_char& S,const u_char& V);
@@ -43,32 +46,8 @@ int Rlow=60,Glow=40,Blow=20,gap=15,Rhigh=220,Ghigh=210,Bhigh=170;
 
 
 
-
-/**
-* Comment the contents of this function if trackbars need not be displayed
-*/
-void displayTrackbarsIfNeeded(){
-
-	namedWindow("Skin Color Segmentation Controllers",WINDOW_AUTOSIZE);
-	
-	createTrackbar("Low Hue","Skin Color Segmentation Controllers",&lH,180);
-	createTrackbar("High Hue","Skin Color Segmentation Controllers",&hH,180);
-	createTrackbar("Low Saturation","Skin Color Segmentation Controllers",&lS,255);
-	createTrackbar("High Saturation","Skin Color Segmentation Controllers",&hS,255);
-	createTrackbar("Low Value","Skin Color Segmentation Controllers",&lV,255);
-	createTrackbar("High Value","Skin Color Segmentation Controllers",&hV,255);
-	
-	createTrackbar("I - R low","Skin Color Segmentation Controllers",&Rlow,255);
-	createTrackbar("I - G low","Skin Color Segmentation Controllers",&Glow,255);
-	createTrackbar("I - B low","Skin Color Segmentation Controllers",&Blow,255);
-	createTrackbar("I - gap"  ,"Skin Color Segmentation Controllers",&gap,255);
-	createTrackbar("II - R high","Skin Color Segmentation Controllers",&Rhigh,255);
-	createTrackbar("II - G high","Skin Color Segmentation Controllers",&Ghigh,255);
-	createTrackbar("II - B high","Skin Color Segmentation Controllers",&Bhigh,255);
-}
-
-
 Mat extractSkinColorRange(Mat& srcBGR,Mat& srcHSV,Mat& srcYCrCb){
+	displaySkinColorDetectionTrackbarsIfNeeded();
 	int nRows=srcBGR.rows;
 	int nCols=srcBGR.cols*3;
 	

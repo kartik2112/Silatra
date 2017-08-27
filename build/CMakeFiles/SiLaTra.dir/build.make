@@ -81,66 +81,92 @@ CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o.provides: CMakeFiles/SiLaTra.dir/SiLaTra.cp
 CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o.provides.build: CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o
 
 
-CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o: CMakeFiles/SiLaTra.dir/flags.make
-CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o: ../GetMyContours/getMyContours.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o -c "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyContours/getMyContours.cpp"
+CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o: CMakeFiles/SiLaTra.dir/flags.make
+CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o: ../GetMyHand/handDetection.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o -c "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/handDetection.cpp"
 
-CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyContours/getMyContours.cpp" > CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.i
+CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/handDetection.cpp" > CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.i
 
-CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyContours/getMyContours.cpp" -o CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.s
+CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/handDetection.cpp" -o CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.s
 
-CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o.requires:
+CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o.requires:
 
-.PHONY : CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o.requires
+.PHONY : CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o.requires
 
-CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o.provides: CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o.requires
-	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o.provides.build
-.PHONY : CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o.provides
+CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o.provides: CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o.requires
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o.provides.build
+.PHONY : CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o.provides
 
-CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o.provides.build: CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o
+CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o.provides.build: CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o
 
 
-CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o: CMakeFiles/SiLaTra.dir/flags.make
-CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o: ../GetMyContours/skinColorSegmentation.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o -c "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyContours/skinColorSegmentation.cpp"
+CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o: CMakeFiles/SiLaTra.dir/flags.make
+CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o: ../GetMyHand/skinColorSegmentation.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o -c "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/skinColorSegmentation.cpp"
 
-CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyContours/skinColorSegmentation.cpp" > CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.i
+CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/skinColorSegmentation.cpp" > CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.i
 
-CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyContours/skinColorSegmentation.cpp" -o CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.s
+CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/skinColorSegmentation.cpp" -o CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.s
 
-CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o.requires:
+CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o.requires:
 
-.PHONY : CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o.requires
+.PHONY : CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o.requires
 
-CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o.provides: CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o.requires
-	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o.provides.build
-.PHONY : CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o.provides
+CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o.provides: CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o.requires
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o.provides.build
+.PHONY : CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o.provides
 
-CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o.provides.build: CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o
+CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o.provides.build: CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o
+
+
+CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o: CMakeFiles/SiLaTra.dir/flags.make
+CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o: ../GetMyHand/trackBarHandling.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o -c "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/trackBarHandling.cpp"
+
+CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/trackBarHandling.cpp" > CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.i
+
+CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/trackBarHandling.cpp" -o CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.s
+
+CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o.requires:
+
+.PHONY : CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o.requires
+
+CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o.provides: CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o.requires
+	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o.provides.build
+.PHONY : CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o.provides
+
+CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o.provides.build: CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o
 
 
 # Object files for target SiLaTra
 SiLaTra_OBJECTS = \
 "CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o" \
-"CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o" \
-"CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o"
+"CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o" \
+"CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o" \
+"CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o"
 
 # External object files for target SiLaTra
 SiLaTra_EXTERNAL_OBJECTS =
 
 SiLaTra: CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o
-SiLaTra: CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o
-SiLaTra: CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o
+SiLaTra: CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o
+SiLaTra: CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o
+SiLaTra: CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o
 SiLaTra: CMakeFiles/SiLaTra.dir/build.make
 SiLaTra: /usr/local/lib/libopencv_stitching.so.3.2.0
 SiLaTra: /usr/local/lib/libopencv_superres.so.3.2.0
@@ -185,7 +211,7 @@ SiLaTra: /usr/local/lib/libopencv_imgcodecs.so.3.2.0
 SiLaTra: /usr/local/lib/libopencv_imgproc.so.3.2.0
 SiLaTra: /usr/local/lib/libopencv_core.so.3.2.0
 SiLaTra: CMakeFiles/SiLaTra.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable SiLaTra"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable SiLaTra"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/SiLaTra.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -194,8 +220,9 @@ CMakeFiles/SiLaTra.dir/build: SiLaTra
 .PHONY : CMakeFiles/SiLaTra.dir/build
 
 CMakeFiles/SiLaTra.dir/requires: CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o.requires
-CMakeFiles/SiLaTra.dir/requires: CMakeFiles/SiLaTra.dir/GetMyContours/getMyContours.cpp.o.requires
-CMakeFiles/SiLaTra.dir/requires: CMakeFiles/SiLaTra.dir/GetMyContours/skinColorSegmentation.cpp.o.requires
+CMakeFiles/SiLaTra.dir/requires: CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o.requires
+CMakeFiles/SiLaTra.dir/requires: CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o.requires
+CMakeFiles/SiLaTra.dir/requires: CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o.requires
 
 .PHONY : CMakeFiles/SiLaTra.dir/requires
 

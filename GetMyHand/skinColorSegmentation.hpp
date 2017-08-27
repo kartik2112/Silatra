@@ -2,7 +2,8 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
-using namespace std;
+#include "trackBarHandling.hpp"
+
 using namespace cv;
 
 Mat extractSkinColorRange(Mat& srcBGR,Mat& srcHSV,Mat& srcYCrCb);           //Entry point function

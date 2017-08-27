@@ -8,17 +8,17 @@
 #include <opencv2/highgui.hpp>
 
 #include "skinColorSegmentation.hpp"
+#include "trackBarHandling.hpp"
 
 #include <iostream>
-#include <ctime>
 
 using namespace std;
 using namespace cv;
 
-void getMyContours(Mat& image);
+Mat getMyHand(Mat& image);
 Mat findHandContours(Mat& src);
 Mat combineExtractedWithMain(Mat& maskedImg,Mat& image);
-void prepareTrackbarsNWindows();
+void prepareWindows();
 
 
 
@@ -34,7 +34,9 @@ extern int lH,lS,lV,hH,hS,hV;
 
 
 
-void getMyContours(Mat& image){
+Mat getMyHand(Mat& image){
+
+	displayHandDetectionTrackbarsIfNeeded(image);
 	
 	imshow("Original Image",image);
 		
@@ -47,7 +49,6 @@ void getMyContours(Mat& image){
 	cvtColor(image,imageHSV,CV_BGR2HSV);	
 	cvtColor(image,imageYCrCb,CV_BGR2YCrCb);
 	//cvtColor(imageYCrCb,imageYCrCb,CV_YCrCb2BGR);
-	imshow("YCrCb Im",imageYCrCb);
 
 	Mat dstHSV;
 	inRange(imageHSV,Scalar(lH,lS,lV),Scalar(hH,hS,hV),dstHSV);
@@ -88,7 +89,7 @@ void getMyContours(Mat& image){
 	
 	Mat morphCloseElement1 = getStructuringElement(MORPH_ELLIPSE,Size(15,15),Point(7,7));
 	/* AND this eroded mask with HSV */
-	bitwise_and(dstEroded,dstHSV,dstEroded);
+	//bitwise_and(dstEroded,dstHSV,dstEroded);
 	
 	morphologyEx(dstEroded,dstEroded,MORPH_CLOSE,morphCloseElement1);
 	
@@ -106,14 +107,14 @@ void getMyContours(Mat& image){
 	Mat contouredImg=findHandContours(finImg);
 	
 	/// Show in a window  
-	imshow( "Contours", contouredImg );	
+	imshow("Contours", contouredImg );	
 	imshow("Morphed Mask",dstEroded);
 	imshow("Masked Image",maskedImg);
 	imshow("Final Image",finImg);
 	imshow("HSV + BGR Mask",dst);
 	imshow("HSV Mask",dstHSV);
 	
-	
+	return contouredImg;	
 }
 
 
@@ -183,22 +184,11 @@ Mat findHandContours(Mat& src){
 }
 
 
-/* To remove any trackbars, comment out those parts */
-void prepareTrackbarsNWindows(){
+void prepareWindows(){
 	namedWindow("Original Image",WINDOW_AUTOSIZE);
 	namedWindow("HSV + BGR Mask",WINDOW_AUTOSIZE);
 	namedWindow("HSV Mask",WINDOW_NORMAL);
 	namedWindow("Masked Image",WINDOW_AUTOSIZE);
 	namedWindow("Final Image",WINDOW_AUTOSIZE);
 	namedWindow("Contours", WINDOW_AUTOSIZE );
-	
-	
-	namedWindow("Blurring, Contouring Controllers",WINDOW_AUTOSIZE);
-	createTrackbar("Blur kernel size","Blurring, Contouring Controllers",&kernSize,10);
-	
-	createTrackbar("MORPH OPEN size","Blurring, Contouring Controllers",&morphOpenKernSize,25);
-	createTrackbar("MORPH CLOSE size","Blurring, Contouring Controllers",&morphCloseKernSize,25);
-	createTrackbar("MORPH OPEN No Of Iterations size","Blurring, Contouring Controllers",&morphCloseNoOfIterations,25);
-	
-	createTrackbar("Contours Threshold","Blurring, Contouring Controllers",&thresh,255);
 }

@@ -7,35 +7,50 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
-#include "GetMyContours/getMyContours.hpp"
+#include "GetMyHand/handDetection.hpp"
 
 #include <iostream>
 #include <ctime>
+#include <experimental/filesystem>
 
 using namespace std;
 using namespace cv;
+namespace fs = std::experimental::filesystem;
 
 void processFrame(Mat& image);
 
 int main(int argc, char** argv){
 
-	double maxTimeTaken=0,minTimeTaken=10000;	
+	double maxTimeTaken=0,minTimeTaken=10000;
 	
-	if(argc==2){
-		Mat image = imread(argv[1],1);
+	if(argc==3 && strcmp(argv[1],"-img")==0){
+		Mat image = imread(argv[2],1);
 		
 		double startTime=(double)getTickCount();
 		
-		processFrame(image);
-		
-		waitKey(0);
+		processFrame(image);		
 	
 		double timeTaken=(getTickCount()-(double)startTime)/getTickFrequency();
 		maxTimeTaken=timeTaken>maxTimeTaken?timeTaken:maxTimeTaken;
 		minTimeTaken=timeTaken<minTimeTaken?timeTaken:minTimeTaken;
 		
+		waitKey(0);
 	}
 	else{
+	
+		string trainingImagesFolderPath;
+		int imgNo=1;
+		if(argc==3 && strcmp(argv[1],"-cap")==0){
+			/*cout<<"Enter name of subdirectory for storing the training images: "<<endl;*/
+			string subDirName(argv[2]);
+			//cin>>subDirName;
+			trainingImagesFolderPath="./training-images/"+subDirName;
+			fs::create_directories(trainingImagesFolderPath);
+			for(auto &tempp1:fs::directory_iterator(trainingImagesFolderPath)){
+				imgNo++;
+			}
+			//mkdir("./training-images/"+subDirName);
+		}
 		
 		VideoCapture cap(0);
 	
@@ -52,17 +67,20 @@ int main(int argc, char** argv){
 			
 			if(!image.data) continue;
 		
-			processFrame(image);
-		
-			if(waitKey(20)=='q') break;
+			processFrame(image);			
 		
 			double timeTaken=(getTickCount()-(double)startTime)/getTickFrequency();
 			maxTimeTaken=timeTaken>maxTimeTaken?timeTaken:maxTimeTaken;
 			minTimeTaken=timeTaken<minTimeTaken?timeTaken:minTimeTaken;
+			
+			if(waitKey(20)=='q') break;
+			if(argc==3 && waitKey(30)=='c'){
+				imwrite(trainingImagesFolderPath+"/"+to_string(imgNo)+".png",image);
+				imgNo++;
+			}
 		}
 	
 		
-		//cout<<YMax<<" "<<YMin<<" "<<CrMax<<" "<<CrMin<<" "<<CbMax<<" "<<CbMin<<endl;
 	
 	}
 	
@@ -78,7 +96,7 @@ int main(int argc, char** argv){
 void processFrame(Mat& image){
 	/* All processing functions go after this point */
 		
-	getMyContours(image);  //Defined in GetMyContours/getMyContours.cpp
+	Mat contours = getMyHand(image);  //Defined in GetMyContours/getMyContours.cpp
 
 	/* All processing functions come before this point */
 }

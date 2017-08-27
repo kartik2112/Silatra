@@ -2,4 +2,7 @@ rm -r ./build/*
 cd build
 cmake ..
 make
-./SiLaTra
+#if [ $1 == "-cap" ]
+#then echo $*
+#fi
+# ./SiLaTra
