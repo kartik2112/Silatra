@@ -27,8 +27,28 @@ But for simplicity the commands have been wrapped into a single file builder.sh
   
   `./build/SiLaTra -cap Digits/1/Right_Hand/Normal`
   
-  To store the image click key 'c' while the program is executing.
+  To store the image click key `c` while the program is executing.
   
- To stop the program executuon, click 'q'
+  To stop the program executuon, click `q`
 	
-The **Files found Online are those files that have been downloaded and might have been used
+The *Files found Online* are those files that have been downloaded and might have been used
+
+### Git Related Usage
+* This repository has stored datasets. These are of sizes greater than 100 MB (max limit for Normal Github usage)
+  For this purpose, Git LFS (Large File Storage) extension has been found. To install this on Ubuntu, execute the following commands:
+  
+  `curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash`
+  
+* After the repository of packages has been downloaded, install the required package by executing the command:
+
+  `sudo apt-get install git-lfs`
+  
+* To verify the same has been installed, execute
+
+  `git lfs install`
+  
+* Now clone the repository and then from the root of that repository run
+
+  `git lfs track "*.zip"`
+  
+For more information, refer [Github LFS Reference](https://help.github.com/articles/working-with-large-files/)
