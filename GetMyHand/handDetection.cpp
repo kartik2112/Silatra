@@ -38,7 +38,7 @@ Mat getMyHand(Mat& image){
 
 	displayHandDetectionTrackbarsIfNeeded(image);
 	
-	imshow("Original Image",image);
+	//imshow("Original Image",image);
 		
 	//blur(image,image,Size(kernSize,kernSize),Point(-1,-1));
 	GaussianBlur(image,image,Size(2*kernSize+1,2*kernSize+1),0,0);
@@ -108,11 +108,11 @@ Mat getMyHand(Mat& image){
 	
 	/// Show in a window  
 	imshow("Contours", contouredImg );	
-	imshow("Morphed Mask",dstEroded);
+	//imshow("Morphed Mask",dstEroded);
 	imshow("Masked Image",maskedImg);
 	imshow("Final Image",finImg);
-	imshow("HSV + BGR Mask",dst);
-	imshow("HSV Mask",dstHSV);
+	//imshow("HSV + BGR Mask",dst);
+	//imshow("HSV Mask",dstHSV);
 	
 	return contouredImg;	
 }
@@ -185,9 +185,9 @@ Mat findHandContours(Mat& src){
 
 
 void prepareWindows(){
-	namedWindow("Original Image",WINDOW_AUTOSIZE);
-	namedWindow("HSV + BGR Mask",WINDOW_AUTOSIZE);
-	namedWindow("HSV Mask",WINDOW_NORMAL);
+	//namedWindow("Original Image",WINDOW_AUTOSIZE);
+	//namedWindow("HSV + BGR Mask",WINDOW_AUTOSIZE);
+	//namedWindow("HSV Mask",WINDOW_NORMAL);
 	namedWindow("Masked Image",WINDOW_AUTOSIZE);
 	namedWindow("Final Image",WINDOW_AUTOSIZE);
 	namedWindow("Contours", WINDOW_AUTOSIZE );
