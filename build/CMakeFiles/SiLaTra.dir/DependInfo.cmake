@@ -4,10 +4,10 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/handDetection.cpp" "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o"
-  "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/skinColorSegmentation.cpp" "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o"
-  "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/trackBarHandling.cpp" "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o"
-  "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/SiLaTra.cpp" "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o"
+  "/home/varun/Silatra/Silatra/GetMyHand/handDetection.cpp" "/home/varun/Silatra/Silatra/build/CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o"
+  "/home/varun/Silatra/Silatra/GetMyHand/skinColorSegmentation.cpp" "/home/varun/Silatra/Silatra/build/CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o"
+  "/home/varun/Silatra/Silatra/GetMyHand/trackBarHandling.cpp" "/home/varun/Silatra/Silatra/build/CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o"
+  "/home/varun/Silatra/Silatra/SiLaTra.cpp" "/home/varun/Silatra/Silatra/build/CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
