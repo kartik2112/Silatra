@@ -1,4 +1,11 @@
 # Silatra
+**Si**gn **La**nguage **Tra**nslator is an application that will convert Indian Sign Language gestures recorded via camera to English Text. More to follow.
+
+Developed by:
+* Tejas Dastane
+* Varun Rao
+* Kartik Shenoy
+* Devendra Vyavaharkar
 
 ### Steps to build the file:
 
