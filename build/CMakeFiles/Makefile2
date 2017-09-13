@@ -54,10 +54,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/varun/Silatra/Silatra
+CMAKE_SOURCE_DIR = "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/varun/Silatra/Silatra/build
+CMAKE_BINARY_DIR = "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build"
 
 #=============================================================================
 # Target rules for target CMakeFiles/SiLaTra.dir
@@ -66,7 +66,7 @@ CMAKE_BINARY_DIR = /home/varun/Silatra/Silatra/build
 CMakeFiles/SiLaTra.dir/all:
 	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/depend
 	$(MAKE) -f CMakeFiles/SiLaTra.dir/build.make CMakeFiles/SiLaTra.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/varun/Silatra/Silatra/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target SiLaTra"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir="/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles" --progress-num=1,2,3,4,5 "Built target SiLaTra"
 .PHONY : CMakeFiles/SiLaTra.dir/all
 
 # Include target in all.
@@ -76,9 +76,9 @@ all: CMakeFiles/SiLaTra.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/SiLaTra.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/varun/Silatra/Silatra/build/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles" 5
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/SiLaTra.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/varun/Silatra/Silatra/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles" 0
 .PHONY : CMakeFiles/SiLaTra.dir/rule
 
 # Convenience name for target.

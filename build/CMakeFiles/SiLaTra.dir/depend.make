@@ -124,6 +124,9 @@ CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o: /usr/local/include/opencv2
 CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o: /usr/local/include/opencv2/videostab/ring_buffer.hpp
 CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o: /usr/local/include/opencv2/videostab/stabilizer.hpp
 CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o: /usr/local/include/opencv2/videostab/wobble_suppression.hpp
+CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o: /usr/local/include/opencv2/xfeatures2d.hpp
+CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o: /usr/local/include/opencv2/xfeatures2d/cuda.hpp
+CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o: /usr/local/include/opencv2/xfeatures2d/nonfree.hpp
 
 CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o: ../GetMyHand/handDetection.hpp
 CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o: ../GetMyHand/skinColorSegmentation.cpp
@@ -248,6 +251,9 @@ CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o: /usr/local/include
 CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o: /usr/local/include/opencv2/videostab/ring_buffer.hpp
 CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o: /usr/local/include/opencv2/videostab/stabilizer.hpp
 CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o: /usr/local/include/opencv2/videostab/wobble_suppression.hpp
+CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o: /usr/local/include/opencv2/xfeatures2d.hpp
+CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o: /usr/local/include/opencv2/xfeatures2d/cuda.hpp
+CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o: /usr/local/include/opencv2/xfeatures2d/nonfree.hpp
 
 CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o: ../GetMyHand/handDetection.hpp
 CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o: ../GetMyHand/skinColorSegmentation.hpp
@@ -372,6 +378,9 @@ CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o: /usr/local/include/open
 CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o: /usr/local/include/opencv2/videostab/ring_buffer.hpp
 CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o: /usr/local/include/opencv2/videostab/stabilizer.hpp
 CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o: /usr/local/include/opencv2/videostab/wobble_suppression.hpp
+CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o: /usr/local/include/opencv2/xfeatures2d.hpp
+CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o: /usr/local/include/opencv2/xfeatures2d/cuda.hpp
+CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o: /usr/local/include/opencv2/xfeatures2d/nonfree.hpp
 
 CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o: ../GetMyHand/handDetection.hpp
 CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o: ../GetMyHand/skinColorSegmentation.hpp
@@ -496,4 +505,7 @@ CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o: /usr/local/include/opencv2/videostab/outli
 CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o: /usr/local/include/opencv2/videostab/ring_buffer.hpp
 CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o: /usr/local/include/opencv2/videostab/stabilizer.hpp
 CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o: /usr/local/include/opencv2/videostab/wobble_suppression.hpp
+CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o: /usr/local/include/opencv2/xfeatures2d.hpp
+CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o: /usr/local/include/opencv2/xfeatures2d/cuda.hpp
+CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o: /usr/local/include/opencv2/xfeatures2d/nonfree.hpp
 

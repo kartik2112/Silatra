@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/varun/Silatra/Silatra/GetMyHand/handDetection.cpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/handDetection.cpp
 opencv2/opencv.hpp
 -
 opencv2/imgproc.hpp
@@ -14,13 +14,17 @@ opencv2/imgproc.hpp
 opencv2/highgui.hpp
 -
 skinColorSegmentation.hpp
-/home/varun/Silatra/Silatra/GetMyHand/skinColorSegmentation.hpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/skinColorSegmentation.hpp
 trackBarHandling.hpp
-/home/varun/Silatra/Silatra/GetMyHand/trackBarHandling.hpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/trackBarHandling.hpp
 iostream
 -
+fstream
+-
+cmath
+-
 
-/home/varun/Silatra/Silatra/GetMyHand/handDetection.hpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/handDetection.hpp
 opencv2/opencv.hpp
 -
 opencv2/imgproc.hpp
@@ -28,13 +32,13 @@ opencv2/imgproc.hpp
 opencv2/highgui.hpp
 -
 skinColorSegmentation.hpp
-/home/varun/Silatra/Silatra/GetMyHand/skinColorSegmentation.hpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/skinColorSegmentation.hpp
 trackBarHandling.hpp
-/home/varun/Silatra/Silatra/GetMyHand/trackBarHandling.hpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/trackBarHandling.hpp
 iostream
 -
 
-/home/varun/Silatra/Silatra/GetMyHand/skinColorSegmentation.cpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/skinColorSegmentation.cpp
 opencv2/opencv.hpp
 -
 opencv2/imgproc.hpp
@@ -42,11 +46,11 @@ opencv2/imgproc.hpp
 opencv2/highgui.hpp
 -
 trackBarHandling.hpp
-/home/varun/Silatra/Silatra/GetMyHand/trackBarHandling.hpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/trackBarHandling.hpp
 iostream
 -
 
-/home/varun/Silatra/Silatra/GetMyHand/skinColorSegmentation.hpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/skinColorSegmentation.hpp
 opencv2/opencv.hpp
 -
 opencv2/imgproc.hpp
@@ -54,9 +58,9 @@ opencv2/imgproc.hpp
 opencv2/highgui.hpp
 -
 trackBarHandling.hpp
-/home/varun/Silatra/Silatra/GetMyHand/trackBarHandling.hpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/trackBarHandling.hpp
 
-/home/varun/Silatra/Silatra/GetMyHand/trackBarHandling.cpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/trackBarHandling.cpp
 opencv2/opencv.hpp
 -
 opencv2/imgproc.hpp
@@ -64,9 +68,9 @@ opencv2/imgproc.hpp
 opencv2/highgui.hpp
 -
 handDetection.hpp
-/home/varun/Silatra/Silatra/GetMyHand/handDetection.hpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/handDetection.hpp
 
-/home/varun/Silatra/Silatra/GetMyHand/trackBarHandling.hpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/trackBarHandling.hpp
 opencv2/opencv.hpp
 -
 opencv2/imgproc.hpp
@@ -74,9 +78,9 @@ opencv2/imgproc.hpp
 opencv2/highgui.hpp
 -
 handDetection.hpp
-/home/varun/Silatra/Silatra/GetMyHand/handDetection.hpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/handDetection.hpp
 
-/home/varun/Silatra/Silatra/SiLaTra.cpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/SiLaTra.cpp
 opencv2/opencv.hpp
 -
 opencv2/imgproc.hpp
@@ -84,7 +88,7 @@ opencv2/imgproc.hpp
 opencv2/highgui.hpp
 -
 GetMyHand/handDetection.hpp
-/home/varun/Silatra/Silatra/GetMyHand/handDetection.hpp
+/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/handDetection.hpp
 iostream
 -
 ctime
@@ -1299,4 +1303,18 @@ opencv2/videostab/global_motion.hpp
 /usr/local/include/opencv2/videostab/opencv2/videostab/global_motion.hpp
 opencv2/videostab/log.hpp
 /usr/local/include/opencv2/videostab/opencv2/videostab/log.hpp
+
+/usr/local/include/opencv2/xfeatures2d.hpp
+opencv2/features2d.hpp
+/usr/local/include/opencv2/opencv2/features2d.hpp
+opencv2/xfeatures2d/nonfree.hpp
+/usr/local/include/opencv2/opencv2/xfeatures2d/nonfree.hpp
+
+/usr/local/include/opencv2/xfeatures2d/cuda.hpp
+opencv2/core/cuda.hpp
+/usr/local/include/opencv2/xfeatures2d/opencv2/core/cuda.hpp
+
+/usr/local/include/opencv2/xfeatures2d/nonfree.hpp
+opencv2/features2d.hpp
+/usr/local/include/opencv2/xfeatures2d/opencv2/features2d.hpp
 
