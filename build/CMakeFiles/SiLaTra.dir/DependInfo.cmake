@@ -4,10 +4,10 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/varun/Silatra/Silatra/GetMyHand/handDetection.cpp" "/home/varun/Silatra/Silatra/build/CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o"
-  "/home/varun/Silatra/Silatra/GetMyHand/skinColorSegmentation.cpp" "/home/varun/Silatra/Silatra/build/CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o"
-  "/home/varun/Silatra/Silatra/GetMyHand/trackBarHandling.cpp" "/home/varun/Silatra/Silatra/build/CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o"
-  "/home/varun/Silatra/Silatra/SiLaTra.cpp" "/home/varun/Silatra/Silatra/build/CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o"
+  "/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/handDetection.cpp" "/media/tejas/SANDISK/Workspace/Silatra/build/CMakeFiles/SiLaTra.dir/GetMyHand/handDetection.cpp.o"
+  "/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/skinColorSegmentation.cpp" "/media/tejas/SANDISK/Workspace/Silatra/build/CMakeFiles/SiLaTra.dir/GetMyHand/skinColorSegmentation.cpp.o"
+  "/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/trackBarHandling.cpp" "/media/tejas/SANDISK/Workspace/Silatra/build/CMakeFiles/SiLaTra.dir/GetMyHand/trackBarHandling.cpp.o"
+  "/media/tejas/SANDISK/Workspace/Silatra/SiLaTra.cpp" "/media/tejas/SANDISK/Workspace/Silatra/build/CMakeFiles/SiLaTra.dir/SiLaTra.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

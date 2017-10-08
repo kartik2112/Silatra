@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/varun/Silatra/Silatra/GetMyHand/handDetection.cpp
+/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/handDetection.cpp
 opencv2/opencv.hpp
 -
 opencv2/imgproc.hpp
@@ -14,13 +14,13 @@ opencv2/imgproc.hpp
 opencv2/highgui.hpp
 -
 skinColorSegmentation.hpp
-/home/varun/Silatra/Silatra/GetMyHand/skinColorSegmentation.hpp
+/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/skinColorSegmentation.hpp
 trackBarHandling.hpp
-/home/varun/Silatra/Silatra/GetMyHand/trackBarHandling.hpp
+/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/trackBarHandling.hpp
 iostream
 -
 
-/home/varun/Silatra/Silatra/GetMyHand/handDetection.hpp
+/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/handDetection.hpp
 opencv2/opencv.hpp
 -
 opencv2/imgproc.hpp
@@ -28,13 +28,13 @@ opencv2/imgproc.hpp
 opencv2/highgui.hpp
 -
 skinColorSegmentation.hpp
-/home/varun/Silatra/Silatra/GetMyHand/skinColorSegmentation.hpp
+/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/skinColorSegmentation.hpp
 trackBarHandling.hpp
-/home/varun/Silatra/Silatra/GetMyHand/trackBarHandling.hpp
+/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/trackBarHandling.hpp
 iostream
 -
 
-/home/varun/Silatra/Silatra/GetMyHand/skinColorSegmentation.cpp
+/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/skinColorSegmentation.cpp
 opencv2/opencv.hpp
 -
 opencv2/imgproc.hpp
@@ -42,11 +42,11 @@ opencv2/imgproc.hpp
 opencv2/highgui.hpp
 -
 trackBarHandling.hpp
-/home/varun/Silatra/Silatra/GetMyHand/trackBarHandling.hpp
+/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/trackBarHandling.hpp
 iostream
 -
 
-/home/varun/Silatra/Silatra/GetMyHand/skinColorSegmentation.hpp
+/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/skinColorSegmentation.hpp
 opencv2/opencv.hpp
 -
 opencv2/imgproc.hpp
@@ -54,9 +54,9 @@ opencv2/imgproc.hpp
 opencv2/highgui.hpp
 -
 trackBarHandling.hpp
-/home/varun/Silatra/Silatra/GetMyHand/trackBarHandling.hpp
+/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/trackBarHandling.hpp
 
-/home/varun/Silatra/Silatra/GetMyHand/trackBarHandling.cpp
+/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/trackBarHandling.cpp
 opencv2/opencv.hpp
 -
 opencv2/imgproc.hpp
@@ -64,9 +64,9 @@ opencv2/imgproc.hpp
 opencv2/highgui.hpp
 -
 handDetection.hpp
-/home/varun/Silatra/Silatra/GetMyHand/handDetection.hpp
+/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/handDetection.hpp
 
-/home/varun/Silatra/Silatra/GetMyHand/trackBarHandling.hpp
+/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/trackBarHandling.hpp
 opencv2/opencv.hpp
 -
 opencv2/imgproc.hpp
@@ -74,9 +74,9 @@ opencv2/imgproc.hpp
 opencv2/highgui.hpp
 -
 handDetection.hpp
-/home/varun/Silatra/Silatra/GetMyHand/handDetection.hpp
+/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/handDetection.hpp
 
-/home/varun/Silatra/Silatra/SiLaTra.cpp
+/media/tejas/SANDISK/Workspace/Silatra/SiLaTra.cpp
 opencv2/opencv.hpp
 -
 opencv2/imgproc.hpp
@@ -84,7 +84,7 @@ opencv2/imgproc.hpp
 opencv2/highgui.hpp
 -
 GetMyHand/handDetection.hpp
-/home/varun/Silatra/Silatra/GetMyHand/handDetection.hpp
+/media/tejas/SANDISK/Workspace/Silatra/GetMyHand/handDetection.hpp
 iostream
 -
 ctime
@@ -1299,4 +1299,42 @@ opencv2/videostab/global_motion.hpp
 /usr/local/include/opencv2/videostab/opencv2/videostab/global_motion.hpp
 opencv2/videostab/log.hpp
 /usr/local/include/opencv2/videostab/opencv2/videostab/log.hpp
+
+/usr/local/include/opencv2/viz.hpp
+opencv2/viz/types.hpp
+-
+opencv2/viz/widgets.hpp
+-
+opencv2/viz/viz3d.hpp
+-
+opencv2/viz/vizcore.hpp
+-
+
+/usr/local/include/opencv2/viz/types.hpp
+string
+-
+opencv2/core.hpp
+-
+opencv2/core/affine.hpp
+-
+
+/usr/local/include/opencv2/viz/viz3d.hpp
+opencv2/core.hpp
+-
+opencv2/viz/types.hpp
+-
+opencv2/viz/widgets.hpp
+-
+
+/usr/local/include/opencv2/viz/vizcore.hpp
+opencv2/viz/types.hpp
+-
+opencv2/viz/widgets.hpp
+-
+opencv2/viz/viz3d.hpp
+-
+
+/usr/local/include/opencv2/viz/widgets.hpp
+opencv2/viz/types.hpp
+-
 
