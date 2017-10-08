@@ -19,11 +19,18 @@ namespace fs = std::experimental::filesystem;
 
 void processFrame(Mat& image);
 
+string subDirName;
+
 int main(int argc, char** argv){
 
 	double maxTimeTaken=0,minTimeTaken=10000;
 	
-	if(argc==3 && strcmp(argv[1],"-img")==0){
+	if(argc==3 && strcmp(argv[1],"-img")==0){	
+		subDirName = string(argv[2]);
+		subDirName = "./CCDC-Data/"+subDirName.substr(0,subDirName.find_last_of("/"));
+		fs::create_directories(subDirName);
+				
+		
 		Mat image = imread(argv[2],1);
 		
 		double startTime=(double)getTickCount();
@@ -42,10 +49,11 @@ int main(int argc, char** argv){
 		int imgNo=1;
 		if(argc==3 && strcmp(argv[1],"-cap")==0){
 			/*cout<<"Enter name of subdirectory for storing the training images: "<<endl;*/
-			string subDirName(argv[2]);
+			subDirName = string(argv[2]);
 			//cin>>subDirName;
 			trainingImagesFolderPath="./training-images/"+subDirName;
 			fs::create_directories(trainingImagesFolderPath);
+			fs::create_directories("./CCDC-Data/"+subDirName);
 			for(auto &tempp1:fs::directory_iterator(trainingImagesFolderPath)){
 				imgNo++;
 			}

@@ -48,10 +48,17 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
+<<<<<<< HEAD
 CMAKE_SOURCE_DIR = /media/tejas/SANDISK/Workspace/Silatra
 
 # The top-level build directory on which CMake was run.
 CMAKE_BINARY_DIR = /media/tejas/SANDISK/Workspace/Silatra/build
+=======
+CMAKE_SOURCE_DIR = "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra"
+
+# The top-level build directory on which CMake was run.
+CMAKE_BINARY_DIR = "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build"
+>>>>>>> d8df099ff0a9c7f0766382dea61af5c0442871b6
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +87,15 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
+<<<<<<< HEAD
 	$(CMAKE_COMMAND) -E cmake_progress_start /media/tejas/SANDISK/Workspace/Silatra/build/CMakeFiles /media/tejas/SANDISK/Workspace/Silatra/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
 	$(CMAKE_COMMAND) -E cmake_progress_start /media/tejas/SANDISK/Workspace/Silatra/build/CMakeFiles 0
+=======
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles" "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles/progress.marks"
+	$(MAKE) -f CMakeFiles/Makefile2 all
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles" 0
+>>>>>>> d8df099ff0a9c7f0766382dea61af5c0442871b6
 .PHONY : all
 
 # The main clean target

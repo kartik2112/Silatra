@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # Install script for directory: /media/tejas/SANDISK/Workspace/Silatra
+=======
+# Install script for directory: /home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra
+>>>>>>> d8df099ff0a9c7f0766382dea61af5c0442871b6
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +44,9 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
+<<<<<<< HEAD
 file(WRITE "/media/tejas/SANDISK/Workspace/Silatra/build/${CMAKE_INSTALL_MANIFEST}"
+=======
+file(WRITE "/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/${CMAKE_INSTALL_MANIFEST}"
+>>>>>>> d8df099ff0a9c7f0766382dea61af5c0442871b6
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
