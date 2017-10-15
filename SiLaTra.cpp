@@ -43,6 +43,32 @@ int main(int argc, char** argv){
 		
 		waitKey(0);
 	}
+	else if(argc==3 && strcmp(argv[1],"-AllImgs")==0){
+		string subDirName1 = string(argv[2]);
+		subDirName = "./CCDC-Data/"+subDirName1.substr(0,subDirName1.find_last_of("/"));
+		fs::create_directories(subDirName);
+		fs::remove(subDirName+"/data.csv");
+		
+		vector<string> files;
+		for(auto &tempp1:fs::directory_iterator(subDirName1)){
+			files.push_back(tempp1.path().string());
+		}
+
+		sort(files.begin(),files.end());
+
+		for(int i=0;i<files.size();i++){
+			cout<<"Processing "<<files[i]<<endl;
+			Mat image = imread(files[i],1);
+			
+			double startTime=(double)getTickCount();
+			
+			processFrame(image);		
+		
+			double timeTaken=(getTickCount()-(double)startTime)/getTickFrequency();
+			maxTimeTaken=timeTaken>maxTimeTaken?timeTaken:maxTimeTaken;
+			minTimeTaken=timeTaken<minTimeTaken?timeTaken:minTimeTaken;
+		}
+	}
 	else{
 	
 		string trainingImagesFolderPath;

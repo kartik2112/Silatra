@@ -1,5 +1,5 @@
 # FeatureDetectionSIFT.py for trying out OpenCV Feature Detection using SIFT
-vocab_size=3
+vocab_size=10
 import cv2
 import numpy as np
 from sklearn.cluster import KMeans
@@ -33,5 +33,5 @@ for digit in range(1,6):
             CSVRecord+=','
         CSVRecord+=str(digit)+'\n'
         OutputFile.write(CSVRecord)
-print("CSV File prepared.")
+print "CSV File prepared."
 OutputFile.close()

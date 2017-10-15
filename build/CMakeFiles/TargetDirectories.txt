@@ -1,9 +1,0 @@
-<<<<<<< HEAD
-/media/tejas/SANDISK/Workspace/Silatra/build/CMakeFiles/edit_cache.dir
-/media/tejas/SANDISK/Workspace/Silatra/build/CMakeFiles/SiLaTra.dir
-/media/tejas/SANDISK/Workspace/Silatra/build/CMakeFiles/rebuild_cache.dir
-=======
-/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles/edit_cache.dir
-/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles/rebuild_cache.dir
-/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/build/CMakeFiles/SiLaTra.dir
->>>>>>> d8df099ff0a9c7f0766382dea61af5c0442871b6

@@ -22,6 +22,7 @@ Mat findHandContours(Mat& src);
 Mat combineExtractedWithMain(Mat& maskedImg,Mat& image);
 void prepareWindows();
 void connectContours(vector<vector<Point> > &contours);
+void reduceClusterPoints(vector< vector< Point > > &contours);
 
 
 
@@ -39,17 +40,17 @@ extern string subDirName;
 
 
 
-Mat getMyHand(Mat& image){
+Mat getMyHand(Mat& imageOG){
 
-	displayHandDetectionTrackbarsIfNeeded(image);
+	displayHandDetectionTrackbarsIfNeeded(imageOG);
 	
 		
 	
-	imshow("Original Image",image);
-	Mat imageHSV,imageYCrCb;
-	cvtColor(image,imageYCrCb,CV_BGR2YCrCb);
-
+	imshow("Original Image",imageOG);
+	Mat image,imageHSV,imageYCrCb;
+	
 	/*
+	cvtColor(image,imageYCrCb,CV_BGR2YCrCb);
 	Mat HEd(image.rows,image.cols,CV_8UC1,Scalar(0));	
 	int fromToArr1[] = {0,0};
 	mixChannels(imageYCrCb,HEd,fromToArr1,1);
@@ -60,7 +61,7 @@ Mat getMyHand(Mat& image){
 	*/
 	
 	//blur(image,image,Size(kernSize,kernSize),Point(-1,-1));
-	GaussianBlur(image,image,Size(2*kernSize+1,2*kernSize+1),0,0);
+	GaussianBlur(imageOG,image,Size(2*kernSize+1,2*kernSize+1),0,0);
 	//medianBlur(image,image,2*kernSize+1);
 	
 	/* Convert BGR Image into HSV, YCrCb Images */
@@ -117,7 +118,7 @@ Mat getMyHand(Mat& image){
 
 	Mat maskedImg;
 	cvtColor(dstEroded,dstEroded,CV_GRAY2BGR);
-	bitwise_and(dstEroded,image,maskedImg);
+	bitwise_and(dstEroded,imageOG,maskedImg);
 	
 	Mat finImg=combineExtractedWithMain(maskedImg,image);
 	
@@ -126,11 +127,11 @@ Mat getMyHand(Mat& image){
 	/// Show in a window  
 	imshow("Contours", contouredImg );	
 	//imwrite("./ContourImages/img.png",contouredImg);
-	//imshow("Morphed Mask",dstEroded);
+	imshow("Morphed Mask",dstEroded);
 	imshow("Masked Image",maskedImg);
 	imshow("Final Image",finImg);
-	//imshow("HSV + BGR Mask",dst);
-	//imshow("HSV Mask",dstHSV);
+	imshow("HSV + BGR Mask",dst);
+	imshow("HSV Mask",dstHSV);
 	
 	return contouredImg;	
 }
@@ -206,6 +207,8 @@ Mat findHandContours(Mat& src){
 	
 	connectContours( contours );
 	
+	reduceClusterPoints( contours );
+	
    	vector<vector<Point> >hull( contours.size() );
 	for( size_t i = 0; i < contours.size(); i++ )
 	{   convexHull( Mat(contours[i]), hull[i], false ); }
@@ -231,6 +234,8 @@ Mat findHandContours(Mat& src){
 		drawContours( drawing, hull, (int)i, color, 1, 8, vector<Vec4i>(), 0, Point() );
 		circle( drawing, mc[i], 4, color, -1, 8, 0 );
 		cout<<"Contour "<<(i+1)<<" size: "<<contours[i].size()<<":"<<endl;
+		circle( drawing, contours[i][0], 4, Scalar(255,0,0), -1, 8, 0 );
+		circle( drawing, contours[i][10], 4, Scalar(255,0,0), -1, 8, 0 );
 		for(auto p:contours[i]){
 			cout<<"("<<p.x<<","<<p.y<<")"<<", ";
 		}
@@ -268,9 +273,9 @@ Mat findHandContours(Mat& src){
 			contourPoints++;
 		}
 		Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-		circle( drawing, contours[indMaxArea][start], 4, color, -1, 8, 0 );
-		circle( drawing, contours[indMaxArea][end], 4, color, -1, 8, 0 );
-		circle( drawing, contours[indMaxArea][far], 4, color, -1, 8, 0 );
+		//circle( drawing, contours[indMaxArea][start], 4, color, -1, 8, 0 );
+		//circle( drawing, contours[indMaxArea][end], 4, color, -1, 8, 0 );
+		//circle( drawing, contours[indMaxArea][far], 4, color, -1, 8, 0 );
 	}
 	
 	cout<<contourPoints<<" Convex Defects Detected"<<endl;
@@ -279,9 +284,18 @@ Mat findHandContours(Mat& src){
 		
 	ofstream csvFile;
 	csvFile.open(subDirName+"/data.csv",std::ios_base::app);
+	vector<float> distVector(contours[indMaxArea].size());
+	float maxDist = 0;
 	for(int i=0;i<contours[indMaxArea].size();i++){
 		float dist=sqrt( (contours[indMaxArea][i].x-mc[indMaxArea].x)*(contours[indMaxArea][i].x-mc[indMaxArea].x) + (contours[indMaxArea][i].y-mc[indMaxArea].y)*(contours[indMaxArea][i].y-mc[indMaxArea].y) );
-		csvFile << dist;
+		distVector[i]=dist;
+		if(dist>maxDist){
+			maxDist = dist;
+		}
+	}
+	
+	for(int i=0;i<contours[indMaxArea].size();i++){
+		csvFile << (distVector[i]/maxDist*10);
 		if(i!=contours[indMaxArea].size()-1) csvFile << ", ";
 	}
 	csvFile << "\n";
@@ -346,6 +360,33 @@ void connectContours(vector<vector<Point> > &contours){
 	//contours[0].erase(contours[0].begin()+contours[0].size()/2,contours[0].end());
 }
 
+void reduceClusterPoints(vector< vector< Point > > &contours){
+	int maxI = -1, max = 0;
+	for(int i = 0 ; i < contours.size() ; i++){
+		cout<<contours[i].size()<<", ";
+		if(contours[i].size()>max){
+			max = contours[i].size();
+			maxI = i;
+		}
+	}
+	cout<<endl;
+	
+	long long minDist = 9223372036854775805;
+	int minDistI = -1;
+	for(int i = 7 ; i < contours[ maxI ].size() - 7; i++){
+		long long tempDist = ( contours[maxI][i].x - contours[maxI][0].x ) * ( contours[maxI][i].x - contours[maxI][0].x ) + ( contours[maxI][i].y - contours[maxI][0].y ) * ( contours[maxI][i].y - contours[maxI][0].y );
+		if(tempDist>=0 && tempDist<=minDist){
+			minDist = tempDist;
+			minDistI = i;
+		}
+	}
+	
+	int firstHalfEnd = minDistI / 2, secondHalfEnd = minDistI + (contours[maxI].size() - minDistI - 1) / 2;
+	
+	cout<<firstHalfEnd<<", "<<minDistI<<", "<<secondHalfEnd<<", "<<contours[maxI].size()-1<<endl;
+	contours[maxI].insert(contours[maxI].begin(), contours[maxI].begin()+secondHalfEnd, contours[maxI].end());
+	contours[maxI].erase(contours[maxI].begin()+firstHalfEnd+secondHalfEnd-minDistI,contours[maxI].end());
+}
 
 
 
