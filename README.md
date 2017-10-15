@@ -38,10 +38,12 @@ But for simplicity the commands have been wrapped into a single file builder.sh
   
   `./build/SiLaTra -cap Digits/1/Right_Hand/Normal`
   
-  To store the image click key `c` while the program is executing.
+  To store the image click key `c` while the program is executing.
   
   To stop the program executuon, click `q`
 	
+* Using the csv files (containing distances), you can classify them by running `python3 getMeSomeResultsInPythonBro.py`
+
 The *Files found Online* are those files that have been downloaded and might have been used
 
 ### Git Related Usage
