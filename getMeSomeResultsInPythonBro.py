@@ -3,6 +3,7 @@ from scipy.fftpack import fft, ifft
 from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
 
 def dumpData():
 	global fftData,correctLabels
@@ -54,7 +55,12 @@ def KNearestNeighbors():
 def SVMLearning():
 	global noOfSamples,fftData,dataInds,correctLabels
 	print("Applying SVM Learning to data")
+	trainData_S,testData_S,trainData_L,testData_L = train_test_split(fftData,correctLabels,test_size = 0.33,random_state=42)
 
+	svm=SVC(C=10,gamma=10)
+	svm.fit(trainData_S,trainData_L)
+	print("Accuracy on training set:"+str(svm.score(trainData_S,trainData_L)*100))
+	print("Accuracy on training set:"+str(svm.score(testData_S,testData_L)*100))
 
 
 # Initializers
@@ -90,3 +96,4 @@ dumpData()
 
 # KMeansClustering()
 # KNearestNeighbors()
+SVMLearning()
