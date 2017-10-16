@@ -1,0 +1,3 @@
+bgreen="$(printf '\033[0;1;32m')"
+norm="$(printf '\033[0m')"
+PS1=$bgreen'Silatra: '$norm

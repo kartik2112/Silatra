@@ -3,6 +3,7 @@ import imutils
 import numpy as np
 import argparse
 import cv2
+from matplotlib import pyplot as plt
  
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
@@ -52,6 +53,7 @@ while True:
     skinMask = cv2.GaussianBlur(skinMask, (3, 3), 0)
     skin = cv2.bitwise_and(frame, frame, mask = skinMask)
 
+    """
     image = skin.copy()
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (5, 5), 0)
@@ -71,11 +73,31 @@ while True:
         cv2.line(image,start,end,[0,255,0],2)
         cv2.circle(image,far,5,[0,0,255],-1)
     
-    cv2.imshow("Actual image, Skin detected, Extreme points detected", np.hstack([frame, skin, image]))
+    """
+
+    # ORB feature detection code
+    image = skin.copy()
+    orb = cv2.ORB_create()
+    kp = orb.detect(image, None)
+    kp,des = orb.compute(image,kp)
+
+    # Get keypoints
+    img = cv2.drawKeypoints(image, kp, None, color=(0,255,0), flags=0)
+
+    cv2.imshow("Actual image, Skin detected, Extreme points detected", np.hstack([frame, skin, img]))
     
     # if the 'q' key is pressed, stop the loop
-    if cv2.waitKey(1) & 0xFF == ord("q"):
+    k=cv2.waitKey(1)
+    if k == ord("q"):
         break
+    elif k == ord("c"):
+        with open("Data/1.csv","a") as f:
+            s=''
+            for keyp in kp:
+               p=keyp.pt
+               f.write(str(p[0])+","+str(p[1]))
+            f.write('\n')
+
 
 # cleanup the camera and close any open windows
 camera.release()
