@@ -171,21 +171,23 @@ Mat findHandContours(Mat& src){
 	RNG rng(12345);
 	
 	Mat canny_output;
-	vector<vector<Point> > contours;
+	vector<vector<Point> > contours,contours1;
 	vector<Vec4i> hierarchy;
 
 	/// Detect edges using canny
 	Canny( src_gray, canny_output, thresh, thresh*2, 3 );
 	
-	Mat morphCloseElement = getStructuringElement(MORPH_CROSS,Size(4*2+1,4*2+1),Point(4,4));
-	//morphologyEx(canny_output,canny_output,MORPH_CLOSE,morphCloseElement);
+	Mat morphCloseElement = getStructuringElement(MORPH_ELLIPSE,Size(5*2+1,5*2+1),Point(5,5));
+	morphologyEx(canny_output,canny_output,MORPH_CLOSE,morphCloseElement);
 	
 	imshow("Canny",canny_output);
 	/// Find contours
 	findContours( canny_output, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
 	
+	//contours.resize(contours1.size());
+	
 	for( size_t i = 0; i< contours.size(); i++ )
-	{		
+	{	
 		cout<<"Contour "<<(i+1)<<" size: "<<contours[i].size()<<":"<<endl;
 		for(auto p:contours[i]){
 			cout<<"("<<p.x<<","<<p.y<<")"<<", ";
@@ -205,9 +207,14 @@ Mat findHandContours(Mat& src){
 	
 	
 	
-	connectContours( contours );
+	//connectContours( contours );
 	
-	reduceClusterPoints( contours );
+	//reduceClusterPoints( contours );
+
+	for( size_t i = 0; i< contours.size(); i++ )
+	{		
+		approxPolyDP(Mat(contours[i]),contours[i],10,true);
+	}
 	
    	vector<vector<Point> >hull( contours.size() );
 	for( size_t i = 0; i < contours.size(); i++ )
@@ -322,7 +329,7 @@ void connectContours(vector<vector<Point> > &contours){
 	long long contourDistThresholdL=contourDistThreshold*contourDistThreshold;
 	long long minDist=contourDistThresholdL*10;
 	
-	
+	long long countComparisons = 0;
 	while(true){
 		bool canMerge = false;
 		minDist=contourDistThresholdL*10;
@@ -331,6 +338,7 @@ void connectContours(vector<vector<Point> > &contours){
 				for(int iPt=0;iPt<contours[i].size();iPt++){
 					for(int jPt=0;jPt<contours[j].size();jPt++){
 						long long tempDist = (contours[i][iPt].x-contours[j][jPt].x)*(contours[i][iPt].x-contours[j][jPt].x) + (contours[i][iPt].y-contours[j][jPt].y)*(contours[i][iPt].y-contours[j][jPt].y);
+						countComparisons++;
 						if( tempDist<=contourDistThresholdL && tempDist < minDist)
 						{
 							minDist = tempDist;
@@ -357,6 +365,8 @@ void connectContours(vector<vector<Point> > &contours){
 			contours.erase(contours.begin()+ctr2);
 		}
 	}
+
+	cout<<countComparisons<<" no of comparisons made!"<<endl;
 	//contours[0].erase(contours[0].begin()+contours[0].size()/2,contours[0].end());
 }
 
