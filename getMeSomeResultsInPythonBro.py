@@ -4,6 +4,16 @@ from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 
+def dumpData():
+	global fftData,correctLabels
+	toBeDumpedData = []
+
+	for i in range(len(fftData)):
+		toBeDumpedData.append(fftData[i].tolist() + [correctLabels[i]])
+
+	np.savetxt("data.csv",toBeDumpedData,delimiter=",")
+	print("Saved csv file")
+
 def KMeansClustering():
 	global noOfSamples,fftData,dataInds
 	print("Applying KMeans clustering to data")
@@ -27,7 +37,7 @@ def KMeansClustering():
 
 def KNearestNeighbors():
 	global noOfSamples,fftData,dataInds,correctLabels
-	print("Applying K Nearest Neighbouts Learning to data")
+	print("Applying K Nearest Neighbours Learning to data")
 	trainData_S,testData_S,trainData_L,testData_L = train_test_split(fftData,correctLabels,test_size = 0.33,random_state=42)
 
 	neigh = KNeighborsClassifier(n_neighbors = len(noOfSamples))
@@ -40,12 +50,20 @@ def KNearestNeighbors():
 		if( testData_L[i] == neigh.predict([testData_S[i]])[0] ):
 			correctlyClassified += 1
 	print("Accuracy: ",correctlyClassified,"/",len(testData_S),"=",correctlyClassified/len(testData_S))
-	
+
+def SVMLearning():
+	global noOfSamples,fftData,dataInds,correctLabels
+	print("Applying SVM Learning to data")
+
+
+
+# Initializers
 dataInds = [1,2,3,4,5]
 noOfDescriptors = 10
 noOfSamples = []
 fftData=[]
 
+# Travers through csv files and append CCDC Data
 for folderNo in dataInds:
 	path_to_csv = "./CCDC-Data/training-images/Digits/"+str(folderNo)+"/Right_Hand/Normal/data.csv"
 
@@ -56,11 +74,11 @@ for folderNo in dataInds:
 	ctr = 0
 	for line in f1:
 		data = np.fromstring(line,dtype = float, sep = ',')
-		fftData.append(fft(data)[:noOfDescriptors])
+		fftData.append(fft(data)[:noOfDescriptors])  # FFT
 		ctr += 1
 	noOfSamples.append(ctr)
 	#print(fftData)
-fftData = np.absolute(fftData)
+fftData = np.absolute(fftData)   # Making this rotation invariant by finding out magnitude
 correctLabels = []
 for i in range(len(noOfSamples)):
 	correctLabels += [dataInds[i]]*noOfSamples[i]
@@ -68,13 +86,7 @@ print(noOfSamples)
 
 print(fftData)
 
-toBeDumpedData = []
-
-for i in range(len(fftData)):
-	toBeDumpedData.append(fftData[i].tolist() + [correctLabels[i]])
-
-np.savetxt("data.csv",toBeDumpedData,delimiter=",")
-print("Saved csv file")
+dumpData()
 
 # KMeansClustering()
 # KNearestNeighbors()
