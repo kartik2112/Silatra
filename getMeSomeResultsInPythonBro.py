@@ -6,6 +6,7 @@ from sklearn.neighbors import KNeighborsClassifier
 
 def KMeansClustering():
 	global noOfSamples,fftData,dataInds
+	print("Applying KMeans clustering to data")
 	kmeans = KMeans(n_clusters = len(noOfSamples), random_state = 0).fit(fftData)
 	labels1 = kmeans.labels_
 
@@ -26,6 +27,7 @@ def KMeansClustering():
 
 def KNearestNeighbors():
 	global noOfSamples,fftData,dataInds,correctLabels
+	print("Applying K Nearest Neighbouts Learning to data")
 	trainData_S,testData_S,trainData_L,testData_L = train_test_split(fftData,correctLabels,test_size = 0.33,random_state=42)
 
 	neigh = KNeighborsClassifier(n_neighbors = len(noOfSamples))
@@ -40,6 +42,7 @@ def KNearestNeighbors():
 	print("Accuracy: ",correctlyClassified,"/",len(testData_S),"=",correctlyClassified/len(testData_S))
 	
 dataInds = [1,2,3,4,5]
+noOfDescriptors = 10
 noOfSamples = []
 fftData=[]
 
@@ -53,7 +56,7 @@ for folderNo in dataInds:
 	ctr = 0
 	for line in f1:
 		data = np.fromstring(line,dtype = float, sep = ',')
-		fftData.append(fft(data)[:10])
+		fftData.append(fft(data)[:noOfDescriptors])
 		ctr += 1
 	noOfSamples.append(ctr)
 	#print(fftData)
@@ -61,10 +64,17 @@ fftData = np.absolute(fftData)
 correctLabels = []
 for i in range(len(noOfSamples)):
 	correctLabels += [dataInds[i]]*noOfSamples[i]
-print(fftData)
 print(noOfSamples)
 
-# KMeansClustering()
-KNearestNeighbors()
+print(fftData)
 
-# np.savetxt(folderNo+"_data.csv",fftData,delimiter=",")
+toBeDumpedData = []
+
+for i in range(len(fftData)):
+	toBeDumpedData.append(fftData[i].tolist() + [correctLabels[i]])
+
+np.savetxt("data.csv",toBeDumpedData,delimiter=",")
+print("Saved csv file")
+
+# KMeansClustering()
+# KNearestNeighbors()
