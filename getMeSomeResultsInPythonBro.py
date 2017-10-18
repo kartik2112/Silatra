@@ -14,6 +14,10 @@ from sklearn.model_selection import KFold
 from sklearn.preprocessing import LabelEncoder
 from sklearn.pipeline import Pipeline
 
+epochs_num=100
+batch=128
+verbose_stat=0
+
 def dumpData():
 	global fftData,correctLabels
 	toBeDumpedData = []
@@ -104,11 +108,19 @@ def KerasDeepLearning():
 	encoded_Y = encoder.transform(Y)
 	# convert integers to dummy variables (i.e. one hot encoded)
 	dummy_y = np_utils.to_categorical(encoded_Y)
-	estimator = KerasClassifier(build_fn=baseline_model, epochs=100, batch_size=128, verbose=1)
+	estimator = KerasClassifier(build_fn=baseline_model, epochs=epochs_num, batch_size=batch, verbose=verbose_stat)
 	print("Estimator created.")
 	kfold = KFold(n_splits=10, shuffle=True, random_state=seed)
 	results = cross_val_score(estimator, X, dummy_y, cv=kfold)
 	print("\nBaseline: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+	print("Saving Model.")
+	toBeSavedModel=baseline_model()
+	toBeSavedModel.fit(X,dummy_y,epochs=epochs_num,batch_size=batch,verbose=1)
+	model_json = toBeSavedModel.to_json()
+	with open("MLModels/KerasModel.json", "w") as json_file:
+		json_file.write(model_json)
+	toBeSavedModel.save_weights("MLModels/KerasModel.h5")
+	print("Saved model to disk")
 
 # Initializers
 dataInds = [1,2,3,4,5]
@@ -127,7 +139,7 @@ for folderNo in dataInds:
 	ctr = 0
 	for line in f1:
 		data = np.fromstring(line,dtype = float, sep = ',')
-		fftData.append(fft(data)[:noOfDescriptors])  # FFT
+		fftData.append(fft(data))  # FFT
 		ctr += 1
 	noOfSamples.append(ctr)
 	#print(fftData)
@@ -144,4 +156,4 @@ dumpData()
 # KMeansClustering()
 # KNearestNeighbors()
 # SVMLearning()
-KerasDeepLearning()
+# KerasDeepLearning()
