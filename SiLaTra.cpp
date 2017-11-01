@@ -13,6 +13,8 @@
 #include <ctime>
 #include <experimental/filesystem>
 
+#define OVERALL 0
+
 using namespace std;
 using namespace cv;
 namespace fs = std::experimental::filesystem;
@@ -21,9 +23,17 @@ void processFrame(Mat& image);
 
 string subDirName;
 
+string tempTimesLabels[] = {"Overall"};
+
+vector<string> timesLabels(tempTimesLabels, tempTimesLabels + sizeof(tempTimesLabels)/sizeof(string));
+vector<double> maxTimes(timesLabels.size(),0);
+vector<double> minTimes(timesLabels.size(),10000);
+vector<double> avgTimes(timesLabels.size(),0);
+double noOfFramesCollected = 0;
+
+
 int main(int argc, char** argv){
 
-	double maxTimeTaken=0,minTimeTaken=10000;
 	
 	if(argc==3 && strcmp(argv[1],"-img")==0){	
 		subDirName = string(argv[2]);
@@ -38,8 +48,8 @@ int main(int argc, char** argv){
 		processFrame(image);		
 	
 		double timeTaken=(getTickCount()-(double)startTime)/getTickFrequency();
-		maxTimeTaken=timeTaken>maxTimeTaken?timeTaken:maxTimeTaken;
-		minTimeTaken=timeTaken<minTimeTaken?timeTaken:minTimeTaken;
+		maxTimes[OVERALL]=timeTaken>maxTimes[OVERALL]?timeTaken:maxTimes[OVERALL];
+		minTimes[OVERALL]=timeTaken<minTimes[OVERALL]?timeTaken:minTimes[OVERALL];
 		
 		waitKey(0);
 	}
@@ -65,8 +75,8 @@ int main(int argc, char** argv){
 			processFrame(image);		
 		
 			double timeTaken=(getTickCount()-(double)startTime)/getTickFrequency();
-			maxTimeTaken=timeTaken>maxTimeTaken?timeTaken:maxTimeTaken;
-			minTimeTaken=timeTaken<minTimeTaken?timeTaken:minTimeTaken;
+			maxTimes[OVERALL]=timeTaken>maxTimes[OVERALL]?timeTaken:maxTimes[OVERALL];
+			minTimes[OVERALL]=timeTaken<minTimes[OVERALL]?timeTaken:minTimes[OVERALL];
 		}
 	}
 	else{
@@ -102,26 +112,34 @@ int main(int argc, char** argv){
 			if(!image.data) continue;
 		
 			processFrame(image);			
-		
+			
+
+			noOfFramesCollected++;
 			double timeTaken=(getTickCount()-(double)startTime)/getTickFrequency();
-			maxTimeTaken=timeTaken>maxTimeTaken?timeTaken:maxTimeTaken;
-			minTimeTaken=timeTaken<minTimeTaken?timeTaken:minTimeTaken;
+			maxTimes[OVERALL] = timeTaken > maxTimes[OVERALL] ? timeTaken : maxTimes[OVERALL];
+			minTimes[OVERALL] = timeTaken < minTimes[OVERALL] ? timeTaken : minTimes[OVERALL];
+			avgTimes[OVERALL] = avgTimes[OVERALL] * ((noOfFramesCollected-1)/noOfFramesCollected) + timeTaken/noOfFramesCollected;
+
 			
 			if(waitKey(20)=='q') break;
 			if(argc==3 && waitKey(30)=='c'){
 				imwrite(trainingImagesFolderPath+"/"+to_string(imgNo)+".png",image);
 				imgNo++;
 			}
+
 		}
 	
 		
 	
 	}
 	
-	
-	cout<<"Maximum time taken by one frame processing is "<<maxTimeTaken<<"s"<<endl;
-	cout<<"Minimum time taken by one frame processing is "<<minTimeTaken<<"s"<<endl;
-	
+	cout<<"Times for "<<noOfFramesCollected<<" frames:"<<endl;
+	for(int i=0;i<timesLabels.size();i++){
+		cout<<timesLabels[i]<<":"<<endl;
+		cout<<"     Min Time: "<<minTimes[i]<<"s"<<endl;
+		cout<<"     Avg Time: "<<avgTimes[i]<<"s"<<endl;
+		cout<<"     Max Time: "<<maxTimes[i]<<"s"<<endl;
+	}
 		
 	
 	return 0;

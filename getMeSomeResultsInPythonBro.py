@@ -112,7 +112,7 @@ def KerasDeepLearning():
 
 # Initializers
 dataInds = [1,2,3,4,5]
-noOfDescriptors = 10
+noOfDescriptors = 30
 noOfSamples = []
 fftData=[]
 
@@ -142,6 +142,6 @@ print(fftData)
 dumpData()
 
 # KMeansClustering()
-# KNearestNeighbors()
+KNearestNeighbors()
 # SVMLearning()
-KerasDeepLearning()
+# KerasDeepLearning()

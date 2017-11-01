@@ -1,3 +1,14 @@
+/**
+* This file holds the code for interacting 
+* with the RTree data structures created in 
+* libspatialindex library
+* Code referenced from 
+* https://github.com/libspatialindex/libspatialindex/wiki/4.-Nearest-neighbour-search
+* Class names and member function names found 
+* from documentation located at
+* http://libspatialindex.github.io/doxygen/index.html
+*/
+
 #include <iostream>
 #include <spatialindex/capi/sidx_api.h>
 #include <spatialindex/capi/sidx_impl.h>
@@ -30,9 +41,9 @@ Index* createIndex()
 
 	// check index is ok
 	if (!idx->index().isIndexValid())
-		throw "Failed to create valid index";
+		throw "Failed to create valid R-Tree index";
 	else
-		cout << "created index" << endl;
+		cout << "created R-Tree index" << endl;
 
 	return idx;
 }
@@ -60,15 +71,45 @@ void addPoint(Index* idx,double lat,double lon, int64_t id)
 
 }
 
+
+// remove a Point to index.
+void deletePoint(Index* idx,double lat,double lon, int64_t id)
+{
+	// create array with lat/lon points
+	double coords[] = {lat, lon};
+
+	// shapes can also have anobject associated with them but we'll leave that for the moment.
+	uint8_t* pData = 0;
+	uint32_t nDataLength = 0;
+
+	// create shape
+	SpatialIndex::IShape* shape = 0;
+	shape = new SpatialIndex::Point(coords, 2);
+
+	// insert into index along with the an object and an ID
+	idx->index().deleteData(*shape,id);
+
+	cout << "Point " << id << " deleted from index." << endl;
+
+	delete shape;
+
+}
+
+/* 
+This function is used to get the nearest points to the provided point
+Here a square region around this point is considered for 
+finding out nearest points
+*/
 std::vector<SpatialIndex::IData*>* getNearest(Index* idx,double lat,double lon)
 {
-    double coordsLow[] = {lat-15,lon-15};
-    double coordsHigh[] = {lat+15,lon+15};
-
+    int sizeOfRectBy2 = 15;
+    double coordsLow[] = {lat-sizeOfRectBy2,lon-sizeOfRectBy2};
+    double coordsHigh[] = {lat+sizeOfRectBy2,lon+sizeOfRectBy2};
+    cout<<"Searching for points in {"<<coordsLow[0]<<","<<coordsLow[1]<<"} to {"<<coordsHigh[0]<<","<<coordsHigh[1]<<"}"<<endl;
 	// get a visitor object and a point from which to search
     ObjVisitor* visitor = new ObjVisitor;
     
-	// get nearesr maxResults shapes form index    
+	// get nearest maxResults shapes from index    
     SpatialIndex::Region* reg = new SpatialIndex::Region(coordsLow,coordsHigh,2);
     idx->index().intersectsWithQuery(*reg,*visitor);
 
@@ -78,7 +119,7 @@ std::vector<SpatialIndex::IData*>* getNearest(Index* idx,double lat,double lon)
 
 	// get actual results
 	std::vector<SpatialIndex::IData*>& results = visitor->GetResults();
-	// an empty vector that wewill copt the results to
+	// an empty vector that we will copy the results to
 	vector<SpatialIndex::IData*>* resultsCopy = new vector<SpatialIndex::IData*>();
 
 	// copy the Items into the newly allocated vector array
@@ -90,7 +131,7 @@ std::vector<SpatialIndex::IData*>* getNearest(Index* idx,double lat,double lon)
 		resultsCopy->push_back(dynamic_cast<SpatialIndex::IData*>(results[i]->clone()));
 	}
 
-	delete r;
+	delete reg;
 	delete visitor;
 	cout << "found " << nResultCount << " results." << endl;
 
@@ -99,16 +140,16 @@ std::vector<SpatialIndex::IData*>* getNearest(Index* idx,double lat,double lon)
 
 int main(int argc, char* argv[])
 {
-	// initalise Indexpointer
+	// initalise Index pointer
 	Index* idx = createIndex();
     
     // add some points
     addPoint(idx,10,10,1); // buckingham palace
     addPoint(idx,20,20,2); // tower bridge
     addPoint(idx,15,15,3); // hyde park
-
+    deletePoint(idx,15,15,3);
     // get nearest two locations to the royal albert hall
-    std::vector<SpatialIndex::IData*>* results = getNearest(idx,51.5009157,-0.1773691,2);
+    std::vector<SpatialIndex::IData*>* results = getNearest(idx,0,0);
     
     // for each item
 	for (SpatialIndex::IData* &item : (*results))
