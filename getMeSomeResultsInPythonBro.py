@@ -14,11 +14,18 @@ from sklearn.model_selection import KFold
 from sklearn.preprocessing import LabelEncoder
 from sklearn.pipeline import Pipeline
 
+#For plotting parallel coordinates
+from pandas.plotting import parallel_coordinates
+import matplotlib.pyplot as plt
+#import pandas as pd
+
+
 # Initializers
 dataInds = [1,2,3,4,5]
 noOfDescriptors = 30
 noOfSamples = []
 fftData=[]
+storeAsLabelledFeaturesFile = True
 
 #Initializers forSVMLearning
 epochs_num=100
@@ -30,11 +37,23 @@ def dumpData():
 	toBeDumpedData = []
 
 	for i in range(len(fftData)):
-		# toBeDumpedData.append(fftData[i].tolist() + [correctLabels[i]])      ##### Use this statement if you want to store the classes along with the descriptors data
-		toBeDumpedData.append(fftData[i].tolist())							   ##### Use this statement if you DO NOT want to store the classes along with the descriptors data
+		if storeAsLabelledFeaturesFile==True:
+			toBeDumpedData.append(fftData[i].tolist() + [correctLabels[i]])      ##### Use this statement if you want to store the classes along with the descriptors data
+		else:
+			toBeDumpedData.append(fftData[i].tolist())							 ##### Use this statement if you DO NOT want to store the classes along with the descriptors data
 
-	np.savetxt("data.csv",toBeDumpedData, delimiter=",")
+	if storeAsLabelledFeaturesFile==True:
+		header_line = (','.join( str(x) for x in range(1,noOfDescriptors+1) )+",Class")
+		np.savetxt("data.csv",toBeDumpedData, delimiter=",",header = header_line , comments = '' )
+	else:
+		np.savetxt("data.csv",toBeDumpedData, delimiter=",")
 	print("Saved csv file")
+
+def plotFeatures():
+	plt.figure()
+	data123 = pd.read_csv('data.csv')
+	parallel_coordinates(data123, 'Class')
+	plt.show()
 
 def KMeansClustering():
 	global noOfSamples,fftData,dataInds
@@ -134,7 +153,7 @@ def KerasDeepLearning():
 
 
 
-########## Main flow starts here #################
+############# Main flow starts here #################
 
 # Travers through csv files and append CCDC Data
 for folderNo in dataInds:
@@ -165,3 +184,7 @@ dumpData()
 KNearestNeighbors()
 # SVMLearning()
 # KerasDeepLearning()
+
+
+plotFeatures()   # Keep this as the last statement if uncommented. Because this is a blocking operation
+# Until you close the corresponding window created, program wont proceed any further.
