@@ -14,6 +14,12 @@
 #include <fstream>
 #include <cmath>
 
+#define OVERALL 0
+#define SKIN_COLOR_EXTRACTION 1
+#define MORPHOLOGY_OPERATIONS 2
+#define MODIFIED_IMAGE_GENERATION 3
+#define HAND_CONTOURS_GENERATION 4
+
 using namespace std;
 using namespace cv;
 
@@ -33,12 +39,12 @@ int morphCloseNoOfIterations=3;
 int kernSize=2;
 int thresh=100;
 int contourDistThreshold = 30;
+double startTime;
 
 extern int lH,lS,lV,hH,hS,hV;
 extern string subDirName;
 
-extern double maxTimes[],minTimes[],avgTimes[];
-extern string timesLabels[];
+extern vector<double> frameStepsTimes;
 
 
 
@@ -46,7 +52,7 @@ Mat getMyHand(Mat& imageOG){
 
 	displayHandDetectionTrackbarsIfNeeded(imageOG);
 	
-		
+	startTime=(double)getTickCount();  //---Timing related part
 	
 	imshow("Original Image",imageOG);
 	Mat image,imageHSV,imageYCrCb;
@@ -75,6 +81,8 @@ Mat getMyHand(Mat& imageOG){
 	
 	Mat dst=extractSkinColorRange(image,imageHSV,imageYCrCb);
 	
+	frameStepsTimes[ SKIN_COLOR_EXTRACTION ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
+	startTime=(double)getTickCount();  //---Timing related part
 	
 	Mat morphOpenElement = getStructuringElement(MORPH_CROSS,Size(morphOpenKernSize*2+1,morphOpenKernSize*2+1),Point(morphOpenKernSize,morphOpenKernSize));
 	Mat morphCloseElement = getStructuringElement(MORPH_CROSS,Size(morphCloseKernSize*2+1,morphCloseKernSize*2+1),Point(morphCloseKernSize,morphCloseKernSize));
@@ -118,13 +126,22 @@ Mat getMyHand(Mat& imageOG){
 	dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
 	//dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
 
+	frameStepsTimes[ MORPHOLOGY_OPERATIONS ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
+	startTime=(double)getTickCount();  //---Timing related part
+
 	Mat maskedImg;
 	cvtColor(dstEroded,dstEroded,CV_GRAY2BGR);
 	bitwise_and(dstEroded,imageOG,maskedImg);
 	
 	Mat finImg=combineExtractedWithMain(maskedImg,image);
+
+	frameStepsTimes[ MODIFIED_IMAGE_GENERATION ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
+	startTime=(double)getTickCount();  //---Timing related part
 	
 	Mat contouredImg=findHandContours(finImg);
+
+	frameStepsTimes[ HAND_CONTOURS_GENERATION ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
+	startTime=(double)getTickCount();  //---Timing related part
 	
 	/// Show in a window  
 	imshow("Contours", contouredImg );	

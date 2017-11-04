@@ -14,21 +14,27 @@
 #include <experimental/filesystem>
 
 #define OVERALL 0
+#define SKIN_COLOR_EXTRACTION 1
+#define MORPHOLOGY_OPERATIONS 2
+#define MODIFIED_IMAGE_GENERATION 3
+#define HAND_CONTOURS_GENERATION 4
 
 using namespace std;
 using namespace cv;
 namespace fs = std::experimental::filesystem;
 
 void processFrame(Mat& image);
+void maintainTrackOfTimings();
 
 string subDirName;
 
-string tempTimesLabels[] = {"Overall"};
+string tempTimesLabels[] = {"Overall","  Skin Color Extraction","  Morphology Operations","  Modified Image Generation","  Hand Contours Generation"};
 
 vector<string> timesLabels(tempTimesLabels, tempTimesLabels + sizeof(tempTimesLabels)/sizeof(string));
 vector<double> maxTimes(timesLabels.size(),0);
 vector<double> minTimes(timesLabels.size(),10000);
 vector<double> avgTimes(timesLabels.size(),0);
+vector<double> frameStepsTimes(timesLabels.size());
 double noOfFramesCollected = 0;
 
 
@@ -43,13 +49,12 @@ int main(int argc, char** argv){
 		
 		Mat image = imread(argv[2],1);
 		
-		double startTime=(double)getTickCount();
+		double startTime=(double)getTickCount();  //---Timing related part
 		
 		processFrame(image);		
 	
-		double timeTaken=(getTickCount()-(double)startTime)/getTickFrequency();
-		maxTimes[OVERALL]=timeTaken>maxTimes[OVERALL]?timeTaken:maxTimes[OVERALL];
-		minTimes[OVERALL]=timeTaken<minTimes[OVERALL]?timeTaken:minTimes[OVERALL];
+		frameStepsTimes[ OVERALL ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
+		maintainTrackOfTimings();
 		
 		waitKey(0);
 	}
@@ -70,13 +75,12 @@ int main(int argc, char** argv){
 			cout<<"Processing "<<files[i]<<endl;
 			Mat image = imread(files[i],1);
 			
-			double startTime=(double)getTickCount();
+			double startTime=(double)getTickCount();   //---Timing related part
 			
 			processFrame(image);		
 		
-			double timeTaken=(getTickCount()-(double)startTime)/getTickFrequency();
-			maxTimes[OVERALL]=timeTaken>maxTimes[OVERALL]?timeTaken:maxTimes[OVERALL];
-			minTimes[OVERALL]=timeTaken<minTimes[OVERALL]?timeTaken:minTimes[OVERALL];
+			frameStepsTimes[ OVERALL ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
+			maintainTrackOfTimings();
 		}
 	}
 	else{
@@ -107,18 +111,15 @@ int main(int argc, char** argv){
 			Mat image;
 			cap>>image;
 		
-			double startTime=(double)getTickCount();
+			double startTime=(double)getTickCount();   //---Timing related part
 			
 			if(!image.data) continue;
 		
 			processFrame(image);			
 			
 
-			noOfFramesCollected++;
-			double timeTaken=(getTickCount()-(double)startTime)/getTickFrequency();
-			maxTimes[OVERALL] = timeTaken > maxTimes[OVERALL] ? timeTaken : maxTimes[OVERALL];
-			minTimes[OVERALL] = timeTaken < minTimes[OVERALL] ? timeTaken : minTimes[OVERALL];
-			avgTimes[OVERALL] = avgTimes[OVERALL] * ((noOfFramesCollected-1)/noOfFramesCollected) + timeTaken/noOfFramesCollected;
+			frameStepsTimes[ OVERALL ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
+			maintainTrackOfTimings();
 
 			
 			if(waitKey(20)=='q') break;
@@ -133,7 +134,7 @@ int main(int argc, char** argv){
 	
 	}
 	
-	cout<<"Times for "<<noOfFramesCollected<<" frames:"<<endl;
+	cout<<endl<<endl<<"Times for "<<noOfFramesCollected<<" frames:"<<endl;
 	for(int i=0;i<timesLabels.size();i++){
 		cout<<timesLabels[i]<<":"<<endl;
 		cout<<"     Min Time: "<<minTimes[i]<<"s"<<endl;
@@ -143,6 +144,15 @@ int main(int argc, char** argv){
 		
 	
 	return 0;
+}
+
+void maintainTrackOfTimings(){
+	noOfFramesCollected++;
+	for(int i=0;i<timesLabels.size();i++){
+		maxTimes[i] = frameStepsTimes[i] > maxTimes[i] ? frameStepsTimes[i] : maxTimes[i];   //---Timing related part
+		minTimes[i] = frameStepsTimes[i] < minTimes[i] ? frameStepsTimes[i] : minTimes[i];   //---Timing related part
+		avgTimes[i] = avgTimes[i] * ((noOfFramesCollected-1)/noOfFramesCollected) + frameStepsTimes[i]/noOfFramesCollected;   //---Timing related part
+	}
 }
 
 void processFrame(Mat& image){

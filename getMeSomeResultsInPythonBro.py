@@ -14,6 +14,13 @@ from sklearn.model_selection import KFold
 from sklearn.preprocessing import LabelEncoder
 from sklearn.pipeline import Pipeline
 
+# Initializers
+dataInds = [1,2,3,4,5]
+noOfDescriptors = 30
+noOfSamples = []
+fftData=[]
+
+#Initializers forSVMLearning
 epochs_num=100
 batch=128
 verbose_stat=0
@@ -23,9 +30,10 @@ def dumpData():
 	toBeDumpedData = []
 
 	for i in range(len(fftData)):
-		toBeDumpedData.append(fftData[i].tolist() + [correctLabels[i]])
+		# toBeDumpedData.append(fftData[i].tolist() + [correctLabels[i]])      ##### Use this statement if you want to store the classes along with the descriptors data
+		toBeDumpedData.append(fftData[i].tolist())							   ##### Use this statement if you DO NOT want to store the classes along with the descriptors data
 
-	np.savetxt("data.csv",toBeDumpedData,delimiter=",")
+	np.savetxt("data.csv",toBeDumpedData, delimiter=",")
 	print("Saved csv file")
 
 def KMeansClustering():
@@ -122,11 +130,11 @@ def KerasDeepLearning():
 	toBeSavedModel.save_weights("MLModels/KerasModel.h5")
 	print("Saved model to disk")
 
-# Initializers
-dataInds = [1,2,3,4,5]
-noOfDescriptors = 30
-noOfSamples = []
-fftData=[]
+
+
+
+
+########## Main flow starts here #################
 
 # Travers through csv files and append CCDC Data
 for folderNo in dataInds:
@@ -139,7 +147,7 @@ for folderNo in dataInds:
 	ctr = 0
 	for line in f1:
 		data = np.fromstring(line,dtype = float, sep = ',')
-		fftData.append(fft(data))  # FFT
+		fftData.append(fft(data)[0:noOfDescriptors])  # FFT
 		ctr += 1
 	noOfSamples.append(ctr)
 	#print(fftData)
