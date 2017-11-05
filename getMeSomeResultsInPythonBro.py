@@ -14,6 +14,7 @@ from sklearn.model_selection import KFold
 from sklearn.preprocessing import LabelEncoder
 from sklearn.pipeline import Pipeline
 
+
 #For plotting parallel coordinates
 from pandas.plotting import parallel_coordinates
 import matplotlib.pyplot as plt
@@ -28,6 +29,7 @@ fftData=[]
 storeAsLabelledFeaturesFile = True
 
 #Initializers forSVMLearning
+
 epochs_num=100
 batch=128
 verbose_stat=0
