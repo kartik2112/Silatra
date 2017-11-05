@@ -13,17 +13,33 @@
 #include <ctime>
 #include <experimental/filesystem>
 
+#define OVERALL 0
+#define SKIN_COLOR_EXTRACTION 1
+#define MORPHOLOGY_OPERATIONS 2
+#define MODIFIED_IMAGE_GENERATION 3
+#define HAND_CONTOURS_GENERATION 4
+
 using namespace std;
 using namespace cv;
 namespace fs = std::experimental::filesystem;
 
 void processFrame(Mat& image);
+void maintainTrackOfTimings();
 
 string subDirName;
 
+string tempTimesLabels[] = {"Overall","  Skin Color Extraction","  Morphology Operations","  Modified Image Generation","  Hand Contours Generation"};
+
+vector<string> timesLabels(tempTimesLabels, tempTimesLabels + sizeof(tempTimesLabels)/sizeof(string));
+vector<double> maxTimes(timesLabels.size(),0);
+vector<double> minTimes(timesLabels.size(),10000);
+vector<double> avgTimes(timesLabels.size(),0);
+vector<double> frameStepsTimes(timesLabels.size());
+double noOfFramesCollected = 0;
+
+
 int main(int argc, char** argv){
 
-	double maxTimeTaken=0,minTimeTaken=10000;
 	
 	if(argc==3 && strcmp(argv[1],"-img")==0){	
 		subDirName = string(argv[2]);
@@ -33,13 +49,12 @@ int main(int argc, char** argv){
 		
 		Mat image = imread(argv[2],1);
 		
-		double startTime=(double)getTickCount();
+		double startTime=(double)getTickCount();  //---Timing related part
 		
 		processFrame(image);		
 	
-		double timeTaken=(getTickCount()-(double)startTime)/getTickFrequency();
-		maxTimeTaken=timeTaken>maxTimeTaken?timeTaken:maxTimeTaken;
-		minTimeTaken=timeTaken<minTimeTaken?timeTaken:minTimeTaken;
+		frameStepsTimes[ OVERALL ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
+		maintainTrackOfTimings();
 		
 		waitKey(0);
 	}
@@ -60,13 +75,12 @@ int main(int argc, char** argv){
 			cout<<"Processing "<<files[i]<<endl;
 			Mat image = imread(files[i],1);
 			
-			double startTime=(double)getTickCount();
+			double startTime=(double)getTickCount();   //---Timing related part
 			
 			processFrame(image);		
 		
-			double timeTaken=(getTickCount()-(double)startTime)/getTickFrequency();
-			maxTimeTaken=timeTaken>maxTimeTaken?timeTaken:maxTimeTaken;
-			minTimeTaken=timeTaken<minTimeTaken?timeTaken:minTimeTaken;
+			frameStepsTimes[ OVERALL ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
+			maintainTrackOfTimings();
 		}
 	}
 	else{
@@ -97,34 +111,48 @@ int main(int argc, char** argv){
 			Mat image;
 			cap>>image;
 		
-			double startTime=(double)getTickCount();
+			double startTime=(double)getTickCount();   //---Timing related part
 			
 			if(!image.data) continue;
 		
 			processFrame(image);			
-		
-			double timeTaken=(getTickCount()-(double)startTime)/getTickFrequency();
-			maxTimeTaken=timeTaken>maxTimeTaken?timeTaken:maxTimeTaken;
-			minTimeTaken=timeTaken<minTimeTaken?timeTaken:minTimeTaken;
+			
+
+			frameStepsTimes[ OVERALL ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
+			maintainTrackOfTimings();
+
 			
 			if(waitKey(20)=='q') break;
 			if(argc==3 && waitKey(30)=='c'){
 				imwrite(trainingImagesFolderPath+"/"+to_string(imgNo)+".png",image);
 				imgNo++;
 			}
+
 		}
 	
 		
 	
 	}
 	
-	
-	cout<<"Maximum time taken by one frame processing is "<<maxTimeTaken<<"s"<<endl;
-	cout<<"Minimum time taken by one frame processing is "<<minTimeTaken<<"s"<<endl;
-	
+	cout<<endl<<endl<<"Times for "<<noOfFramesCollected<<" frames:"<<endl;
+	for(int i=0;i<timesLabels.size();i++){
+		cout<<timesLabels[i]<<":"<<endl;
+		cout<<"     Min Time: "<<minTimes[i]<<"s"<<endl;
+		cout<<"     Avg Time: "<<avgTimes[i]<<"s"<<endl;
+		cout<<"     Max Time: "<<maxTimes[i]<<"s"<<endl;
+	}
 		
 	
 	return 0;
+}
+
+void maintainTrackOfTimings(){
+	noOfFramesCollected++;
+	for(int i=0;i<timesLabels.size();i++){
+		maxTimes[i] = frameStepsTimes[i] > maxTimes[i] ? frameStepsTimes[i] : maxTimes[i];   //---Timing related part
+		minTimes[i] = frameStepsTimes[i] < minTimes[i] ? frameStepsTimes[i] : minTimes[i];   //---Timing related part
+		avgTimes[i] = avgTimes[i] * ((noOfFramesCollected-1)/noOfFramesCollected) + frameStepsTimes[i]/noOfFramesCollected;   //---Timing related part
+	}
 }
 
 void processFrame(Mat& image){

@@ -14,6 +14,12 @@
 #include <fstream>
 #include <cmath>
 
+#define OVERALL 0
+#define SKIN_COLOR_EXTRACTION 1
+#define MORPHOLOGY_OPERATIONS 2
+#define MODIFIED_IMAGE_GENERATION 3
+#define HAND_CONTOURS_GENERATION 4
+
 using namespace std;
 using namespace cv;
 
@@ -33,10 +39,12 @@ int morphCloseNoOfIterations=3;
 int kernSize=2;
 int thresh=100;
 int contourDistThreshold = 30;
+double startTime;
 
 extern int lH,lS,lV,hH,hS,hV;
 extern string subDirName;
 
+extern vector<double> frameStepsTimes;
 
 
 
@@ -44,7 +52,7 @@ Mat getMyHand(Mat& imageOG){
 
 	displayHandDetectionTrackbarsIfNeeded(imageOG);
 	
-		
+	startTime=(double)getTickCount();  //---Timing related part
 	
 	imshow("Original Image",imageOG);
 	Mat image,imageHSV,imageYCrCb;
@@ -73,6 +81,8 @@ Mat getMyHand(Mat& imageOG){
 	
 	Mat dst=extractSkinColorRange(image,imageHSV,imageYCrCb);
 	
+	frameStepsTimes[ SKIN_COLOR_EXTRACTION ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
+	startTime=(double)getTickCount();  //---Timing related part
 	
 	Mat morphOpenElement = getStructuringElement(MORPH_CROSS,Size(morphOpenKernSize*2+1,morphOpenKernSize*2+1),Point(morphOpenKernSize,morphOpenKernSize));
 	Mat morphCloseElement = getStructuringElement(MORPH_CROSS,Size(morphCloseKernSize*2+1,morphCloseKernSize*2+1),Point(morphCloseKernSize,morphCloseKernSize));
@@ -116,13 +126,22 @@ Mat getMyHand(Mat& imageOG){
 	dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
 	//dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
 
+	frameStepsTimes[ MORPHOLOGY_OPERATIONS ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
+	startTime=(double)getTickCount();  //---Timing related part
+
 	Mat maskedImg;
 	cvtColor(dstEroded,dstEroded,CV_GRAY2BGR);
 	bitwise_and(dstEroded,imageOG,maskedImg);
 	
 	Mat finImg=combineExtractedWithMain(maskedImg,image);
+
+	frameStepsTimes[ MODIFIED_IMAGE_GENERATION ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
+	startTime=(double)getTickCount();  //---Timing related part
 	
 	Mat contouredImg=findHandContours(finImg);
+
+	frameStepsTimes[ HAND_CONTOURS_GENERATION ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
+	startTime=(double)getTickCount();  //---Timing related part
 	
 	/// Show in a window  
 	imshow("Contours", contouredImg );	
@@ -178,18 +197,18 @@ Mat findHandContours(Mat& src){
 	Canny( src_gray, canny_output, thresh, thresh*2, 3 );
 	
 	Mat morphCloseElement = getStructuringElement(MORPH_ELLIPSE,Size(5*2+1,5*2+1),Point(5,5));
-	morphologyEx(canny_output,canny_output,MORPH_CLOSE,morphCloseElement);
+	//morphologyEx(canny_output,canny_output,MORPH_CLOSE,morphCloseElement);
 	
 	imshow("Canny",canny_output);
 	/// Find contours
-	findContours( canny_output, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
+	findContours( canny_output, contours1, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
 	
-	//contours.resize(contours1.size());
+	contours.resize(contours1.size());
 	
 	for( size_t i = 0; i< contours.size(); i++ )
 	{	
-		cout<<"Contour "<<(i+1)<<" size: "<<contours[i].size()<<":"<<endl;
-		for(auto p:contours[i]){
+		cout<<"Contour "<<(i+1)<<" size: "<<contours1[i].size()<<":"<<endl;
+		for(auto p:contours1[i]){
 			cout<<"("<<p.x<<","<<p.y<<")"<<", ";
 		}
 		cout<<endl<<endl;
@@ -197,10 +216,10 @@ Mat findHandContours(Mat& src){
 	
 	/// Draw contours
 	Mat drawingOGContours = Mat::zeros( canny_output.size(), CV_8UC3 );
-	for( int i = 0; i< contours.size(); i++ )
+	for( int i = 0; i< contours1.size(); i++ )
 	{
 		Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-		drawContours( drawingOGContours, contours, i, color, 1, 8, hierarchy, 0, Point() );
+		drawContours( drawingOGContours, contours1, i, color, 1, 8, hierarchy, 0, Point() );
 		//cout<<contours[i].size()<<endl;
 	}
 	imshow("OG Contours",drawingOGContours);
@@ -211,9 +230,9 @@ Mat findHandContours(Mat& src){
 	
 	//reduceClusterPoints( contours );
 
-	for( size_t i = 0; i< contours.size(); i++ )
+	for( size_t i = 0; i< contours1.size(); i++ )
 	{		
-		approxPolyDP(Mat(contours[i]),contours[i],10,true);
+		approxPolyDP(Mat(contours1[i]),contours[i],3,true);
 	}
 	
    	vector<vector<Point> >hull( contours.size() );
@@ -307,6 +326,14 @@ Mat findHandContours(Mat& src){
 	}
 	csvFile << "\n";
 	csvFile.close();
+
+
+
+	contours.clear();
+	contours.shrink_to_fit();
+
+	contours1.clear();
+	contours1.shrink_to_fit();
 
   	return drawing;
 }
