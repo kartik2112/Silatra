@@ -1,6 +1,0 @@
-cmake_minimum_required(VERSION 2.8)
-project( SiLaTra )
-find_package( OpenCV REQUIRED )
-include_directories( ${OpenCV_INCLUDE_DIRS} )
-add_executable( SiLaTra SiLaTra.cpp ./GetMyHand/handDetection.cpp ./GetMyHand/skinColorSegmentation.cpp ./GetMyHand/trackBarHandling.cpp)
-target_link_libraries( SiLaTra ${OpenCV_LIBS} stdc++fs)
