@@ -151,7 +151,6 @@ def KerasDeepLearning():
 
 
 
-
 ############# Main flow starts here #################
 
 # Travers through csv files and append CCDC Data
