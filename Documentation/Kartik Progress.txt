@@ -1,0 +1,9 @@
+28 August 2017 12:12 PM:
+	Created a training data set for digits 1 through 5.
+	No of samples for digit 1: 115
+	No of samples for digit 2: 119
+	No of samples for digit 3: 156
+	No of samples for digit 4: 213
+	No of samples for digit 5: 314
+
+
