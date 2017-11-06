@@ -3,6 +3,8 @@
 * The functions specific to each phase must be defined in its own file
 */
 
+#include <python3.5/Python.h>
+
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
@@ -50,10 +52,17 @@ vector<double> avgTimes(timesLabels.size(),0);
 vector<double> frameStepsTimes(timesLabels.size());
 double noOfFramesCollected = 0;
 
+char** args;
+int args_c;
+
 
 int main(int argc, char** argv){
 
-	
+	args = argv;
+	args_c = argc;
+
+	Py_Initialize();
+
 	if(argc==3 && strcmp(argv[1],"-img")==0){	
 		subDirName = string(argv[2]);
 		subDirName = "./CCDC-Data/"+subDirName.substr(0,subDirName.find_last_of("/"));
@@ -120,7 +129,7 @@ int main(int argc, char** argv){
 		}	
 		
 		prepareWindows();
-		
+
 		while(true){
 			Mat image;
 			cap>>image;
@@ -155,6 +164,8 @@ int main(int argc, char** argv){
 		cout<<"        Avg Time: "<<avgTimes[i]<<"s"<<endl;
 		cout<<"        Max Time: "<<maxTimes[i]<<"s"<<endl;
 	}
+
+	Py_Finalize();
 		
 	
 	return 0;

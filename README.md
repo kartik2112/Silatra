@@ -47,6 +47,8 @@ But for simplicity the commands have been wrapped into a single file builder.sh
   To store the image click key `c` while the program is executing.
   
   To stop the program executuon, click `q`
+
+* You can classify the current image using the model specified in the code. For `-img`, `-AllImgs` modes,  by default you can see the classification. For `-cap` and normal mode, you can see the classification    for a particular image frame by hitting `m` (Currently intended to mean Magic). But this output will be seen amongst a continuous stream of contour data. So you need to scroll up to see this classification.
 	
 * Using the csv files (containing distances), you can classify them by running `python3 getMeSomeResultsInPythonBro.py`
 

@@ -1,3 +1,7 @@
+# Reference for pickle:
+#    https://machinelearningmastery.com/save-load-machine-learning-models-python-scikit-learn/
+
+
 import numpy as np
 from scipy.fftpack import fft, ifft
 from sklearn.neighbors import KNeighborsClassifier

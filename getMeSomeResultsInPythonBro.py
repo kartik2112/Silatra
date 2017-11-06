@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt
 
 
 # Initializers
-dataInds = [1,4,5]
+dataInds = [1,2,3,4,5]
 noOfDescriptors = 10
 noOfSamples = []
 fftData=[]

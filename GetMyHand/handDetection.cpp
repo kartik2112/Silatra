@@ -55,6 +55,9 @@ extern string subDirName;
 
 extern vector<double> frameStepsTimes;
 
+extern char** args;
+extern int args_c;
+
 
 /*
 This is the main entry point function of this file
@@ -102,29 +105,29 @@ Mat getMyHand(Mat& imageOG){
 	Mat morphCloseElement = getStructuringElement(MORPH_CROSS,Size(morphCloseKernSize*2+1,morphCloseKernSize*2+1),Point(morphCloseKernSize,morphCloseKernSize));
 	Mat dstEroded;
 	
-	erode(dst,dstEroded,morphOpenElement);
-/**/	imshow("Round 1 - Eroded Segment - MorphologyEx - MORPH_OPEN",dstEroded);
-	dilate(dstEroded,dstEroded,morphOpenElement);
-/**/	imshow("Round 1 - Dilated Segment - MorphologyEx - MORPH_OPEN",dstEroded);
+// 	erode(dst,dstEroded,morphOpenElement);
+// /**/	imshow("Round 1 - Eroded Segment - MorphologyEx - MORPH_OPEN",dstEroded);
+// 	dilate(dstEroded,dstEroded,morphOpenElement);
+// /**/	imshow("Round 1 - Dilated Segment - MorphologyEx - MORPH_OPEN",dstEroded);
 	
-	dilate(dstEroded,dstEroded,morphOpenElement);
-/**/	imshow("Round 2 - Dilated Segment - MorphologyEx - MORPH_CLOSE",dstEroded);
-	erode(dstEroded,dstEroded,morphOpenElement);
-/**/	imshow("Round 2 - Eroded Segment - MorphologyEx - MORPH_CLOSE",dstEroded);
+// 	dilate(dstEroded,dstEroded,morphOpenElement);
+// /**/	imshow("Round 2 - Dilated Segment - MorphologyEx - MORPH_CLOSE",dstEroded);
+// 	erode(dstEroded,dstEroded,morphOpenElement);
+// /**/	imshow("Round 2 - Eroded Segment - MorphologyEx - MORPH_CLOSE",dstEroded);
 	
 	/* 
 	This will act make white areas smaller then make them larger
 	i.e. this will do dilate(erode(img))
 	Thus removing noise.
 	 */
-	//morphologyEx(dst,dstEroded,MORPH_OPEN,morphOpenElement);
+	morphologyEx(dst,dstEroded,MORPH_OPEN,morphOpenElement);
 	
 	/* 
 	This will act make white areas larger then make them smaller
 	i.e. this will do erode(dilate(img))
 	Thus filling out missing spots in big white areas.
 	 */
-	//morphologyEx(dstEroded,dstEroded,MORPH_CLOSE,morphCloseElement);
+	morphologyEx(dstEroded,dstEroded,MORPH_CLOSE,morphCloseElement);
 	
 	/* This will enlarge white areas */
 	dilate(dstEroded,dstEroded,morphCloseElement,Point(-1,-1),morphCloseNoOfIterations);
@@ -242,10 +245,10 @@ Mat findHandContours(Mat& src){
 	for( size_t i = 0; i< contours.size(); i++ )
 	{	
 		cout<<"Contour "<<(i+1)<<" size: "<<contours1[i].size()<<":"<<endl;
-		for(auto p:contours1[i]){
-			cout<<"("<<p.x<<","<<p.y<<")"<<", ";
-		}
-		cout<<endl<<endl;
+		// for(auto p:contours1[i]){
+		// 	cout<<"("<<p.x<<","<<p.y<<")"<<", ";
+		// }
+		// cout<<endl<<endl;
 	}
 	
 	/// Draw contours
@@ -311,10 +314,10 @@ Mat findHandContours(Mat& src){
 		cout<<"Contour "<<(i+1)<<" size: "<<contours[i].size()<<":"<<endl;
 		circle( drawing, contours[i][0], 4, Scalar(255,0,0), -1, 8, 0 );
 		circle( drawing, contours[i][10], 4, Scalar(255,0,0), -1, 8, 0 );
-		for(auto p:contours[i]){
-			cout<<"("<<p.x<<","<<p.y<<")"<<", ";
-		}
-		cout<<endl<<endl;
+		// for(auto p:contours[i]){
+		// 	cout<<"("<<p.x<<","<<p.y<<")"<<", ";
+		// }
+		// cout<<endl<<endl;
 	}
 	
 	double maxArea = 0;
@@ -343,7 +346,7 @@ Mat findHandContours(Mat& src){
 		
 		start = convD[i][0]; end = convD[i][1];
 		far = convD[i][2]; farDist = convD[i][3];
-		cout<<start<<","<<end<<","<<far<<","<<farDist/256.0<<endl;
+		// cout<<start<<","<<end<<","<<far<<","<<farDist/256.0<<endl;
 		if(farDist/256.0 > 70){
 			contourPoints++;
 		}
@@ -353,7 +356,7 @@ Mat findHandContours(Mat& src){
 		//circle( drawing, contours[indMaxArea][far], 4, color, -1, 8, 0 );
 	}
 	
-	cout<<contourPoints<<" Convex Defects Detected"<<endl;
+	// cout<<contourPoints<<" Convex Defects Detected"<<endl;
 	
 	
 		
@@ -384,8 +387,8 @@ Mat findHandContours(Mat& src){
 
 
 
-
-	findClassUsingPythonModels(distVector);
+	if( (args_c==3 && ( strcmp(args[1],"-img")==0 || strcmp(args[1],"-AllImgs")==0 ) ) || waitKey(30)=='m' )
+		findClassUsingPythonModels(distVector);
 
 
 
@@ -412,7 +415,10 @@ void prepareWindows(){
 }
 
 
-/* This function needs huge optimization!!!!! */
+/* 
+This function needs huge optimization!!!!! 
+Can be optimized using RTrees
+*/
 void connectContours(vector<vector<Point> > &contours){
 	
 	int ctr1=-1,ctr2=-1,ctr1PtIndex,ctr2PtIndex;
@@ -460,6 +466,10 @@ void connectContours(vector<vector<Point> > &contours){
 	//contours[0].erase(contours[0].begin()+contours[0].size()/2,contours[0].end());
 }
 
+
+/*
+Okayishly efficient but horribly innacurate for noisy intersecting contours
+*/
 void reduceClusterPoints(vector< vector< Point > > &contours){
 	int maxI = -1, max = 0;
 	for(int i = 0 ; i < contours.size() ; i++){
@@ -504,12 +514,24 @@ void findClassUsingPythonModels( vector<float> &distVector ){
 	csvFile.close();
 
 	cout<<endl<<endl<<endl<<"Python Invocation from from C++ begins here"<<endl;
+
+
+	/*
+	References for Python interfacing: 
+	Main code: https://docs.python.org/2/extending/embedding.html
+	For adding target_link_libraries in CMakeLists.txt: https://stackoverflow.com/a/21548557/5370202
+	*/
+
 	// PyRun_SimpleString("print('Python Invocation from from C++ begins here')");
 	// Py_SetProgramName();
-	Py_Initialize();
+
+
+	// Py_Initialize();   //Moved to main() of Silatra.cpp
 	FILE* file = fopen("testThisSampleInPython.py","r");
 	PyRun_SimpleFile(file,"testThisSampleInPython.py");
-	Py_Finalize();
+	// Py_Finalize();   //Moved to main() of Silatra.cpp
+	fclose(file);
+
 	cout<<"Python Invocation ends here"<<endl<<endl<<endl;
 
 }
