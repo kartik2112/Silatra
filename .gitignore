@@ -1,2 +1,8 @@
 build/*
 training-images/*
+Backups/*
+Cache/*
+CachedData/*
+GPUCache/*
+Local Storage/*
+User/*
