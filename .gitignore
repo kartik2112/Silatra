@@ -6,3 +6,7 @@ CachedData/*
 GPUCache/*
 Local Storage/*
 User/*
+KNNModelDump.sav
+MLModels/*
+Cookies
+Cookies-journal

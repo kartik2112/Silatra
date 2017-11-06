@@ -28,8 +28,8 @@ dataInds = [1,2,3,4,5]
 noOfDescriptors = 10
 noOfSamples = []
 fftData=[]
-storeAsLabelledFeaturesFile = True
-# storeAsLabelledFeaturesFile = False
+# storeAsLabelledFeaturesFile = True
+storeAsLabelledFeaturesFile = False
 
 #Initializers forSVMLearning
 
@@ -185,10 +185,10 @@ print(fftData)
 dumpData()
 
 # KMeansClustering()
-KNearestNeighbors()
-# SVMLearning()
-# KerasDeepLearning()
+# KNearestNeighbors()
+SVMLearning()
+KerasDeepLearning()
 
 
-plotFeatures()   # Keep this as the last statement if uncommented. Because this is a blocking operation
+# plotFeatures()   # Keep this as the last statement if uncommented. Because this is a blocking operation
 # Until you close the corresponding window created, program wont proceed any further.

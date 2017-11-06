@@ -6,6 +6,7 @@ import numpy as np
 
 # Loading the data
 dataframe = pd.read_csv("test_data.csv", header=None)
+# dataframe = pd.read_csv("TestSampleDistancesData.csv", header=None)
 dataset = dataframe.values
 X = dataset[:,0:10].astype(float)
 
