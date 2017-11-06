@@ -7,7 +7,13 @@ Developed by:
 * Kartik Shenoy
 * Devendra Vyavaharkar
 
-### Steps to build the file:
+### Pre-requisites
+
+* Install pytho-dev, python3-dev using following commands for invoking Python scripts from C++ files
+  `sudo apt-get install python-dev`
+  `sudo apt-get install python3-dev`
+
+### Steps to build the file
 
 Actually here cmake, make commands are used
 

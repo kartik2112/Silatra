@@ -2,6 +2,7 @@
 * This file contains the code that will dilate, erode the regions extracted based on color
 */
 
+#include <python3.5/Python.h>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
@@ -14,14 +15,21 @@
 #include <fstream>
 #include <cmath>
 
+#include <experimental/filesystem>
+
 #define OVERALL 0
 #define SKIN_COLOR_EXTRACTION 1
 #define MORPHOLOGY_OPERATIONS 2
 #define MODIFIED_IMAGE_GENERATION 3
 #define HAND_CONTOURS_GENERATION 4
+#define CONTOURS_PRE_PROCESSING 5
+#define CONTOURS_IMPROVEMENT 6
+#define CONTOURS_POST_PROCESSING 7
+#define CONTOUR_CLASSIFICATION_IN_PY 8
 
 using namespace std;
 using namespace cv;
+namespace fs = std::experimental::filesystem;
 
 Mat getMyHand(Mat& image);
 Mat findHandContours(Mat& src);
@@ -29,6 +37,7 @@ Mat combineExtractedWithMain(Mat& maskedImg,Mat& image);
 void prepareWindows();
 void connectContours(vector<vector<Point> > &contours);
 void reduceClusterPoints(vector< vector< Point > > &contours);
+void findClassUsingPythonModels( vector<float> &distVector );
 
 
 
@@ -47,7 +56,9 @@ extern string subDirName;
 extern vector<double> frameStepsTimes;
 
 
-
+/*
+This is the main entry point function of this file
+*/
 Mat getMyHand(Mat& imageOG){
 
 	displayHandDetectionTrackbarsIfNeeded(imageOG);
@@ -70,6 +81,7 @@ Mat getMyHand(Mat& imageOG){
 	
 	//blur(image,image,Size(kernSize,kernSize),Point(-1,-1));
 	GaussianBlur(imageOG,image,Size(2*kernSize+1,2*kernSize+1),0,0);
+/**/	imshow("Gaussian Blurred Image",image); 
 	//medianBlur(image,image,2*kernSize+1);
 	
 	/* Convert BGR Image into HSV, YCrCb Images */
@@ -80,6 +92,8 @@ Mat getMyHand(Mat& imageOG){
 	inRange(imageHSV,Scalar(lH,lS,lV),Scalar(hH,hS,hV),dstHSV);
 	
 	Mat dst=extractSkinColorRange(image,imageHSV,imageYCrCb);
+/**/	imshow("Skin Color Range Pixels Extracted Image (using HSV, BGR ranges)",dst); 
+	
 	
 	frameStepsTimes[ SKIN_COLOR_EXTRACTION ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
 	startTime=(double)getTickCount();  //---Timing related part
@@ -88,28 +102,33 @@ Mat getMyHand(Mat& imageOG){
 	Mat morphCloseElement = getStructuringElement(MORPH_CROSS,Size(morphCloseKernSize*2+1,morphCloseKernSize*2+1),Point(morphCloseKernSize,morphCloseKernSize));
 	Mat dstEroded;
 	
-	//erode(dst,dstEroded,element);
-	//dilate(dstEroded,dstEroded,element);
+	erode(dst,dstEroded,morphOpenElement);
+/**/	imshow("Round 1 - Eroded Segment - MorphologyEx - MORPH_OPEN",dstEroded);
+	dilate(dstEroded,dstEroded,morphOpenElement);
+/**/	imshow("Round 1 - Dilated Segment - MorphologyEx - MORPH_OPEN",dstEroded);
 	
-	//dilate(dstEroded,dstEroded,element);
-	//erode(dstEroded,dstEroded,element);
+	dilate(dstEroded,dstEroded,morphOpenElement);
+/**/	imshow("Round 2 - Dilated Segment - MorphologyEx - MORPH_CLOSE",dstEroded);
+	erode(dstEroded,dstEroded,morphOpenElement);
+/**/	imshow("Round 2 - Eroded Segment - MorphologyEx - MORPH_CLOSE",dstEroded);
 	
 	/* 
 	This will act make white areas smaller then make them larger
 	i.e. this will do dilate(erode(img))
 	Thus removing noise.
 	 */
-	morphologyEx(dst,dstEroded,MORPH_OPEN,morphOpenElement);
+	//morphologyEx(dst,dstEroded,MORPH_OPEN,morphOpenElement);
 	
 	/* 
 	This will act make white areas larger then make them smaller
 	i.e. this will do erode(dilate(img))
 	Thus filling out missing spots in big white areas.
 	 */
-	morphologyEx(dstEroded,dstEroded,MORPH_CLOSE,morphCloseElement);
+	//morphologyEx(dstEroded,dstEroded,MORPH_CLOSE,morphCloseElement);
 	
 	/* This will enlarge white areas */
 	dilate(dstEroded,dstEroded,morphCloseElement,Point(-1,-1),morphCloseNoOfIterations);
+/**/	imshow("Round 3 - Dilated Segment - to expand segmented area",dstEroded);
 	
 	
 	//cout<<dst.type()<<" "<<image.type()<<endl;
@@ -125,6 +144,7 @@ Mat getMyHand(Mat& imageOG){
 	/* This will enlarge white areas */
 	dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
 	//dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
+/**/	imshow("Round 4,5 - After morphologyEx(MORPH_CLOSE) and dilate segment",dstEroded);
 
 	frameStepsTimes[ MORPHOLOGY_OPERATIONS ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
 	startTime=(double)getTickCount();  //---Timing related part
@@ -151,7 +171,17 @@ Mat getMyHand(Mat& imageOG){
 	imshow("Final Image",finImg);
 	imshow("HSV + BGR Mask",dst);
 	imshow("HSV Mask",dstHSV);
+
+
+
+	// Py_SetProgramName();
+	// Py_Initialize();
+	// PyRun_SimpleString("print '\nThis is first successful Python Statement being run from C++' ");
+	// Py_Finalize();
 	
+
+
+
 	return contouredImg;	
 }
 
@@ -162,6 +192,7 @@ Mat combineExtractedWithMain(Mat& maskedImg,Mat& image){
 	
 	Mat dst;
 	GaussianBlur(image,dst,Size(25,25),0,0);
+/**/	imshow("Gaussian Blur on BG",dst);
 		
 	uchar *blurredRow,*extractedRow,*dstRow;
 	for(int i=0;i<nRows;i++){
@@ -183,6 +214,9 @@ Mat combineExtractedWithMain(Mat& maskedImg,Mat& image){
 
 
 Mat findHandContours(Mat& src){
+
+	double startTime1 = (double)getTickCount();  //---Timing related part
+
 
 	Mat src_gray;
 	cvtColor( src, src_gray, COLOR_BGR2GRAY );
@@ -231,10 +265,24 @@ Mat findHandContours(Mat& src){
 	{		
 		approxPolyDP(Mat(contours1[i]),contours[i],3,true);
 	}
+
+
+
+
+	frameStepsTimes[ CONTOURS_PRE_PROCESSING ] = (getTickCount()-(double)startTime1)/getTickFrequency();   //---Timing related part
+	startTime1=(double)getTickCount();  //---Timing related part
+
+
 	
-	//connectContours( contours );
+	connectContours( contours );
 	
-	//reduceClusterPoints( contours );
+	reduceClusterPoints( contours );
+
+
+	frameStepsTimes[ CONTOURS_IMPROVEMENT ] = (getTickCount()-(double)startTime1)/getTickFrequency();   //---Timing related part
+	startTime1=(double)getTickCount();  //---Timing related part
+
+
 	
    	vector<vector<Point> >hull( contours.size() );
 	for( size_t i = 0; i < contours.size(); i++ )
@@ -322,12 +370,26 @@ Mat findHandContours(Mat& src){
 	}
 	
 	for(int i=0;i<contours[indMaxArea].size();i++){
-		csvFile << (distVector[i]/maxDist*10);
+		distVector[i] = (distVector[i]/maxDist*10);
+		csvFile << distVector[i];
 		if(i!=contours[indMaxArea].size()-1) csvFile << ", ";
 	}
 	csvFile << "\n";
 	csvFile.close();
 
+
+
+	frameStepsTimes[ CONTOURS_POST_PROCESSING ] = (getTickCount()-(double)startTime1)/getTickFrequency();   //---Timing related part
+	startTime1=(double)getTickCount();  //---Timing related part
+
+
+
+
+	findClassUsingPythonModels(distVector);
+
+
+
+	frameStepsTimes[ CONTOUR_CLASSIFICATION_IN_PY ] = (getTickCount()-(double)startTime1)/getTickFrequency();   //---Timing related part
 
 
 	contours.clear();
@@ -341,12 +403,12 @@ Mat findHandContours(Mat& src){
 
 
 void prepareWindows(){
-	//namedWindow("Original Image",WINDOW_AUTOSIZE);
-	//namedWindow("HSV + BGR Mask",WINDOW_AUTOSIZE);
+	//namedWindow("Original Image",WINDOW_NORMAL);
+	//namedWindow("HSV + BGR Mask",WINDOW_NORMAL);
 	//namedWindow("HSV Mask",WINDOW_NORMAL);
-	namedWindow("Masked Image",WINDOW_AUTOSIZE);
-	namedWindow("Final Image",WINDOW_AUTOSIZE);
-	namedWindow("Contours", WINDOW_AUTOSIZE );
+	namedWindow("Masked Image",WINDOW_NORMAL);
+	namedWindow("Final Image",WINDOW_NORMAL);
+	namedWindow("Contours", WINDOW_NORMAL );
 }
 
 
@@ -427,6 +489,27 @@ void reduceClusterPoints(vector< vector< Point > > &contours){
 }
 
 
+void findClassUsingPythonModels( vector<float> &distVector ){
 
+	ofstream csvFile;
+	fs::remove("./TestSampleDistancesData.csv");
+	csvFile.open("./TestSampleDistancesData.csv",std::ios_base::app);
 
+	for(int i=0;i<distVector.size();i++){
+		csvFile << distVector[i];
+		if(i!=distVector.size()-1) csvFile << ", ";
+	}
 
+	csvFile << "\n";
+	csvFile.close();
+
+	cout<<endl<<endl<<endl<<"Python Invocation from from C++ begins here"<<endl;
+	// PyRun_SimpleString("print('Python Invocation from from C++ begins here')");
+	// Py_SetProgramName();
+	Py_Initialize();
+	FILE* file = fopen("testThisSampleInPython.py","r");
+	PyRun_SimpleFile(file,"testThisSampleInPython.py");
+	Py_Finalize();
+	cout<<"Python Invocation ends here"<<endl<<endl<<endl;
+
+}

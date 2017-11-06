@@ -18,6 +18,10 @@
 #define MORPHOLOGY_OPERATIONS 2
 #define MODIFIED_IMAGE_GENERATION 3
 #define HAND_CONTOURS_GENERATION 4
+#define CONTOURS_PRE_PROCESSING 5
+#define CONTOURS_IMPROVEMENT 6
+#define CONTOURS_POST_PROCESSING 7
+#define CONTOUR_CLASSIFICATION_IN_PY 8
 
 using namespace std;
 using namespace cv;
@@ -28,7 +32,16 @@ void maintainTrackOfTimings();
 
 string subDirName;
 
-string tempTimesLabels[] = {"Overall","  Skin Color Extraction","  Morphology Operations","  Modified Image Generation","  Hand Contours Generation"};
+string tempTimesLabels[] = 
+					{"Overall",
+					"  Skin Color Extraction",
+					"  Morphology Operations",
+					"  Modified Image Generation",
+					"  Hand Contours Generation",
+					"    Contours Pre-processing (Canny, ApproxPolyDP)",
+					"    Contours Improvement (Connect, reduce cluster points)",
+					"    Contours Post-processing (Convex Hull, Normalized CCDC computation n storage)",
+					"    Contour Classification (Python invocation)"};
 
 vector<string> timesLabels(tempTimesLabels, tempTimesLabels + sizeof(tempTimesLabels)/sizeof(string));
 vector<double> maxTimes(timesLabels.size(),0);
@@ -106,7 +119,8 @@ int main(int argc, char** argv){
 			return -1;
 		}	
 		
-	
+		prepareWindows();
+		
 		while(true){
 			Mat image;
 			cap>>image;
@@ -137,9 +151,9 @@ int main(int argc, char** argv){
 	cout<<endl<<endl<<"Times for "<<noOfFramesCollected<<" frames:"<<endl;
 	for(int i=0;i<timesLabels.size();i++){
 		cout<<timesLabels[i]<<":"<<endl;
-		cout<<"     Min Time: "<<minTimes[i]<<"s"<<endl;
-		cout<<"     Avg Time: "<<avgTimes[i]<<"s"<<endl;
-		cout<<"     Max Time: "<<maxTimes[i]<<"s"<<endl;
+		cout<<"        Min Time: "<<minTimes[i]<<"s"<<endl;
+		cout<<"        Avg Time: "<<avgTimes[i]<<"s"<<endl;
+		cout<<"        Max Time: "<<maxTimes[i]<<"s"<<endl;
 	}
 		
 	

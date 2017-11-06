@@ -3,6 +3,8 @@ from scipy.fftpack import fft, ifft
 from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+import pickle
+
 from sklearn.svm import SVC
 import pandas as pd
 from keras.models import Sequential
@@ -22,12 +24,12 @@ import matplotlib.pyplot as plt
 
 
 # Initializers
-dataInds = [1,2,3,4,5]
+dataInds = [1,4,5]
 noOfDescriptors = 10
 noOfSamples = []
 fftData=[]
-# storeAsLabelledFeaturesFile = True
-storeAsLabelledFeaturesFile = False
+storeAsLabelledFeaturesFile = True
+# storeAsLabelledFeaturesFile = False
 
 #Initializers forSVMLearning
 
@@ -94,6 +96,7 @@ def KNearestNeighbors():
 		if( testData_L[i] == neigh.predict([testData_S[i]])[0] ):
 			correctlyClassified += 1
 	print("Accuracy: ",correctlyClassified,"/",len(testData_S),"=",correctlyClassified/len(testData_S))
+	pickle.dump(neigh, open('KNNModelDump.sav','wb'))
 
 def SVMLearning():
 	global noOfSamples,fftData,dataInds,correctLabels
@@ -182,9 +185,9 @@ print(fftData)
 dumpData()
 
 # KMeansClustering()
-# KNearestNeighbors()
-SVMLearning()
-KerasDeepLearning()
+KNearestNeighbors()
+# SVMLearning()
+# KerasDeepLearning()
 
 
 plotFeatures()   # Keep this as the last statement if uncommented. Because this is a blocking operation
