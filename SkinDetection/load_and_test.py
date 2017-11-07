@@ -12,13 +12,12 @@ start = time.clock()
 model_data = ''
 with open('skin.json') as model_file: model_data = model_file.read()
 model = model_from_json(model_data)
-model.summary()
-model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy'])
+#model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy'])
 
 # Load saved weights
 model.load_weights('skin.h5')
 
-print '\nLoaded model\n'
+#print '\nLoaded model\n'
 
 img, segmented_img, completed = cv2.imread('1.png').tolist(), [], 0
 total_pixels = len(img)*len(img[0])
@@ -26,29 +25,30 @@ total_pixels = len(img)*len(img[0])
 # Normalization of image pixels
 for i in range(len(img)):                                   # Each row
     for j in range(len(img[i])):                            # Each pixel
-        for k in range(3):                                  # Each channel (r/g/b)
-            img[i][j][k] = img[i][j][k]*1.0/255.0
+        for k in range(3):                                  # Each channel [r,g,b]
+            img[i][j][k] = float(img[i][j][k])/255.0
+        img[i][j].reverse()                                 # Reverse in input form [b,g,r]
 
-print 'Image size = '+str(len(img))+'x'+str(len(img[0]))+' = '+str(total_pixels)+' pixels\n'
+#print 'Image size = '+str(len(img))+'x'+str(len(img[0]))+' = '+str(total_pixels)+' pixels\n'
 
 # Prediction starts here
 for a_row in img:
     output = model.predict(array(a_row))                    # Model needs a numpy array
-    pixel_val=0
-    if output[0][0]>output[0][1]:
-        pixel_val=255
-    else:
-        pixel_val=0
+    output = output.tolist()
+    pixel_vals=[]
+    for i in range(len(output)):
+        if output[i][0] > output[i][1]: pixel_vals.append(255)
+        else: pixel_vals.append(0)
     completed += len(a_row)
-    print 'Completed: '+str(completed)+"/"+str(total_pixels)+"\r",
-    segmented_img.append(pixel_val)
+    #print 'Completed: '+str(completed)+"/"+str(total_pixels)+"\r",
+    segmented_img.append(pixel_vals)
 
 end = time.clock()
 print 'Time required for segmentation: '+str(end-start)
 ''' cv2.imshow('Segmented image',array(segmented_img))
 raw_input()
 cv2.destroyAllWindows() '''
-#print segmented_img
+print segmented_img
 
 
 

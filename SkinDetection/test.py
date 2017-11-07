@@ -78,7 +78,7 @@ def deep():
     with open('skin.json','w') as model_file: model_file.write(to_be_saved_model)
     model.save_weights('skin.h5')
 
-    r,g,b = 83.0,91.0,131.0
+    b,g,r = 200.0,198.0,163.0
     r,g,b = r/255.0, g/255.0, b/255.0
     data_to_test = [[r,g,b]]
     data_to_test = array(data_to_test)
