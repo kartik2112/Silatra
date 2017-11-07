@@ -1,4 +1,5 @@
 from sklearn.model_selection import train_test_split
+from numpy import array
 
 data,d=[],[]
 with open('data.txt') as f:
@@ -58,6 +59,13 @@ def deep():
     to_be_saved_model = model.to_json()
     with open('skin.json','w') as model_file: model_file.write(to_be_saved_model)
     model.save_weights('skin.h5')
+
+    r,g,b = 203.0,213.0,253.0
+    r,g,b = r/255.0, g/255.0, b/255.0
+    data_to_test = [[r,g,b]]
+    data_to_test = array(data_to_test)
+    output = model.predict([data_to_test])
+    print 'Input: (',r,',',g,',',b,') output:',output[0][0]
     
 # Program starts here
 if __name__ == "__main__":

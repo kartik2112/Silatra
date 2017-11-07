@@ -7,35 +7,54 @@ import cv2, time
 
 # Start timer
 start = time.clock()
+
 # Read model architecture
 model_data = ''
 with open('skin.json') as model_file: model_data = model_file.read()
 model = model_from_json(model_data)
+model.summary()
+model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy'])
 
 # Load saved weights
 model.load_weights('skin.h5')
 
-#print '\nLoaded model\n'
+print '\nLoaded model\n'
 
-  
-img, segmented_img, completed = cv2.imread('1.png'), [], 0
+img, segmented_img, completed = cv2.imread('1.png').tolist(), [], 0
 total_pixels = len(img)*len(img[0])
-#print 'Image size = '+str(len(img))+'x'+str(len(img[0]))+' = '+str(total_pixels)+' pixels\n'
+
+# Normalization of image pixels
+for i in range(len(img)):                                   # Each row
+    for j in range(len(img[i])):                            # Each pixel
+        for k in range(3):                                  # Each channel (r/g/b)
+            img[i][j][k] = img[i][j][k]*1.0/255.0
+
+print 'Image size = '+str(len(img))+'x'+str(len(img[0]))+' = '+str(total_pixels)+' pixels\n'
+
+# Prediction starts here
 for a_row in img:
-    data = array(a_row)
-    output = model.predict(data)
+    output = model.predict(array(a_row))                    # Model needs a numpy array
+    output = output.tolist()                                # Convert numpy array to list
     for i in range(len(output)):
-        if floor(output[i][0])==2: output[i][0]=0
-        else: output[i][0]=255
+        output[i][0] = round(output[i][0],3)
+        if roundoff(output[i][0])==2.0: output[i]=0
+        else: output[i]=1
     completed += len(a_row)
     print 'Completed: '+str(completed)+"/"+str(total_pixels)+"\r",
     segmented_img.append(output)
 
 end = time.clock()
 print 'Time required for segmentation: '+str(end-start)
-cv2.imshow('Segmented image',array(segmented_img))
+''' cv2.imshow('Segmented image',array(segmented_img))
 raw_input()
+cv2.destroyAllWindows() '''
+#print segmented_img
+
+
+
 ''' 
+# Sample prediction
+
 r,g,b = 203.0,213.0,253.0
 r,g,b = r/255.0, g/255.0, b/255.0
 data = [[r,g,b]]
