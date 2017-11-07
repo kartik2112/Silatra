@@ -528,8 +528,8 @@ void findClassUsingPythonModels( vector<float> &distVector ){
 
 	// Py_Initialize();   //Moved to main() of Silatra.cpp
 	FILE* file = fopen("testThisSampleInPython.py","r");
-	// PyRun_SimpleFile(file,"testThisSampleInPython.py");
-	PyRun_SimpleFile(file,"LoadSavedModel.py");
+	PyRun_SimpleFile(file,"testThisSampleInPython.py");
+	// PyRun_SimpleFile(file,"LoadSavedModel.py");
 	// Py_Finalize();   //Moved to main() of Silatra.cpp
 	fclose(file);
 
