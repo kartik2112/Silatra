@@ -34,11 +34,7 @@ print 'Image size = '+str(len(img))+'x'+str(len(img[0]))+' = '+str(total_pixels)
 # Prediction starts here
 for a_row in img:
     output = model.predict(array(a_row))                    # Model needs a numpy array
-    output = output.tolist()                                # Convert numpy array to list
-    for i in range(len(output)):
-        output[i][0] = round(output[i][0],3)
-        if roundoff(output[i][0])==2.0: output[i]=0
-        else: output[i]=1
+    
     completed += len(a_row)
     print 'Completed: '+str(completed)+"/"+str(total_pixels)+"\r",
     segmented_img.append(output)
@@ -52,7 +48,7 @@ cv2.destroyAllWindows() '''
 
 
 
-''' 
+'''
 # Sample prediction
 
 r,g,b = 203.0,213.0,253.0
