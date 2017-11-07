@@ -1,0 +1,1 @@
+Time required for segmentation: 5.431088

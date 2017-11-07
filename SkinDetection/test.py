@@ -38,13 +38,13 @@ def deep():
     ''' 
     This is a sequential model. 
     Contains 3 inputs, 
-    1 hidden layer with 10 neurons & activation as sigmoid 
+    1 hidden layer with 2 neurons & activation as sigmoid 
     & 1 output layer with 1 neuron and activation relu
     '''
 
     model = Sequential()
-    model.add(Dense(2,input_dim=3,activation='sigmoid'))
-    model.add(Dense(1, activation='relu'))
+    model.add(Dense(2,input_dim=3,activation='sigmoid', name='hidden_layer'))
+    model.add(Dense(1, activation='relu', name='output_layer'))
 
     # Compile model & fit data to model.
     model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy'])
@@ -54,12 +54,11 @@ def deep():
     score = model.evaluate(test_data,test_labels)
     print("\n%s: %.2f%%" % (model.metrics_names[1], score[1]*100))
 
-    ''' 
     # Save model architecture in json file & save weights in another file.
     to_be_saved_model = model.to_json()
     with open('skin.json','w') as model_file: model_file.write(to_be_saved_model)
     model.save_weights('skin.h5')
-    '''
+    
 # Program starts here
 if __name__ == "__main__":
     deep()
