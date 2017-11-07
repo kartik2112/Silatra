@@ -34,10 +34,14 @@ print 'Image size = '+str(len(img))+'x'+str(len(img[0]))+' = '+str(total_pixels)
 # Prediction starts here
 for a_row in img:
     output = model.predict(array(a_row))                    # Model needs a numpy array
-    
+    pixel_val=0
+    if output[0][0]>output[0][1]:
+        pixel_val=255
+    else:
+        pixel_val=0
     completed += len(a_row)
     print 'Completed: '+str(completed)+"/"+str(total_pixels)+"\r",
-    segmented_img.append(output)
+    segmented_img.append(pixel_val)
 
 end = time.clock()
 print 'Time required for segmentation: '+str(end-start)
