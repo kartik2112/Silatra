@@ -1,9 +1,10 @@
 from keras.models import model_from_json, Model
 from keras import backend as k
-from numpy import array
+from numpy import array,uint8
 from keras.activations import relu
 from math import floor
-import cv2, time
+from PIL import Image
+import cv2, time, numpy as np
 
 # Start timer
 start = time.clock()
@@ -12,53 +13,76 @@ start = time.clock()
 model_data = ''
 with open('skin.json') as model_file: model_data = model_file.read()
 model = model_from_json(model_data)
-model.summary()
-model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy'])
+# model.summary()
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Load saved weights
 model.load_weights('skin.h5')
 
-print '\nLoaded model\n'
+print('\nLoaded model\n')
 
-img, segmented_img, completed = cv2.imread('1.png').tolist(), [], 0
+
+img, segmented_img, completed = cv2.imread('Test_Images/hand.jpg'), [], 0
+img = cv2.resize(img, (320,240))
 total_pixels = len(img)*len(img[0])
 
-# Normalization of image pixels
+# Conversion to HSV & Normalization of image pixels
+img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+img = img.tolist()
+
 for i in range(len(img)):                                   # Each row
     for j in range(len(img[i])):                            # Each pixel
-        for k in range(3):                                  # Each channel (r/g/b)
+        img[i][j] = img[i][j][0:2]
+        for k in range(2):                                  # Each channel (r/g/b)
             img[i][j][k] = img[i][j][k]*1.0/255.0
 
-print 'Image size = '+str(len(img))+'x'+str(len(img[0]))+' = '+str(total_pixels)+' pixels\n'
+print('Image size = '+str(len(img))+'x'+str(len(img[0]))+' = '+str(total_pixels)+' pixels\n')
 
 # Prediction starts here
+print('Segmentation starts now.')
 for a_row in img:
     output = model.predict(array(a_row))                    # Model needs a numpy array
-    pixel_val=0
-    if output[0][0]>output[0][1]:
-        pixel_val=255
-    else:
-        pixel_val=0
+    output = output.tolist()
+    pixel_vals = []
+    for i in range(len(output)):
+        if output[i][0]>output[i][1]:
+            pixel_vals.append([1,1])
+        else:
+            pixel_vals.append([0,0])
     completed += len(a_row)
-    print 'Completed: '+str(completed)+"/"+str(total_pixels)+"\r",
-    segmented_img.append(pixel_val)
+    print('Completed: '+str(completed)+"/"+str(total_pixels)+"\r",end='')
+    segmented_img.append(pixel_vals)
+
+for i in range(len(img)):
+    for j in range(len(img[i])):
+        for k in range(2): img[i][j][k] *= int(255*segmented_img[i][j][k])
+        img[i][j].append(10)
+
+img = array(img)
+kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
+img = cv2.dilate(img, kernel, iterations=4)
+img = cv2.erode(img, kernel, iterations=3)
 
 end = time.clock()
-print 'Time required for segmentation: '+str(end-start)
-''' cv2.imshow('Segmented image',array(segmented_img))
-raw_input()
-cv2.destroyAllWindows() '''
-#print segmented_img
+print('Time required for segmentation: '+str(round(end-start,3))+'s')
+#cv2.imshow('Post segmentation',array(img))
+cv2.imwrite('segmented.jpg',array(img))
 
 
 
-'''
+''' 
 # Sample prediction
-
-r,g,b = 203.0,213.0,253.0
-r,g,b = r/255.0, g/255.0, b/255.0
-data = [[r,g,b]]
-data = array(data)
-output = model.predict(data)
-print 'Input: (',r,',',g,',',b,') output:',floor(output[0][0])
- '''
+r,g,b = 129,117,91
+data_bgr = [b,g,r]
+data_hsv = cv2.cvtColor(uint8([[data_bgr]]), cv2.COLOR_BGR2HSV).tolist()[0][0]
+data_to_test = data_hsv[1:]
+for i in range(len(data_to_test)): data_to_test[i] = data_to_test[i]*1.0/255.0
+data_to_test = [data_to_test]
+output = model.predict(array(data_to_test)).tolist()
+print('Output of model: '+str(output))
+class_dt=""
+if output[0][0]>output[0][1]:
+    class_dt="Skin"
+else:
+    class_dt="Non-Skin"
+print("Predicted class:"+class_dt) '''
