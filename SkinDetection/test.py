@@ -4,29 +4,44 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.pipeline import Pipeline
 import cv2
 
+'''
+HSV = Hue, Saturation & Value.
+Illumination is reflected by V values. We are not interested in Illumination, we are interested in actual colour.abs
+Actual colour is determined by HS values. Thus, we neglect V as it is irrelevant in training.
+'''
+
 data,d=[],[]
 with open('data.txt') as f:
     while True:
+        # Read data row by row
         line = f.readline()
-        if line == '': break
+        if line == '': break                    # End of file
         line = line.split('\t')
-        pixel = line[0:len(line)-1]
+        pixel = line[0:len(line)-1]             # Data comes as: [b,g,r,class]. Select BGR values
 
-        # Conversion of BGR to HSV
+        # Conversion of BGR to HS colour space.
         hsv_pixel = cv2.cvtColor(uint8([[pixel]]), cv2.COLOR_BGR2HSV).tolist()[0][0]
-        hs_pixel = hsv_pixel[0:2]
+        hs_pixel = hsv_pixel[0:2]               # Neglect V from HSV
         pixel = hs_pixel
 
+        # Append data
         for i in range(len(pixel)): pixel[i] = float(pixel[i])/255.0
         data.append(pixel)
         d.append(line[len(line)-1])
 
+# Split data for training & testing. Ratio = 33%
 train_data,test_data,train_labels,test_labels = train_test_split(data,d,test_size=0.3,random_state=31)
 
 def knn():
+    # Imports
     from sklearn.neighbors import KNeighborsClassifier
-    neighbors = KNeighborsClassifier(n_neighbors=2)
+
+    neighbors = KNeighborsClassifier(n_neighbors=2)             # 2 clusters
+
+    # Training starts
     neighbors.fit(train_data,train_labels)
+
+    # Test with testing data.
     correct,r,g,b=0,[],[],[]
     for i in range(len(test_data)):
         if test_labels[i] == neighbors.predict([test_data[i]])[0]:
@@ -38,7 +53,7 @@ def knn():
     print("Accuracy =",correct,"/",len(test_data),"=",correct*1.0/len(test_data))
 
 def deep():
-    # Imports needed
+    # Imports
     import numpy as np
     from keras.models import Sequential
     from keras.layers import Dense
@@ -50,12 +65,14 @@ def deep():
     encoder = LabelEncoder()
     encoder.fit(train_labels)
     encoded_Y = encoder.transform(train_labels)
+
     # convert integers to dummy variables (i.e. one hot encoded)
     dummy_labels = np_utils.to_categorical(encoded_Y)
 
     encoder = LabelEncoder()
     encoder.fit(test_labels)
     encoded_Y = encoder.transform(test_labels)
+
     # convert integers to dummy variables (i.e. one hot encoded)
     dummy_test_labels = np_utils.to_categorical(encoded_Y)
 
@@ -65,8 +82,8 @@ def deep():
     '''
     This is a sequential model.
     Contains 3 inputs,
-    1 hidden layer with 2 neurons & activation as sigmoid
-    & 1 output layer with 1 neuron and activation relu
+    1 hidden layer with 8 neurons & activation as ReLU
+    & 1 output layer with 2 neurons and activation Softmax
     '''
 
     model = Sequential()
@@ -85,21 +102,6 @@ def deep():
     to_be_saved_model = model.to_json()
     with open('skin.json','w') as model_file: model_file.write(to_be_saved_model)
     model.save_weights('skin.h5')
-
-    r,g,b = 112,91,93
-    data_bgr = [b,g,r]
-    data_ycbcr = cv2.cvtColor(uint8([[data_bgr]]), cv2.COLOR_BGR2HSV).tolist()[0][0]
-    data_to_test = data_ycbcr[1:]
-    for i in range(len(data_to_test)): data_to_test[i] = data_to_test[i]*1.0/255.0
-    data_to_test = [data_to_test]
-    output = model.predict(array(data_to_test)).tolist()
-    print('Output of model: '+str(output))
-    class_dt=""
-    if output[0][0]>output[0][1]:
-        class_dt="Skin"
-    else:
-        class_dt="Non-Skin"
-    print("Predicted class:"+class_dt)
 
 # Program starts here
 if __name__ == "__main__":
