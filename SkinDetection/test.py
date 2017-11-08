@@ -12,7 +12,7 @@ with open('data.txt') as f:
         line = line.split('\t')
         pixel = line[0:len(line)-1]
 
-        # Conversion of BGR to YCbCr
+        # Conversion of BGR to HSV
         hsv_pixel = cv2.cvtColor(uint8([[pixel]]), cv2.COLOR_BGR2HSV).tolist()[0][0]
         hs_pixel = hsv_pixel[0:2]
         pixel = hs_pixel
