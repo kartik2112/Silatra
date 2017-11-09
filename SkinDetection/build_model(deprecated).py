@@ -32,6 +32,12 @@ with open('data.txt') as f:
 # Split data for training & testing. Ratio = 33%
 train_data,test_data,train_labels,test_labels = train_test_split(data,d,test_size=0.3,random_state=31)
 
+''' 
+This function has now become obsolete and would not be used in any further project work.
+The code has been kept only for proof of work, or any documentation regarding the work done.
+
+The accuracy obtained with KNN was 99%. 
+But this function has been discarded as it would take huge time to just process one frame.
 def knn():
     # Imports
     from sklearn.neighbors import KNeighborsClassifier
@@ -51,6 +57,7 @@ def knn():
                 g.append(test_data[i][1])
                 b.append(test_data[i][2])
     print("Accuracy =",correct,"/",len(test_data),"=",correct*1.0/len(test_data))
+ '''
 
 def deep():
     # Imports
@@ -98,10 +105,10 @@ def deep():
     score = model.evaluate(test_data,dummy_test_labels)
     print("\n%s: %.2f%%" % (model.metrics_names[1], score[1]*100))
 
-    # Save model architecture in json file & save weights in another file.
+    ''' # Save model architecture in json file & save weights in another file.
     to_be_saved_model = model.to_json()
     with open('skin.json','w') as model_file: model_file.write(to_be_saved_model)
-    model.save_weights('skin.h5')
+    model.save_weights('skin.h5') '''
 
 # Program starts here
 if __name__ == "__main__":
