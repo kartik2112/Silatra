@@ -19,23 +19,25 @@ import cv2, time, numpy as np
 
 # Read model architecture
 model_data = ''
-with open('new_skin_model.json') as model_file: model_data = model_file.read()
+with open('model.json') as model_file: model_data = model_file.read()
 model = model_from_json(model_data)
 # model.summary() # Uncomment this to see overview of the model
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Load saved weights
-model.load_weights('new_skin_model_weights.h5')
+model.load_weights('weights.h5')
 print('\nLoaded model\n')
+
+img_file = input('Test Image file (Keep blank to use sample image): ')
+if img_file is not '': img_file = 'Test_Images/'+img_file
 
 # Start timer
 start = time.clock()
-
 # Load image & resize it to 640x480 pixels.
 #img_file = '..\\training-images\\Digits\\5\\Right_Hand\\Normal\\10.png'
-img_file = 'Test_Images/test2.jpg'
+if img_file is '': img_file = 'Test_Images/test_img.jpg'
 img, segmented_img, completed = cv2.imread(img_file), [], 0
-img = cv2.resize(img, (320,240))                                # 240x320 resized image for faster prediction.
+#img = cv2.resize(img, (320,240))                                # 240x320 resized image for faster prediction.
 
 # Conversion to HSV & Normalization of image pixels
 ranges = [255.0,100.0,100.0]
@@ -60,13 +62,14 @@ for a_row in img:
         else:
             pixel_vals.append([0,0,0])
     completed += len(a_row)
-    print('Completed: '+str(completed)+"/"+str(total_pixels)+"\r",end='')
+    if completed%10000 == 0: print('Completed: '+str(int(completed/10000))+"k/"+str(int(total_pixels/10000))+"k\r",end='')
     segmented_img.append(pixel_vals)
 
 # Bitwise and operation. Do not use inbuilt cv2 function as it won't work with 2 channels.
+ranges = [255,255,255]                                     # White colour in hsv
 for i in range(len(img)):
     for j in range(len(img[i])):
-        for k in range(3): img[i][j][k] *= int(ranges[k]*segmented_img[i][j][k])
+        for k in range(3): img[i][j][k] = int(ranges[k]*segmented_img[i][j][k])
 
 ''' #Issue-1
 Unusre whether this code must be kept. 
