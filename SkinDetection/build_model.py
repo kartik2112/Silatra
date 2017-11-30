@@ -100,7 +100,11 @@ def deep(data,d):
 
     # Compile model & fit data to model.
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+<<<<<<< 8b65c5a9b53a2c4ac77168b1963782069433616a
     model.fit(train_data,dummy_labels,batch_size=8,epochs=12,verbose=1,validation_split=0.25)
+=======
+    model.fit(train_data,dummy_labels,batch_size=16,epochs=12,verbose=1,validation_split=0.25)
+>>>>>>> Improvement in skin model
 
     # Evaluate against test data
     score = model.evaluate(test_data,dummy_test_labels)
