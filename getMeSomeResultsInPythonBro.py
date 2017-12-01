@@ -134,9 +134,7 @@ def KerasDeepLearning():
 	np.random.seed(seed)
 	#load the stuff
 	dataframe = pd.read_csv("data.csv", header=None)
-	df_norm = (dataframe - dataframe.mean()) / (dataframe.max() - dataframe.min())
-	df_norm[10]=dataframe[10]
-	dataset = df_norm.values
+
 	X = dataset[:,0:10].astype(float)
 	Y = dataset[:,10]
 	encoder = LabelEncoder()
@@ -189,9 +187,9 @@ for i in range(len(noOfSamples)):
 dumpData()
 
 # KMeansClustering()
-KNearestNeighbors()
+# KNearestNeighbors()
 # SVMLearning()
-# KerasDeepLearning()
+KerasDeepLearning()
 
 # plotFeatures()   # Keep this as the last statement if uncommented. Because this is a blocking operation
 # Until you close the corresponding window created, program wont proceed any further.
