@@ -26,7 +26,21 @@ For parameter passing main function, use:
 
 /**
 Reference: http://answers.opencv.org/question/25642/how-to-compile-basic-opencv-program-in-c-in-ubuntu/
+For defining the necesary Mat to PyObject conversion functions, wrapper functions for Opencv3 were used
+Ref: https://github.com/spillai/numpy-opencv-converter/issues/9
+
 To compile this file from commandline use:
+    `g++ c++script.cpp -I/usr/local/include/opencv -I/usr/local/include/opencv2 -L/usr/local/lib/ -I/usr/local/include/python3.5
+     -g 
+     -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_ml -lopencv_video -lopencv_features2d -lopencv_calib3d -lopencv_objdetect 
+     -lopencv_contrib -lopencv_legacy -lopencv_stitching -lpython3.5m`
+Preferably use ./builder.sh The compiling will be simpler
+
+Using ./builder technique is easier.
+
+Run `./builder.sh`
+Then run
+    `./build/PythonInterfacingTrial pythonscript displayImageParams ./4.png`
 
 */
 
@@ -168,10 +182,9 @@ If you get "fatal error: pyconfig.h: No such file or directory"
         Tried this. Didn't work
     Referring: https://github.com/BVLC/caffe/issues/410
         `make clean
-        export CPLUS_INCLUDE_PATH=/usr/include/python2.7
+        export CPLUS_INCLUDE_PATH=/usr/include/python3.5m
         make all -j8`
         This worked.
-
 
 
 */
@@ -180,7 +193,7 @@ If you get "fatal error: pyconfig.h: No such file or directory"
 int main(int argc, char *argv[])
 {
     PyObject *pName, *pModule, *pDict, *pFunc;
-    PyObject *pArgs, *pMat, *pValue;
+    PyObject *pArgs, *pMat, *pResponse;
     int i;
 
     if (argc < 3) {
@@ -213,6 +226,7 @@ int main(int argc, char *argv[])
             cout<<"Image ("<<image.size().width<<","<<image.size().height<<") loaded"<<endl;
 
             pArgs = PyTuple_New(1);
+            imshow("Original image before python processing",image);
             pMat = pyopencv_from(image);
             PyTuple_SetItem(pArgs, 0, pMat);
 
@@ -228,11 +242,19 @@ int main(int argc, char *argv[])
             //     /* pValue reference stolen here: */
             //     PyTuple_SetItem(pArgs, i, pValue);
             // }
-            pValue = PyObject_CallObject(pFunc, pArgs);
-            Py_DECREF(pMat);
-            if (pValue != NULL) {
-                printf("Result of call: %ld\n", PyLong_AsLong(pValue));
-                Py_DECREF(pValue);
+            pResponse = PyObject_CallObject(pFunc, pArgs);
+            // Py_DECREF(pMat);
+            Py_DECREF(pArgs);   //DECReffing pArgs would DECRef pMat as well because pArgs tuple has pMat
+            //Reference for reason of commenting DECRef of pMat:
+            //https://stackoverflow.com/a/14244382/5370202
+            cout<<PyTuple_Check(pResponse)<<endl;
+            if (pResponse != NULL ) {
+                // printf("Result of call: %ld\n", PyLong_AsLong(pResponse));
+                cout<<"Received frame from python script"<<endl;
+                // pMat = PyTuple_GetItem(pResponse,0);
+                pyopencv_to(pResponse,image,"Grayscale");
+                imshow("Image after python processing",image);
+                Py_DECREF(pResponse);
             }
             else {
                 Py_DECREF(pFunc);
@@ -262,6 +284,8 @@ int main(int argc, char *argv[])
     Py_Finalize();
 
     cout<<"Time taken by entire endeavour: "<<(getTickCount()-(double)startTime)/getTickFrequency()<<endl;
+
+    waitKey(0);
 
     return 0;
 }

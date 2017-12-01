@@ -383,17 +383,18 @@ bool pyopencv_to(PyObject* o, Matx<_Tp, m, n>& mx, const ArgInfo info)
 template<typename _Tp, int m, int n>
 bool pyopencv_to(PyObject* o, Matx<_Tp, m, n>& mx, const char* name)
 {
+    import_array();
     return pyopencv_to(o, mx, ArgInfo(name, 0));
 }
 
-template <typename T>
-bool pyopencv_to(PyObject *o, Ptr<T>& p, const char *name)
-{
-    if (!o || o == Py_None)
-        return true;
-    p = makePtr<T>();
-    return pyopencv_to(o, *p, name);
-}
+// template <typename T>
+// bool pyopencv_to(PyObject *o, Ptr<T>& p, const char *name)
+// {
+//     if (!o || o == Py_None)
+//         return true;
+//     p = makePtr<T>();
+//     return pyopencv_to(o, *p, name);
+// }
 
 PyObject* pyopencv_from(const Mat& m)
 {
