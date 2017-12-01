@@ -134,12 +134,16 @@ def KerasDeepLearning():
 	np.random.seed(seed)
 	#load the stuff
 	dataframe = pd.read_csv("data.csv", header=None)
+<<<<<<< 12179ccdbdc65fbab479c1659d5fde65e8c028c5
 <<<<<<< 594537f1415fa11cc9d350a826d86f8ece30e8ab
 
 =======
 	# Normalization of the frame
 	dataf_norm = (dataframe - dataframe.mean()) / (dataframe.max() - dataframe.min())
 	dataset = dataf_norm.values
+>>>>>>> Models put on ipynb
+=======
+
 >>>>>>> Models put on ipynb
 	X = dataset[:,0:10].astype(float)
 	Y = dataset[:,10]
@@ -196,7 +200,6 @@ dumpData()
 # KNearestNeighbors()
 # SVMLearning()
 KerasDeepLearning()
-
 
 # plotFeatures()   # Keep this as the last statement if uncommented. Because this is a blocking operation
 # Until you close the corresponding window created, program wont proceed any further.
