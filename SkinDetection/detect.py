@@ -2,7 +2,6 @@
 This to be done:
 
 #Issue-1    Decide on Erosion & dilation
-#Issue-2    Figure out a way to show images.
 
 Need to figure out a way to speed up prediction.
 '''
@@ -21,7 +20,6 @@ import cv2, time, numpy as np
 model_data = ''
 with open('model.json') as model_file: model_data = model_file.read()
 model = model_from_json(model_data)
-# model.summary() # Uncomment this to see overview of the model
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Load saved weights
@@ -33,11 +31,11 @@ if img_file is not '': img_file = 'Test_Images/'+img_file
 
 # Start timer
 start = time.clock()
+
 # Load image & resize it to 640x480 pixels.
-#img_file = '..\\training-images\\Digits\\5\\Right_Hand\\Normal\\10.png'
 if img_file is '': img_file = 'Test_Images/test_img.jpg'
 img, segmented_img, completed = cv2.imread(img_file), [], 0
-#img = cv2.resize(img, (320,240))                                # 240x320 resized image for faster prediction.
+img = cv2.resize(img, (320,240))                                # 240x320 resized image for faster prediction.
 
 # Conversion to HSV & Normalization of image pixels
 ranges = [255.0,100.0,100.0]
@@ -53,6 +51,7 @@ print('Image size = '+str(len(img))+'x'+str(len(img[0]))+' = '+str(total_pixels)
 
 print('Segmentation starts now.')
 for a_row in img:
+    if a_row == [0,0,0]: continue
     output = model.predict(array(a_row))                    # Model needs a numpy array
     output = output.tolist()                                # Prediction is a numpy array. Convert to list for iteration
     pixel_vals = []
@@ -69,7 +68,7 @@ for a_row in img:
 ranges = [255,255,255]                                     # White colour in hsv
 for i in range(len(img)):
     for j in range(len(img[i])):
-        for k in range(3): img[i][j][k] = int(ranges[k]*segmented_img[i][j][k])
+        for k in range(3): img[i][j][k] = float(ranges[k]*segmented_img[i][j][k])
 
 ''' #Issue-1
 Unusre whether this code must be kept. 
@@ -85,17 +84,9 @@ img = cv2.dilate(img, kernel, iterations=1)
 end = time.clock()
 print('Time required for segmentation: '+str(round(end-start,3))+'s')
 
-''' #Issue-2
-Need to find out a way to show the image. 
-The image window hangs when this function comes up with a new window.
-
-#cv2.imshow('Post segmentation',array(img))
-'''
-
-# These lines are for testing purposes only. Remove them later.
-cv2.imwrite('segmented.jpg',array(img))
-system('start segmented.jpg')
-system('start '+img_file)
+img = array(img)
+cv2.imshow('Segmentated image',np.array(img))
+cv2.waitKey(10000)
 
 '''
 This code is kept if we want to test on individual RGB values. Remove this later.
