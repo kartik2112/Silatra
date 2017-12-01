@@ -133,7 +133,9 @@ def KerasDeepLearning():
 	np.random.seed(seed)
 	#load the stuff
 	dataframe = pd.read_csv("data.csv", header=None)
-	dataset = dataframe.values
+	# Normalization of the frame
+	dataf_norm = (dataframe - dataframe.mean()) / (dataframe.max() - dataframe.min())
+	dataset = dataf_norm.values
 	X = dataset[:,0:10].astype(float)
 	Y = dataset[:,10]
 	encoder = LabelEncoder()
@@ -178,15 +180,15 @@ fftData = np.absolute(fftData)   # Making this rotation invariant by finding out
 correctLabels = []
 for i in range(len(noOfSamples)):
 	correctLabels += [dataInds[i]]*noOfSamples[i]
-print(noOfSamples)
-
-print(fftData)
+# print(noOfSamples)
+#
+# print(fftData)
 
 dumpData()
 
 # KMeansClustering()
 # KNearestNeighbors()
-SVMLearning()
+# SVMLearning()
 KerasDeepLearning()
 
 
