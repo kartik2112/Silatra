@@ -187,9 +187,22 @@ for i in range(len(noOfSamples)):
 dumpData()
 
 # KMeansClustering()
+<<<<<<< dab425e73197c4ff9a810d92fd1c79fe1309928c
 # KNearestNeighbors()
 SVMLearning()
 KerasDeepLearning()
+=======
+<<<<<<< e188cf51dce769e8516ac4ce4b332310da7a6f64
+KNearestNeighbors()
+# SVMLearning()
+# KerasDeepLearning()
+=======
+# KNearestNeighbors()
+# SVMLearning()
+KerasDeepLearning()
+>>>>>>> Models put on ipynb
+
+>>>>>>> Models put on ipynb
 
 # plotFeatures()   # Keep this as the last statement if uncommented. Because this is a blocking operation
 # Until you close the corresponding window created, program wont proceed any further.
