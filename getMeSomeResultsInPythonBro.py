@@ -180,9 +180,9 @@ fftData = np.absolute(fftData)   # Making this rotation invariant by finding out
 correctLabels = []
 for i in range(len(noOfSamples)):
 	correctLabels += [dataInds[i]]*noOfSamples[i]
-print(noOfSamples)
-
-print(fftData)
+# print(noOfSamples)
+#
+# print(fftData)
 
 dumpData()
 
@@ -190,7 +190,6 @@ dumpData()
 KNearestNeighbors()
 # SVMLearning()
 # KerasDeepLearning()
-
 
 # plotFeatures()   # Keep this as the last statement if uncommented. Because this is a blocking operation
 # Until you close the corresponding window created, program wont proceed any further.
