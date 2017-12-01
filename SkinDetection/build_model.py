@@ -3,6 +3,7 @@ from numpy import array, uint8
 from sklearn.preprocessing import LabelEncoder
 from sklearn.pipeline import Pipeline
 import cv2
+from sklearn.metrics import roc_curve, auc
 
 '''
 HSV = Hue, Saturation & Value.
@@ -105,11 +106,14 @@ def deep(data,d):
     # Evaluate against test data
     score = model.evaluate(test_data,dummy_test_labels)
     print("\n%s: %.2f%%" % (model.metrics_names[1], score[1]*100))
+    predictions = model.predict(test_data)
+    print(predictions)
 
     # Save model architecture in json file & save weights in another file.
     to_be_saved_model = model.to_json()
     with open('model.json','w') as model_file: model_file.write(to_be_saved_model)
     model.save_weights('weights.h5')
+
 
 # Program starts here
 if __name__ == "__main__":
