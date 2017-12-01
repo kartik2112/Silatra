@@ -145,12 +145,33 @@ def KerasDeepLearning():
 	model.add(Dense(5, activation='softmax'))
 	# Compile model
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-	model.fit(train_x,dummy_train_y,epochs=200,batch_size=18,verbose=1)
-	scores = model.evaluate(train_x,dummy_train_y)
-	print("\n%s: %.2f%%" % ("Accuracy on Training set", scores[1]*100))
-	scores = model.evaluate(test_x,dummy_test_y)
-	print("\n%s: %.2f%%" % ("Accuracy on Testing set", scores[1]*100))
-	model_json = model.to_json()
+	return model
+
+def KerasDeepLearning():
+	#Install Keras and Tensorflow/Theanos before using this function.
+	seed=7
+	np.random.seed(seed)
+	#load the stuff
+	dataframe = pd.read_csv("data.csv", header=None)
+	# Normalization of the frame
+	dataf_norm = (dataframe - dataframe.mean()) / (dataframe.max() - dataframe.min())
+	dataset = dataf_norm.values
+	X = dataset[:,0:10].astype(float)
+	Y = dataset[:,10]
+	encoder = LabelEncoder()
+	encoder.fit(Y)
+	encoded_Y = encoder.transform(Y)
+	# convert integers to dummy variables (i.e. one hot encoded)
+	dummy_y = np_utils.to_categorical(encoded_Y)
+	estimator = KerasClassifier(build_fn=baseline_model, epochs=epochs_num, batch_size=batch, verbose=verbose_stat)
+	print("Estimator created.")
+	kfold = KFold(n_splits=10, shuffle=True, random_state=seed)
+	results = cross_val_score(estimator, X, dummy_y, cv=kfold)
+	print("\nBaseline: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+	print("Saving Model.")
+	toBeSavedModel=baseline_model()
+	toBeSavedModel.fit(X,dummy_y,epochs=epochs_num,batch_size=batch,verbose=1)
+	model_json = toBeSavedModel.to_json()
 	with open("MLModels/KerasModel.json", "w") as json_file:
 		json_file.write(model_json)
 	model.save_weights("MLModels/KerasModel.h5")
@@ -179,9 +200,9 @@ fftData = np.absolute(fftData)  # Making this rotation invariant by finding out 
 correctLabels = []
 for i in range(len(noOfSamples)):
 	correctLabels += [dataInds[i]]*noOfSamples[i]
-print(noOfSamples)
-
-print(fftData)
+# print(noOfSamples)
+#
+# print(fftData)
 
 dumpData()
 
