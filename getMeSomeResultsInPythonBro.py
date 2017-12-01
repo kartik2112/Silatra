@@ -133,9 +133,9 @@ def KerasDeepLearning():
 	np.random.seed(seed)
 	#load the stuff
 	dataframe = pd.read_csv("data.csv", header=None)
-	# Normalization of the frame
-	dataf_norm = (dataframe - dataframe.mean()) / (dataframe.max() - dataframe.min())
-	dataset = dataf_norm.values
+	df_norm = (dataframe - dataframe.mean()) / (dataframe.max() - dataframe.min())
+	df_norm[10]=dataframe[10]
+	dataset = df_norm.values
 	X = dataset[:,0:10].astype(float)
 	Y = dataset[:,10]
 	encoder = LabelEncoder()
@@ -143,7 +143,7 @@ def KerasDeepLearning():
 	encoded_Y = encoder.transform(Y)
 	# convert integers to dummy variables (i.e. one hot encoded)
 	dummy_y = np_utils.to_categorical(encoded_Y)
-	estimator = KerasClassifier(build_fn=baseline_model, epochs=epochs_num, batch_size=batch, verbose=verbose_stat)
+	estimator = KerasClassifier(build_fn=baseline_model, epochs=epochs_num, batch_size=batch, verbose=2, validation_split=0.25)
 	print("Estimator created.")
 	kfold = KFold(n_splits=10, shuffle=True, random_state=seed)
 	results = cross_val_score(estimator, X, dummy_y, cv=kfold)
@@ -187,10 +187,9 @@ for i in range(len(noOfSamples)):
 dumpData()
 
 # KMeansClustering()
-# KNearestNeighbors()
+KNearestNeighbors()
 # SVMLearning()
-KerasDeepLearning()
-
+# KerasDeepLearning()
 
 # plotFeatures()   # Keep this as the last statement if uncommented. Because this is a blocking operation
 # Until you close the corresponding window created, program wont proceed any further.

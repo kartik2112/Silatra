@@ -1,4 +1,4 @@
-# import the necessary packages
+''' # import the necessary packages
 import imutils
 import numpy as np
 import argparse
@@ -62,4 +62,23 @@ while True:
  
 # cleanup the camera and close any open windows
 camera.release()
-cv2.destroyAllWindows()
+cv2.destroyAllWindows() '''
+
+import cv2
+import numpy as np
+
+image = cv2.imread('../SkinDetection/Test_Images/test_img.jpg').tolist()
+#image = cv2.imread('../training-images/Digits/1/Right_Hand/Normal/1.png').tolist()
+threshold = -0.0
+
+for i in range(len(image)):
+	for j in range(len(image[i])):
+		pixel = image[i][j]
+		if pixel[0]-pixel[2] < threshold and pixel[1]-pixel[2] < threshold: # B<G<R or R>G>B
+			image[i][j][0] = image[i][j][1] = image[i][j][2] = 255.0
+		else: image[i][j] = [0,0,0]
+
+kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (20, 20))
+skinMask = cv2.dilate(np.array(image), kernel, iterations = 4)
+cv2.imshow('After condition',np.array(image))
+cv2.waitKey(10000)
