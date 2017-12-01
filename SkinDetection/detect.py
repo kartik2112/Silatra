@@ -16,6 +16,8 @@ from PIL import Image
 from os import system
 import cv2, time, numpy as np
 
+print('\n--------------- Silatra skin detector ---------------')
+
 # Read model architecture
 model_data = ''
 with open('model.json') as model_file: model_data = model_file.read()
@@ -32,10 +34,6 @@ if img_file is not '': img_file = 'Test_Images/'+img_file
 # Start timer
 start = time.clock()
 # Load image & resize it to 640x480 pixels.
-<<<<<<< 8b65c5a9b53a2c4ac77168b1963782069433616a
-=======
-#img_file = '..\\training-images\\Digits\\5\\Right_Hand\\Normal\\10.png'
->>>>>>> Improvement in skin model
 if img_file is '': img_file = 'Test_Images/test_img.jpg'
 img, segmented_img, completed = cv2.imread(img_file), [], 0
 #img = cv2.resize(img, (320,240))                                # 240x320 resized image for faster prediction.
@@ -71,11 +69,8 @@ for a_row in img:
 ranges = [255,255,255]                                     # White colour in hsv
 for i in range(len(img)):
     for j in range(len(img[i])):
-<<<<<<< 8b65c5a9b53a2c4ac77168b1963782069433616a
         for k in range(3): img[i][j][k] = float(ranges[k]*segmented_img[i][j][k])
-=======
-        for k in range(3): img[i][j][k] = int(ranges[k]*segmented_img[i][j][k])
->>>>>>> Improvement in skin model
+
 
 ''' #Issue-1
 Unusre whether this code must be kept. 
