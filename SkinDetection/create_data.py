@@ -22,7 +22,6 @@ if __name__=="__main__":
     print('Extracting features... Completed: 0%\r',end='')
     hsv_data = set()
     img_template = 'Test_Images/Samples for training/'
-
     sample_start_number, sample_end_number, img_ext, mark_data_as = 1, 8, '.jpg', '1'
     for i in range(sample_start_number,sample_end_number+1):
         print('                                                                                      \r',end='')
@@ -36,20 +35,20 @@ if __name__=="__main__":
         print('Processing: '+img_template+'Skin samples/'+str(i)+img_ext+'\r',end='')
         extracted_data = extract_hsv_features(img_template+'Skin samples/'+str(i)+img_ext,mark_data_as)
         for row in extracted_data: hsv_data.add(row)
-
     sample_start_number, sample_end_number, img_ext, mark_data_as = 1, 9, '.jpg', '2'
     for i in range(sample_start_number,sample_end_number+1):
         print('                                                                                      \r',end='')
         print('Processing: '+img_template+'Non-skin samples/'+str(i)+img_ext+'\r',end='')
         extracted_data = extract_hsv_features(img_template+'Non-skin samples/'+str(i)+img_ext,mark_data_as)
         for row in extracted_data: hsv_data.add(row)
-        
+
     sample_start_number, sample_end_number, img_ext, mark_data_as = 1, 3, '.png', '2'
     for i in range(sample_start_number,sample_end_number+1):
         print('                                                                                      \r',end='')
         print('Processing: '+img_template+'Non-skin samples/'+str(i)+img_ext+'\r',end='')
         extracted_data = extract_hsv_features(img_template+'Non-skin samples/'+str(i)+img_ext,mark_data_as)
         for row in extracted_data: hsv_data.add(row)
+
         
     print('                                                                                      \r',end='')
     print('Extraction complete! Saving...\r',end='')
