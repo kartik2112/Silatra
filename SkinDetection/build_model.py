@@ -110,9 +110,10 @@ def deep(data,d):
     print(predictions)
 
     # Save model architecture in json file & save weights in another file.
-    # to_be_saved_model = model.to_json()
-    # with open('model.json','w') as model_file: model_file.write(to_be_saved_model)
-    # model.save_weights('weights.h5')
+    to_be_saved_model = model.to_json()
+    with open('model.json','w') as model_file: model_file.write(to_be_saved_model)
+    model.save_weights('weights.h5')
+
 
 # Program starts here
 if __name__ == "__main__":
