@@ -100,7 +100,7 @@ def deep(data,d):
 
     # Compile model & fit data to model.
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    model.fit(train_data,dummy_labels,batch_size=16,epochs=12,verbose=1,validation_split=0.25)
+    model.fit(train_data,dummy_labels,batch_size=8,epochs=12,verbose=1,validation_split=0.25)
 
     # Evaluate against test data
     score = model.evaluate(test_data,dummy_test_labels)
