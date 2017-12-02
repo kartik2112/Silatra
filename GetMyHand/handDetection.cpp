@@ -279,7 +279,7 @@ Mat findHandContours(Mat& src){
 	
 	connectContours( contours );
 	
-	reduceClusterPoints( contours );
+	// reduceClusterPoints( contours );
 
 
 	frameStepsTimes[ CONTOURS_IMPROVEMENT ] = (getTickCount()-(double)startTime1)/getTickFrequency();   //---Timing related part
