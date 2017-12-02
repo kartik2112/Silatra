@@ -25,6 +25,7 @@ import matplotlib.pyplot as plt
 
 # Initializers
 dataInds = [1,2,3,4,5]
+subFolderNames = ['Normal'] #,'Rotated'
 noOfDescriptors = 10
 noOfSamples = []
 fftData=[]
@@ -163,17 +164,18 @@ def KerasDeepLearning():
 
 # Travers through csv files and append CCDC Data
 for folderNo in dataInds:
-	path_to_csv = "./CCDC-Data/training-images/Digits/"+str(folderNo)+"/Right_Hand/Normal/data.csv"
-
-	#data = np.genfromtxt(path_to_csv, delimiter=',' )
-	f1 = open(path_to_csv)
-
-	#print(data)
 	ctr = 0
-	for line in f1:
-		data = np.fromstring(line,dtype = float, sep = ',')
-		fftData.append(fft(data)[0:noOfDescriptors])  # FFT
-		ctr += 1
+	for subFolderNameI in subFolderNames:
+		path_to_csv = "./CCDC-Data/training-images/Digits/"+str(folderNo)+"/Right_Hand/"+subFolderNameI+"/data.csv"
+
+		#data = np.genfromtxt(path_to_csv, delimiter=',' )
+		f1 = open(path_to_csv)
+
+		#print(data)
+		for line in f1:
+			data = np.fromstring(line,dtype = float, sep = ',')
+			fftData.append(fft(data)[0:noOfDescriptors])  # FFT
+			ctr += 1
 	noOfSamples.append(ctr)
 	#print(fftData)
 fftData = np.absolute(fftData)   # Making this rotation invariant by finding out magnitude
