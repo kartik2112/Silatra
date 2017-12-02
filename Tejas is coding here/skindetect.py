@@ -67,7 +67,7 @@ cv2.destroyAllWindows() '''
 import cv2
 import numpy as np
 
-image = cv2.imread('../SkinDetection/Test_Images/test_img.jpg').tolist()
+''' image = cv2.imread('../SkinDetection/Test_Images/test_img.jpg').tolist()
 #image = cv2.imread('../training-images/Digits/1/Right_Hand/Normal/1.png').tolist()
 threshold = -0.0
 
@@ -81,4 +81,16 @@ for i in range(len(image)):
 kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (20, 20))
 skinMask = cv2.dilate(np.array(image), kernel, iterations = 4)
 cv2.imshow('After condition',np.array(image))
+cv2.waitKey(10000) '''
+
+img = cv2.imread('../SkinDetection/Test_Images/test_img.jpg')
+og = img.copy()
+img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+h,s,v = cv2.split(img)
+equalised_v = cv2.equalizeHist(v)
+img = cv2.merge((h,s,equalised_v))
+img = cv2.cvtColor(img, cv2.COLOR_HSV2BGR)
+cv2.imshow('Equalized',np.hstack([og,img]))
+cv2.imwrite('Equalised_test_img.jpg',img)
 cv2.waitKey(10000)
+cv2.destroyAllWindows()
