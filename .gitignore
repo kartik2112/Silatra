@@ -13,6 +13,7 @@ Cookies-journal
 storage.json
 Prefences
 machineid
-*/build/*
 SkinDetection/segmented.jpg
-*/data.csv
+*/build/*
+CCDC-Data/*
+data.csv
