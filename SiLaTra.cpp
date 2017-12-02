@@ -84,7 +84,8 @@ int main(int argc, char** argv){
 		string subDirName1 = string(argv[2]);
 		subDirName = "./CCDC-Data/"+subDirName1.substr(0,subDirName1.find_last_of("/"));
 		fs::create_directories(subDirName);
-		fs::remove(subDirName+"/data.csv");
+		if(fs::exists(subDirName+"/data.csv"))
+			fs::remove(subDirName+"/data.csv");
 		
 		vector<string> files;
 		for(auto &tempp1:fs::directory_iterator(subDirName1)){

@@ -25,6 +25,7 @@ import matplotlib.pyplot as plt
 
 # Initializers
 dataInds = [1,2,3,4,5]
+subFolderNames = ['Normal'] #,'Rotated'
 noOfDescriptors = 10
 noOfSamples = []
 fftData=[]
@@ -108,9 +109,28 @@ def SVMLearning():
 	print("Accuracy on training set:"+str(svm.score(trainData_S,trainData_L)*100))
 	print("Accuracy on training set:"+str(svm.score(testData_S,testData_L)*100))
 
-# define baseline model
-def baseline_model():
-	# create model
+def KerasDeepLearning():
+	#Install Keras and Tensorflow/Theanos before using this function.
+	seed=7
+	np.random.seed(seed)
+	#load the stuff
+	dataframe = pd.read_csv("data.csv", header=None)
+	Y=dataframe[10]
+	del dataframe[10]
+	X=dataframe
+	X1,X2,Y1,Y2 = train_test_split(X,Y,test_size = 0.33,random_state=42)
+	train_x=X1.values
+	train_y=Y1.values
+	test_x=X2.values
+	test_y=Y2.values
+	encoder = LabelEncoder()
+	encoder.fit(train_y)
+	encoded_train_Y = encoder.transform(train_y)
+	dummy_train_y = np_utils.to_categorical(encoded_train_Y)
+	encoder = LabelEncoder()
+	encoder.fit(test_y)
+	encoded_test_Y = encoder.transform(test_y)
+	dummy_test_y = np_utils.to_categorical(encoded_test_Y)
 	model = Sequential()
 	model.add(Dense(64, input_dim=10, activation='relu'))
 	model.add(Dense(64, activation='relu'))
@@ -133,7 +153,11 @@ def KerasDeepLearning():
 	np.random.seed(seed)
 	#load the stuff
 	dataframe = pd.read_csv("data.csv", header=None)
-	dataset = dataframe.values
+	
+	# Normalization of the frame
+	dataf_norm = (dataframe - dataframe.mean()) / (dataframe.max() - dataframe.min())
+	dataset = dataf_norm.values
+	
 	X = dataset[:,0:10].astype(float)
 	Y = dataset[:,10]
 	encoder = LabelEncoder()
@@ -152,43 +176,42 @@ def KerasDeepLearning():
 	model_json = toBeSavedModel.to_json()
 	with open("MLModels/KerasModel.json", "w") as json_file:
 		json_file.write(model_json)
-	toBeSavedModel.save_weights("MLModels/KerasModel.h5")
+	model.save_weights("MLModels/KerasModel.h5")
 	print("Saved model to disk")
-
 
 
 ############# Main flow starts here #################
 
 # Travers through csv files and append CCDC Data
 for folderNo in dataInds:
-	path_to_csv = "./CCDC-Data/training-images/Digits/"+str(folderNo)+"/Right_Hand/Normal/data.csv"
-
-	#data = np.genfromtxt(path_to_csv, delimiter=',' )
-	f1 = open(path_to_csv)
-
-	#print(data)
 	ctr = 0
-	for line in f1:
-		data = np.fromstring(line,dtype = float, sep = ',')
-		fftData.append(fft(data)[0:noOfDescriptors])  # FFT
-		ctr += 1
+	for subFolderNameI in subFolderNames:
+		path_to_csv = "./CCDC-Data/training-images/Digits/"+str(folderNo)+"/Right_Hand/"+subFolderNameI+"/data.csv"
+
+		#data = np.genfromtxt(path_to_csv, delimiter=',' )
+		f1 = open(path_to_csv)
+
+		#print(data)
+		for line in f1:
+			data = np.fromstring(line,dtype = float, sep = ',')
+			fftData.append(fft(data)[0:noOfDescriptors])  # FFT
+			ctr += 1
 	noOfSamples.append(ctr)
 	#print(fftData)
-fftData = np.absolute(fftData)   # Making this rotation invariant by finding out magnitude
+fftData = np.absolute(fftData)  # Making this rotation invariant by finding out magnitude
 correctLabels = []
 for i in range(len(noOfSamples)):
 	correctLabels += [dataInds[i]]*noOfSamples[i]
-print(noOfSamples)
-
-print(fftData)
+# print(noOfSamples)
+#
+# print(fftData)
 
 dumpData()
 
 # KMeansClustering()
 # KNearestNeighbors()
-SVMLearning()
+# SVMLearning()
 KerasDeepLearning()
-
 
 # plotFeatures()   # Keep this as the last statement if uncommented. Because this is a blocking operation
 # Until you close the corresponding window created, program wont proceed any further.
