@@ -15,6 +15,13 @@ from math import floor
 from PIL import Image
 from os import system
 import cv2, time, numpy as np
+import argparse
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-p", 
+	help = "If image is portrait, include this flag")
+ap.add_argument("-i","--image", help='Use this flag followed by image file to do segmentation on an image')
+args = vars(ap.parse_args())
 
 print('\n--------------- Silatra skin detector ---------------')
 
@@ -26,10 +33,9 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accur
 
 # Load saved weights
 model.load_weights('weights.h5')
-print('\nModel ready for testing. Keep image file empty to use empty image.\n')
+print('\nModel ready for testing. ',end='')
 
-def predict_skin_pixels():
-    img_file = input('Image file: ')
+def predict_skin_pixels(img_file, return_flag=False):
     if img_file is not '': img_file = 'Test_Images/'+img_file
 
     # Start timer
@@ -38,10 +44,13 @@ def predict_skin_pixels():
     # Load image & resize it to 640x480 pixels.
     if img_file is '': img_file = 'Test_Images/test_img.jpg'
     img, segmented_img, completed = cv2.imread(img_file), [], 0
-    img = cv2.resize(img, (320,240))                                # 240x320 resized image for faster prediction.
+    if not args.get('p'): img = cv2.resize(img, (320,240))                 # 240x320 resized image for faster prediction.
+    else: img = cv2.resize(img, (240,320))
+    original = img.copy()
+
 
     # Conversion to HSV & Normalization of image pixels
-    ranges = [255.0,100.0,100.0]
+    ranges = [179.0,255.0,255.0]
     img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     img = img.tolist()
     for i in range(len(img)):                                   # Each row
@@ -68,8 +77,8 @@ def predict_skin_pixels():
         segmented_img.append(pixel_vals)
     print('Skin segmented from image.')
 
-    # Bitwise and operation. Do not use inbuilt cv2 function as it won't work with 2 channels.
-    ranges = [255,255,255]                                     # White colour in hsv
+    # Bitwise and operation.
+    ranges = [0,0,255]
     for i in range(len(img)):
         for j in range(len(img[i])):
             for k in range(3): img[i][j][k] = float(ranges[k]*segmented_img[i][j][k])
@@ -89,16 +98,28 @@ def predict_skin_pixels():
     print('Time required for segmentation: '+str(round(end-start,3))+'s')
 
     img = array(img)
-    cv2.imshow('Segmentated image',np.array(img))
+    if not return_flag: cv2.imshow('Segmentation results',np.hstack([original, cv2.cvtColor(array(img, uint8), cv2.COLOR_HSV2BGR)]))
+    else: return cv2.cvtColor(array(img, uint8), cv2.COLOR_HSV2BGR)
     cv2.waitKey(10000)
     cv2.destroyAllWindows()
 
-predict_skin_pixels()
-while True:
-    continue_param = input('\n-----------------------------------------------------\n\nTest one more? (Y/N): ')
-    print()
-    if continue_param.lower() == 'y': predict_skin_pixels()
-    else: break
+if not args.get('image'):
+    print('Keep image file empty for test image.')
+    image_file = input('Image file: ')
+    predict_skin_pixels(image_file)
+    while True:
+        continue_param = input('\n-----------------------------------------------------\n\nTest one more? (Y/N): ')
+        print()
+        if continue_param.lower() == 'y':
+            image_file = input('Image file: ')
+            predict_skin_pixels(image_file)
+        else: break
+else:
+    print('\n')
+    image_file = args.get('image')
+    print('Using: '+image_file)
+    cv2.imshow('Results',predict_skin_pixels(image_file, True))
+    cv2.waitKey(10000)
 
 '''
 This code is kept if we want to test on individual RGB values. Remove this later.

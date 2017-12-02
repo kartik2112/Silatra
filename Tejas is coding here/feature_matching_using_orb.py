@@ -72,5 +72,5 @@ matches = sorted(matches, key = lambda x:x.distance)
 final_image = cv2.drawMatches(image1,key_points_1,image2,key_points_2,matches[:10], None, flags=2)
 
 cv2.imshow('Matches', final_image)
-cv2.waitKey(100000)
+cv2.waitKey(1000000)
 cv2.destroyAllWindows()

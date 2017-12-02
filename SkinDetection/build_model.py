@@ -9,11 +9,11 @@ HSV = Hue, Saturation & Value.
 Illumination is reflected by V values. We are not interested in Illumination, we are interested in actual colour.abs
 Actual colour is determined by HS values. Thus, we might neglect V as it seems irrelevant in training.
 But, in that case dark & light colours (close to black & white) also get detected. Also colours like pink are detected.
-Thus, including V might help model in learning the range of V.
+Thus, including V might help model in learning the range of V for skin colours.
 
 Ranges for HSV:
-H       [0,255]
-S,V     [0,100]%
+H       [0,179]
+S,V     [0,255]
 '''
 
 def read_uci_data(data,d):
@@ -24,13 +24,13 @@ def read_uci_data(data,d):
             line = f.readline()
             if line == '': break                    # End of file
             line = line.split('\t')
-            pixel = line[0:len(line)-1]             # Data comes as: [b,g,r,class]. Select BGR values
+            pixel = line[0:len(line)-1]             # Data comes as: [h,s,v,class].
 
-            # Conversion of BGR to HS colour space.
+            # Conversion of BGR to HSV colour space.
             pixel = cv2.cvtColor(uint8([[pixel]]), cv2.COLOR_BGR2HSV).tolist()[0][0]
 
             # Normalize & Append data
-            ranges = [255.0,100.0,100.0]
+            ranges = [179.0,255.0,255.0]
             for i in range(len(pixel)): pixel[i] = float(pixel[i])/ranges[i]
             
             data.append(pixel)
@@ -45,13 +45,13 @@ def read_silatra_data(data,d):
             row = f.readline()
             if row is '': break                     # End of file
             row = row.split('\t')
-            pixel = row[0:len(row)-1]               # Data comes as [h,s,v,class]. Select HS values.
+            pixel = row[0:len(row)-1]               # Data comes as [h,s,v,class]
 
             if row_count%100000 == 0: print('Reading the Silatra dataset... Read '+str(int(row_count/100000))+' Lakh rows\r',end='')
             row_count+=1
 
-            # Normalisation of HS data
-            ranges = [255.0,100.0,100.0]
+            # Normalisation of HSV data
+            ranges = [179.0,255.0,255.0]
             for i in range(len(pixel)): pixel[i] = float(pixel[i])/ranges[i]
 
             # Appending data
