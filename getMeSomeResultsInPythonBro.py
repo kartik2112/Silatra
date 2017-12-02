@@ -198,7 +198,7 @@ dumpData()
 
 # KMeansClustering()
 # KNearestNeighbors()
-# SVMLearning()
+SVMLearning()
 KerasDeepLearning()
 
 # plotFeatures()   # Keep this as the last statement if uncommented. Because this is a blocking operation
