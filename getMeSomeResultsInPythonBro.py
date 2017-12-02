@@ -109,9 +109,28 @@ def SVMLearning():
 	print("Accuracy on training set:"+str(svm.score(trainData_S,trainData_L)*100))
 	print("Accuracy on training set:"+str(svm.score(testData_S,testData_L)*100))
 
-# define baseline model
-def baseline_model():
-	# create model
+def KerasDeepLearning():
+	#Install Keras and Tensorflow/Theanos before using this function.
+	seed=7
+	np.random.seed(seed)
+	#load the stuff
+	dataframe = pd.read_csv("data.csv", header=None)
+	Y=dataframe[10]
+	del dataframe[10]
+	X=dataframe
+	X1,X2,Y1,Y2 = train_test_split(X,Y,test_size = 0.33,random_state=42)
+	train_x=X1.values
+	train_y=Y1.values
+	test_x=X2.values
+	test_y=Y2.values
+	encoder = LabelEncoder()
+	encoder.fit(train_y)
+	encoded_train_Y = encoder.transform(train_y)
+	dummy_train_y = np_utils.to_categorical(encoded_train_Y)
+	encoder = LabelEncoder()
+	encoder.fit(test_y)
+	encoded_test_Y = encoder.transform(test_y)
+	dummy_test_y = np_utils.to_categorical(encoded_test_Y)
 	model = Sequential()
 	model.add(Dense(64, input_dim=10, activation='relu'))
 	model.add(Dense(64, activation='relu'))
@@ -126,46 +145,16 @@ def baseline_model():
 	model.add(Dense(5, activation='softmax'))
 	# Compile model
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-	return model
-
-def KerasDeepLearning():
-	#Install Keras and Tensorflow/Theanos before using this function.
-	seed=7
-	np.random.seed(seed)
-	#load the stuff
-	dataframe = pd.read_csv("data.csv", header=None)
-<<<<<<< 12179ccdbdc65fbab479c1659d5fde65e8c028c5
-<<<<<<< 594537f1415fa11cc9d350a826d86f8ece30e8ab
-
-=======
-	# Normalization of the frame
-	dataf_norm = (dataframe - dataframe.mean()) / (dataframe.max() - dataframe.min())
-	dataset = dataf_norm.values
->>>>>>> Models put on ipynb
-=======
-
->>>>>>> Models put on ipynb
-	X = dataset[:,0:10].astype(float)
-	Y = dataset[:,10]
-	encoder = LabelEncoder()
-	encoder.fit(Y)
-	encoded_Y = encoder.transform(Y)
-	# convert integers to dummy variables (i.e. one hot encoded)
-	dummy_y = np_utils.to_categorical(encoded_Y)
-	estimator = KerasClassifier(build_fn=baseline_model, epochs=epochs_num, batch_size=batch, verbose=2, validation_split=0.25)
-	print("Estimator created.")
-	kfold = KFold(n_splits=10, shuffle=True, random_state=seed)
-	results = cross_val_score(estimator, X, dummy_y, cv=kfold)
-	print("\nBaseline: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
-	print("Saving Model.")
-	toBeSavedModel=baseline_model()
-	toBeSavedModel.fit(X,dummy_y,epochs=epochs_num,batch_size=batch,verbose=1)
-	model_json = toBeSavedModel.to_json()
+	model.fit(train_x,dummy_train_y,epochs=200,batch_size=18,verbose=1)
+	scores = model.evaluate(train_x,dummy_train_y)
+	print("\n%s: %.2f%%" % ("Accuracy on Training set", scores[1]*100))
+	scores = model.evaluate(test_x,dummy_test_y)
+	print("\n%s: %.2f%%" % ("Accuracy on Testing set", scores[1]*100))
+	model_json = model.to_json()
 	with open("MLModels/KerasModel.json", "w") as json_file:
 		json_file.write(model_json)
-	toBeSavedModel.save_weights("MLModels/KerasModel.h5")
+	model.save_weights("MLModels/KerasModel.h5")
 	print("Saved model to disk")
-
 
 
 ############# Main flow starts here #################
@@ -186,20 +175,21 @@ for folderNo in dataInds:
 			ctr += 1
 	noOfSamples.append(ctr)
 	#print(fftData)
-fftData = np.absolute(fftData)   # Making this rotation invariant by finding out magnitude
+fftData = np.absolute(fftData)  # Making this rotation invariant by finding out magnitude
 correctLabels = []
 for i in range(len(noOfSamples)):
 	correctLabels += [dataInds[i]]*noOfSamples[i]
-# print(noOfSamples)
-#
-# print(fftData)
+print(noOfSamples)
+
+print(fftData)
 
 dumpData()
 
 # KMeansClustering()
 # KNearestNeighbors()
-SVMLearning()
+# SVMLearning()
 KerasDeepLearning()
+
 
 # plotFeatures()   # Keep this as the last statement if uncommented. Because this is a blocking operation
 # Until you close the corresponding window created, program wont proceed any further.
