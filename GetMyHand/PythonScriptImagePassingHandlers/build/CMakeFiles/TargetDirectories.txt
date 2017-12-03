@@ -1,3 +1,0 @@
-/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/PythonScriptImagePassingHandlers/build/CMakeFiles/edit_cache.dir
-/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/PythonScriptImagePassingHandlers/build/CMakeFiles/rebuild_cache.dir
-/home/kartik/Documents/GDrive/Ubuntu Synced/OPENCV/Silatra/GetMyHand/PythonScriptImagePassingHandlers/build/CMakeFiles/PythonScriptImagePassingHandlers.dir
