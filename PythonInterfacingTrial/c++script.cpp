@@ -205,16 +205,21 @@ int main(int argc, char *argv[])
 
     Py_Initialize();
 
+    cout<<"Check 1"<<endl;
 
     PyRun_SimpleString("import sys\n"
-    "sys.path.insert(0, './')\n");  // This statement added from reference: https://stackoverflow.com/a/24492775/5370202
+    "sys.path.insert(0, './')\n"
+    "print(sys.path)");  // This statement added from reference: https://stackoverflow.com/a/24492775/5370202
 
+    cout<<"Check 2"<<endl;
 
     pName = PyUnicode_DecodeFSDefault(argv[1]);
     /* Error checking of pName left out */
 
     pModule = PyImport_Import(pName);
     Py_DECREF(pName);
+
+    cout<<"Check 3"<<endl;
 
     if (pModule != NULL) {
         pFunc = PyObject_GetAttrString(pModule, argv[2]);
@@ -225,10 +230,14 @@ int main(int argc, char *argv[])
             Mat image = imread(argv[3],1);
             cout<<"Image ("<<image.size().width<<","<<image.size().height<<") loaded"<<endl;
 
+            cout<<"Check 4"<<endl;
+
             pArgs = PyTuple_New(1);
             imshow("Original image before python processing",image);
             pMat = pyopencv_from(image);
             PyTuple_SetItem(pArgs, 0, pMat);
+
+            cout<<"Check 5"<<endl;
 
             // pArgs = PyTuple_New(argc - 3);
             // for (i = 0; i < argc - 3; ++i) {
@@ -247,6 +256,9 @@ int main(int argc, char *argv[])
             Py_DECREF(pArgs);   //DECReffing pArgs would DECRef pMat as well because pArgs tuple has pMat
             //Reference for reason of commenting DECRef of pMat:
             //https://stackoverflow.com/a/14244382/5370202
+
+            cout<<"Check 6"<<endl;
+
             cout<<PyTuple_Check(pResponse)<<endl;
             if (pResponse != NULL ) {
                 // printf("Result of call: %ld\n", PyLong_AsLong(pResponse));

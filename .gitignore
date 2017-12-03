@@ -17,3 +17,4 @@ SkinDetection/segmented.jpg
 */build/*
 CCDC-Data/*
 data.csv
+*/__pycache__
