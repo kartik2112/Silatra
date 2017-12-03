@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.8)
+project( PythonScriptImagePassingHandlers )
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} /usr/local/include/python3.5 /usr/local/include/google/protobuf)
+add_executable( PythonScriptImagePassingHandlers skinColorSegmentation.cpp cv_cpp_py_interface.cpp)
+target_link_libraries( PythonScriptImagePassingHandlers ${OpenCV_LIBS} stdc++fs python3.5m protobuf)
