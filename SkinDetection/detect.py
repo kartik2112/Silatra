@@ -23,16 +23,28 @@ print('\n--------------- Silatra skin detector ---------------')
 
 # Read model architecture
 model_data = ''
-with open('new_skin_model.json') as model_file: model_data = model_file.read()
+with open('model.json') as model_file: model_data = model_file.read()
 model = model_from_json(model_data)
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Load saved weights
-model.load_weights('new_skin_model_weights.h5')
+model.load_weights('weights.h5')
 print('\nModel ready for testing. ',end='')
 
 #Set Segmentation threshold
 SEGMENTATION_THRESHOLD = 0.5
+
+with open('probabilities.txt') as p:
+    probability_of_being_skin_pixel, count = 0, 0
+    while True:
+        try:
+            line = p.read()
+            if line is '': break
+            probability_of_being_skin_pixel += float(line.split('\n')[0])
+            count += 1
+        except: break
+
+probability_of_being_skin_pixel /= count
 
 def predict_skin_pixels(img_file, return_flag=False):
     if img_file is not '': img_file = 'Test_Images/'+img_file
@@ -40,9 +52,11 @@ def predict_skin_pixels(img_file, return_flag=False):
     # Start timer
     start = time.clock()
 
-    # Load image & resize it to 640x480 pixels.
+    # Load image
     if img_file is '': img_file = 'Test_Images/test_img.jpg'
     img, segmented_img, completed = cv2.imread(img_file), [], 0
+
+    # Decide aspect ratio and resize the image.
     if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (240,320))
     elif float(len(img)/len(img[0])) == float(9/16): img = cv2.resize(img, (320,240))
     elif float(len(img)/len(img[0])) == 1: img = cv2.resize(img, (320,240))
@@ -62,6 +76,8 @@ def predict_skin_pixels(img_file, return_flag=False):
     total_pixels = len(img)*len(img[0])
     print('Image size = '+str(len(img))+'x'+str(len(img[0]))+' = '+str(total_pixels)+' pixels\n')
 
+    # Classification of pixels to skin and non-skin
+    total_skin_pixels = 0
     print('Processing image....\r',end='')
     for a_row in img:
         if a_row == [0,0,0]: continue
@@ -69,36 +85,26 @@ def predict_skin_pixels(img_file, return_flag=False):
         output = output.tolist()                                # Prediction is a numpy array. Convert to list for iteration
         pixel_vals = []
         for i in range(len(output)):
-            if output[i][1]<=SEGMENTATION_THRESHOLD:
+            if output[i][0]*probability_of_being_skin_pixel >= output[i][1]*(1.0-probability_of_being_skin_pixel):
+            #if output[i][0] > output[i][1]:
                 pixel_vals.append([1,1,1])
+                total_skin_pixels += 1
             else:
                 pixel_vals.append([0,0,0])
-        #completed += len(a_row)
-        #if completed%10000 == 0: print('Completed: '+str(int(completed/10000))+"k/"+str(int(total_pixels/10000))+"k\r",end='')
         segmented_img.append(pixel_vals)
     print('Skin segmented from image.')
 
-    # Bitwise and operation.
+    # Bitwise AND operation to binarise the image.
     ranges = [0,0,255]
     for i in range(len(img)):
         for j in range(len(img[i])):
             for k in range(3): img[i][j][k] = float(ranges[k]*segmented_img[i][j][k])
-
-    ''' #Issue-1
-    """
-    Unusre whether this code must be kept. 
-    Some cases provides excellent results, but in some cases (particularly in cases of small hands) damages detected skin.
-    """
-
-    # Erosion & dilation
-    img = array(img)
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
-    img = cv2.erode(img, kernel, iterations=1)
-    img = cv2.dilate(img, kernel, iterations=1) '''
-   
-
+    
     end = time.clock()
     print('Time required for segmentation: '+str(round(end-start,3))+'s')
+
+    #print('Probability of a pixel being skin: '+str(round(float(total_skin_pixels)/float(total_pixels),3)))
+    #with open('probabilities.txt','a') as f: f.write(str(round(float(total_skin_pixels)/float(total_pixels),3))+'\n')
 
     img = array(img)
     if not return_flag: cv2.imshow('Segmentation results',np.hstack([original, cv2.cvtColor(array(img, uint8), cv2.COLOR_HSV2BGR)]))
@@ -122,7 +128,7 @@ else:
     image_file = args.get('image')
     print('Using: '+image_file)
     cv2.imshow('Results',predict_skin_pixels(image_file, True))
-    cv2.waitKey(10000)
+    cv2.waitKey(100000)
 
 '''
 This code is kept if we want to test on individual RGB values. Remove this later.

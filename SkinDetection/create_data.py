@@ -22,21 +22,21 @@ if __name__=="__main__":
     print('Extracting features... Completed: 0%\r',end='')
     hsv_data = set()
     img_template = 'Test_Images/Samples for training/'
-    sample_start_number, sample_end_number, img_ext, mark_data_as = 1, 10, '.jpg', '1'
+    sample_start_number, sample_end_number, img_ext, mark_data_as = 1, 9, '.jpg', '1'
     for i in range(sample_start_number,sample_end_number+1):
         print('                                                                                      \r',end='')
         print('Processing: '+img_template+'Skin samples/'+str(i)+img_ext+'\r',end='')
         extracted_data = extract_hsv_features(img_template+'Skin samples/'+str(i)+img_ext,mark_data_as)
         for row in extracted_data: hsv_data.add(row)
 
-    sample_start_number, sample_end_number, img_ext, mark_data_as = 6, 10, '.png', '1'
+    sample_start_number, sample_end_number, img_ext, mark_data_as = 1, 6, '.png', '1'
     for i in range(sample_start_number,sample_end_number+1):
         print('                                                                                      \r',end='')
         print('Processing: '+img_template+'Skin samples/'+str(i)+img_ext+'\r',end='')
         extracted_data = extract_hsv_features(img_template+'Skin samples/'+str(i)+img_ext,mark_data_as)
         for row in extracted_data: hsv_data.add(row)
 
-    sample_start_number, sample_end_number, img_ext, mark_data_as = 1, 14, '.jpg', '2'
+    sample_start_number, sample_end_number, img_ext, mark_data_as = 1, 9, '.jpg', '2'
     for i in range(sample_start_number,sample_end_number+1):
         print('                                                                                      \r',end='')
         print('Processing: '+img_template+'Non-skin samples/'+str(i)+img_ext+'\r',end='')
@@ -53,6 +53,6 @@ if __name__=="__main__":
         
     print('                                                                                      \r',end='')
     print('Extraction complete! Saving...\r',end='')
-    with open('hsv.data','w') as data_file:
+    with open('silatra_dataset.txt','w') as data_file:
         for row in hsv_data: data_file.write(row)
     print('Data is ready for building the model!')
