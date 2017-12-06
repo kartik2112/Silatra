@@ -19,3 +19,5 @@ CCDC-Data/*
 data.csv
 .vscode/*
 Tejas is coding here/*
+*/__pycache__
+.ipynb_checkpoints/*
