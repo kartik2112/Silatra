@@ -101,13 +101,12 @@ def deep(data,d):
 
     # Compile model & fit data to model.
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    model.fit(train_data,dummy_labels,batch_size=8,epochs=12,verbose=1,validation_split=0.25)
+    model.fit(train_data,dummy_labels,batch_size=8,epochs=10,verbose=1,validation_split=0.25)
 
     # Evaluate against test data
     score = model.evaluate(test_data,dummy_test_labels)
     print("\n%s: %.2f%%" % (model.metrics_names[1], score[1]*100))
     predictions = model.predict(test_data)
-    print(predictions)
 
     # Save model architecture in json file & save weights in another file.
     to_be_saved_model = model.to_json()
