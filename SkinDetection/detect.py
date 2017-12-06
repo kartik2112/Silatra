@@ -10,10 +10,6 @@ Need to figure out a way to speed up prediction.
 from keras.models import model_from_json, Model
 from keras import backend as k
 from numpy import array,uint8
-from keras.activations import relu
-from math import floor
-from PIL import Image
-from os import system
 import cv2, time, numpy as np
 import argparse
 
@@ -27,13 +23,16 @@ print('\n--------------- Silatra skin detector ---------------')
 
 # Read model architecture
 model_data = ''
-with open('model.json') as model_file: model_data = model_file.read()
+with open('new_skin_model.json') as model_file: model_data = model_file.read()
 model = model_from_json(model_data)
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Load saved weights
-model.load_weights('weights.h5')
+model.load_weights('new_skin_model_weights.h5')
 print('\nModel ready for testing. ',end='')
+
+#Set Segmentation threshold
+SEGMENTATION_THRESHOLD = 0.5
 
 def predict_skin_pixels(img_file, return_flag=False):
     if img_file is not '': img_file = 'Test_Images/'+img_file
@@ -44,8 +43,10 @@ def predict_skin_pixels(img_file, return_flag=False):
     # Load image & resize it to 640x480 pixels.
     if img_file is '': img_file = 'Test_Images/test_img.jpg'
     img, segmented_img, completed = cv2.imread(img_file), [], 0
-    if not args.get('p'): img = cv2.resize(img, (320,240))                 # 240x320 resized image for faster prediction.
-    else: img = cv2.resize(img, (240,320))
+    if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (240,320))
+    elif float(len(img)/len(img[0])) == float(9/16): img = cv2.resize(img, (320,240))
+    elif float(len(img)/len(img[0])) == 1: img = cv2.resize(img, (320,240))
+    else: img = cv2.resize(img, (250,250))
     original = img.copy()
 
 
@@ -68,7 +69,7 @@ def predict_skin_pixels(img_file, return_flag=False):
         output = output.tolist()                                # Prediction is a numpy array. Convert to list for iteration
         pixel_vals = []
         for i in range(len(output)):
-            if output[i][0]>output[i][1]:
+            if output[i][1]<=SEGMENTATION_THRESHOLD:
                 pixel_vals.append([1,1,1])
             else:
                 pixel_vals.append([0,0,0])
@@ -84,15 +85,17 @@ def predict_skin_pixels(img_file, return_flag=False):
             for k in range(3): img[i][j][k] = float(ranges[k]*segmented_img[i][j][k])
 
     ''' #Issue-1
+    """
     Unusre whether this code must be kept. 
     Some cases provides excellent results, but in some cases (particularly in cases of small hands) damages detected skin.
+    """
 
     # Erosion & dilation
     img = array(img)
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9, 9))
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
     img = cv2.erode(img, kernel, iterations=1)
-    img = cv2.dilate(img, kernel, iterations=1)
-    '''
+    img = cv2.dilate(img, kernel, iterations=1) '''
+   
 
     end = time.clock()
     print('Time required for segmentation: '+str(round(end-start,3))+'s')
@@ -104,7 +107,7 @@ def predict_skin_pixels(img_file, return_flag=False):
     cv2.destroyAllWindows()
 
 if not args.get('image'):
-    print('Keep image file empty for test image.')
+    print('Keep image file empty for test image.\n')
     image_file = input('Image file: ')
     predict_skin_pixels(image_file)
     while True:

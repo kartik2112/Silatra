@@ -1,13 +1,18 @@
 import cv2
 import numpy as np
 
-file_path = '../training-images/Digits/1/Right_Hand/Normal/'
+''' file_path = '../training-images/Digits/1/Right_Hand/Normal/'
 print('\nEnter image numbers for Right hand, normal and sign as 1\nEg. 2,3 (No space in between)\n')
 image_number_1 = input('Image inputs: ')
-image_number_1, image_number_2 = image_number_1.split(',')
+image_number_1, image_number_2 = image_number_1.split(',') '''
 
-image1 = cv2.imread(file_path+image_number_1+'.png')                                  # Query
-image2 = cv2.imread(file_path+image_number_2+'.png')                                  # Train
+image1 = cv2.imread('Images/mouse.jpg')                                     # Query
+image2 = cv2.imread('Images/bg.jpg')                                 # Train
+
+image1 = cv2.resize(image1,(640,480))
+image2 = cv2.resize(image2,(640,480))
+''' image1 = cv2.resize(image1,(480,640))
+image2 = cv2.resize(image2,(480,640)) '''
 
 # Convert images to grayscale
 image1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
@@ -18,8 +23,8 @@ clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(6,6))
 image1 = clahe.apply(image1)
 image2 = clahe.apply(image2)
 
-
-""" # FLANN Based feature matching
+"""
+# FLANN Based feature matching
 
 # For FLANN based feature matching, we can use only SIFT.
 
@@ -39,18 +44,19 @@ matches = flann.knnMatch(descriptors_1,descriptors_2,k=2)
 matchesMask = [[0,0] for i in range(len(matches))]
 
 # ratio test as per Lowe's paper
-for i,(m,n) in enumerate(matches):
+good_matches = []
+for m,n in matches:
     if m.distance < 0.7*n.distance:
-        matchesMask[i]=[1,0]
+        good_matches.append(m)
 
-draw_params = dict(matchColor = (0,255,0),
+''' draw_params = dict(matchColor = (0,255,0),
                    singlePointColor = (255,0,0),
                    matchesMask = matchesMask,
                    flags = 0)
 
-final_image = cv2.drawMatchesKnn(image1,key_points_1,image2,key_points_2,matches,None,**draw_params)
-
+final_image = cv2.drawMatchesKnn(image1,key_points_1,image2,key_points_2,matches,None,**draw_params) '''
 """
+
 
 # Brute force matching using ORB descriptors
 
@@ -68,9 +74,33 @@ matches = bf_matcher.match(descriptors_1,descriptors_2)
 # Sort them in the order of their distance.
 matches = sorted(matches, key = lambda x:x.distance)
 
-# Draw first 10 matches.
-final_image = cv2.drawMatches(image1,key_points_1,image2,key_points_2,matches[:10], None, flags=2)
+""" # Draw first 10 matches.
+final_image = cv2.drawMatches(image1,key_points_1,image2,key_points_2,matches[:3], None, flags=2) """
 
-cv2.imshow('Matches', final_image)
-cv2.waitKey(1000000)
-cv2.destroyAllWindows()
+good_matches = matches[:]
+
+if len(good_matches) >= 4:
+    src_pts = np.float32([key_points_1[m.queryIdx].pt for m in good_matches]).reshape(-1,1,2)
+    dst_pts = np.float32([key_points_2[m.trainIdx].pt for m in good_matches]).reshape(-1,1,2)
+
+    M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,5.0)
+    matchesMask = mask.ravel().tolist()
+
+    height,width = image1.shape
+    pts = np.float32([ [0,0],[0,height-1],[width-1,height-1],[width-1,0] ]).reshape(-1,1,2)
+    dst = cv2.perspectiveTransform(pts,M)
+
+    image2 = cv2.polylines(image2,[np.int32(dst)],True,255,3, cv2.LINE_AA)
+
+    draw_params = dict(matchColor = (0,255,0), # draw matches in green color
+                    singlePointColor = None,
+                    matchesMask = matchesMask, # draw only inliers
+                    flags = 2)
+
+    final_image = cv2.drawMatches(image1,key_points_1,image2,key_points_2,good_matches, None,**draw_params)
+
+    cv2.imshow('Matches', final_image)
+    cv2.waitKey(1000000)
+    cv2.destroyAllWindows()
+else:
+    print('Not enough matches. Found: '+str(len(good_matches))+' Expected: 4')
