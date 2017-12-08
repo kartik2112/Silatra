@@ -47,11 +47,7 @@ if __name__=="__main__":
     '''
 
     img_template = 'Test_Images/Samples for training/'
-<<<<<<< HEAD
     sample_start_number, sample_end_number, img_ext, mark_data_as = 1, 17, '.jpg', '1'
-=======
-    sample_start_number, sample_end_number, img_ext, mark_data_as = 1, 9, '.jpg', '1'
->>>>>>> 16d3a0e39a7d5e01ef7332e374030606c0f7285a
     for i in range(sample_start_number,sample_end_number+1):
         print('                                                                                      \r',end='')
         print('Processing: '+img_template+'Skin samples/'+str(i)+img_ext+'\r',end='')
@@ -82,10 +78,6 @@ if __name__=="__main__":
         
     print('                                                                                      \r',end='')
     print('Extraction complete! Saving...\r',end='')
-<<<<<<< HEAD
     with open('silatra_dataset_complete.txt','w') as data_file:
-=======
-    with open('silatra_dataset.txt','w') as data_file:
->>>>>>> 16d3a0e39a7d5e01ef7332e374030606c0f7285a
         for row in hsv_data: data_file.write(row)
     print('Data is ready for building the model!')
