@@ -1,18 +1,17 @@
 '''
-This to be done:
+To be run after:
+create_data.py & then build_model.py
 
-#Issue-1    Decide on Erosion & dilation
-
-Need to figure out a way to speed up prediction.
+Segments skin from an image. Input image is taken from Test_Images folder as of now.
 '''
 
 # Imports
-from keras.models import model_from_json, Model
-from keras import backend as k
-from numpy import array,uint8,reshape
-import cv2, time, numpy as np
+from keras.models import model_from_json
+from numpy import array,uint8,hstack
+import cv2, time
 import argparse
 
+# Add support for using flags such as -i and --image for direct image input
 ap = argparse.ArgumentParser()
 ap.add_argument("-i","--image", help='Use this flag followed by image file to do segmentation on an image')
 args = vars(ap.parse_args())
@@ -29,21 +28,6 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accur
 model.load_weights('weights.h5')
 print('\nModel ready for testing. ',end='')
 
-#Set Segmentation threshold
-SEGMENTATION_THRESHOLD = 0.5
-
-with open('probabilities.txt') as p:
-    probability_of_being_skin_pixel, count = 0, 0
-    while True:
-        try:
-            line = p.read()
-            if line is '': break
-            probability_of_being_skin_pixel += float(line.split('\n')[0])
-            count += 1
-        except: break
-
-probability_of_being_skin_pixel /= count
-
 def predict_skin_pixels(img_file, return_flag=False):
     if img_file is not '': img_file = 'Test_Images/'+img_file
 
@@ -55,17 +39,11 @@ def predict_skin_pixels(img_file, return_flag=False):
     img, segmented_img, completed = cv2.imread(img_file), [], 0
 
     # Decide aspect ratio and resize the image.
-<<<<<<< HEAD
     if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (180,320))
     elif float(len(img)/len(img[0])) == float(9/16): img = cv2.resize(img, (320,180))
     elif float(len(img)/len(img[0])) == float(4/3): img = cv2.resize(img, (320,240))
     elif float(len(img)/len(img[0])) == float(3/4): img = cv2.resize(img, (240,320))
     elif float(len(img)/len(img[0])) == 1: img = cv2.resize(img, (300,300))
-=======
-    if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (240,320))
-    elif float(len(img)/len(img[0])) == float(9/16): img = cv2.resize(img, (320,240))
-    elif float(len(img)/len(img[0])) == 1: img = cv2.resize(img, (320,240))
->>>>>>> 16d3a0e39a7d5e01ef7332e374030606c0f7285a
     else: img = cv2.resize(img, (250,250))
     original = img.copy()
 
@@ -82,37 +60,24 @@ def predict_skin_pixels(img_file, return_flag=False):
     total_pixels = len(img)*len(img[0])
     print('Image size = '+str(len(img))+'x'+str(len(img[0]))+' = '+str(total_pixels)+' pixels\n')
 
-    ''' img = img.tolist()
-    with open('temp.txt','w') as f:
-        for row in img:
-            for pixel in row:
-                f.write(str(pixel))
-            f.write(('-'*20)+'\n\n') '''
+    ''' Determination of pixels - skin and non-skin
 
-    # Determination of pixels - skin and non-skin
-    total_skin_pixels = 0
-    completed=0
-    ''' for a_row in img:
-        output = model.predict(a_row)
-        output = output.tolist()                                # Prediction is a numpy array. Convert to list for iteration
-        pixel_vals = []
-        for i in range(len(output)):
-            l_skin = (output[max(0,i-1)][0] + output[min(i+1,len(output)-1)][0])/2
-            l_non_skin = 1 - l_skin
-            if output[i][0]*l_skin >= 0.5:
-            #if output[i][0] > output[i][1]:
-                pixel_vals.append([1,1,1])
-                total_skin_pixels += 1
-            else:
-                pixel_vals.append([0,0,0])
-            completed += 1
-            if completed%10000==0: print(str(completed/1000)+'K / '+str(total_pixels/1000)+'K\r',end='')
-        segmented_img.append(pixel_vals)
-    print(str(total_pixels/1000)+'K / '+str(total_pixels/1000)+'K\r',end='') '''
-    upper_row_predictions = 0
-    curr_row_predictions = model.predict(img[0])
-    lower_row_predictions = model.predict(img[1])
-    n = len(img[0])-1
+        How probability of a pixel being skin or non-skin is calculated:
+        The probability that a pixel is skin pixel depends on following factors:
+        1. Whether colour of pixel is skin colour
+        2. Whether neighbouring colours are skin (Belonging in a skin area)
+
+        Thus, we can decide probability of a pixel being skin by using following equation:
+        P(pixel: skin) = P(pixel: skin_colour) x L(pixel: skin)
+
+        where L(pixel: skin) represents the likelihood of pixel being skin. 
+        More the chance of neighbouring pixels being of skin colour, more the chance of current pixel being skin.abs
+        Thus, we calculate L(pixel: skin) by taking average of the probabilities of being skin colour of the 8 neighbouring pixels.
+        L(pixel: skin) = Avg(P(pixel-i: skin_colour)) where pixel-i is one of the 8 neighbouring pixel.
+
+    '''
+    completed, n = 0, len(img[0]) - 1
+    upper_row_predictions, curr_row_predictions, lower_row_predictions = '', model.predict(img[0]), model.predict(img[1])
     for i in range(len(img)):
         for j in range(len(curr_row_predictions)):
             l_skin, count = 0, 0
@@ -137,23 +102,18 @@ def predict_skin_pixels(img_file, return_flag=False):
         if i < len(img)-2: lower_row_predictions = model.predict(img[i+2])
     print(str(total_pixels/1000)+'K / '+str(total_pixels/1000)+'K\r',end='')
     print('Skin segmented from image.')
-
-    ''' # Bitwise AND operation to binarise the image.
-    for i in range(len(img)):
-        for j in range(len(img[i])):
-            for k in range(3): img[i][j][k] *= float(ranges[k]*segmented_img[i][j][k]) '''
     
+    # Stop timer and measure the time for segmentation
     end = time.clock()
     print('Time required for segmentation: '+str(round(end-start,3))+'s')
 
-    #print('Probability of a pixel being skin: '+str(round(float(total_skin_pixels)/float(total_pixels),3)))
-    #with open('probabilities.txt','a') as f: f.write(str(round(float(total_skin_pixels)/float(total_pixels),3))+'\n')
-
-    if not return_flag: cv2.imshow('Segmentation results',np.hstack([original, cv2.cvtColor(array(img, uint8), cv2.COLOR_HSV2BGR)]))
+    # Show results
+    if not return_flag: cv2.imshow('Segmentation results',hstack([original, cv2.cvtColor(array(img, uint8), cv2.COLOR_HSV2BGR)]))
     else: return cv2.cvtColor(array(img, uint8), cv2.COLOR_HSV2BGR)
     cv2.waitKey(100000)
     cv2.destroyAllWindows()
 
+# If no flags specified, execution starts here
 if not args.get('image'):
     print('Keep image file empty for test image.\n')
     image_file = input('Image file: ')
@@ -165,29 +125,10 @@ if not args.get('image'):
             image_file = input('Image file: ')
             predict_skin_pixels(image_file)
         else: break
+# When -i or --image flag is used, execution stsrts here.
 else:
     print('\n')
     image_file = args.get('image')
     print('Using: '+image_file)
     cv2.imshow('Results',predict_skin_pixels(image_file, True))
     cv2.waitKey(100000)
-
-'''
-This code is kept if we want to test on individual RGB values. Remove this later.
-
-# Sample prediction
-r,g,b = 129,117,91
-data_bgr = [b,g,r]
-data_hsv = cv2.cvtColor(uint8([[data_bgr]]), cv2.COLOR_BGR2HSV).tolist()[0][0]
-ranges = [255.0,100.0,100.0]
-for i in range(len(data_to_test)): data_to_test[i] = data_to_test[i]*1.0/ranges[i]
-data_to_test = [data_to_test]
-output = model.predict(array(data_to_test)).tolist()
-print('Output of model: '+str(output))
-class_dt=""
-if output[0][0]>output[0][1]:
-    class_dt="Skin"
-else:
-    class_dt="Non-Skin"
-print("Predicted class:"+class_dt)
-'''
