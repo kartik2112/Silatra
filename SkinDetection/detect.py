@@ -55,11 +55,17 @@ def predict_skin_pixels(img_file, return_flag=False):
     img, segmented_img, completed = cv2.imread(img_file), [], 0
 
     # Decide aspect ratio and resize the image.
+<<<<<<< HEAD
     if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (180,320))
     elif float(len(img)/len(img[0])) == float(9/16): img = cv2.resize(img, (320,180))
     elif float(len(img)/len(img[0])) == float(4/3): img = cv2.resize(img, (320,240))
     elif float(len(img)/len(img[0])) == float(3/4): img = cv2.resize(img, (240,320))
     elif float(len(img)/len(img[0])) == 1: img = cv2.resize(img, (300,300))
+=======
+    if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (240,320))
+    elif float(len(img)/len(img[0])) == float(9/16): img = cv2.resize(img, (320,240))
+    elif float(len(img)/len(img[0])) == 1: img = cv2.resize(img, (320,240))
+>>>>>>> 16d3a0e39a7d5e01ef7332e374030606c0f7285a
     else: img = cv2.resize(img, (250,250))
     original = img.copy()
 
