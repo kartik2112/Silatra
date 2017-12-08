@@ -19,7 +19,7 @@ S,V     [0,255]
 
 def read_uci_data(data,d):
     print('Reading the UCI dataset...\r',end='')
-    with open('data.txt') as f:
+    with open('uci_skin_segmentation_data.txt') as f:
         while True:
             # Read data row by row
             line = f.readline()
@@ -38,7 +38,7 @@ def read_uci_data(data,d):
             d.append(line[len(line)-1])
 
 def read_silatra_data(data,d):
-    with open('hsv.data') as f:
+    with open('silatra_dataset.txt') as f:
         row_count=1
         print('Reading the Silatra dataset... Read 0 Lakh rows\r',end='')
         while True:
@@ -58,7 +58,6 @@ def read_silatra_data(data,d):
             # Appending data
             data.append(pixel)
             d.append(row[len(row)-1])
-
 
 
 def deep(data,d):
@@ -101,17 +100,19 @@ def deep(data,d):
 
     # Compile model & fit data to model.
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    model.fit(train_data,dummy_labels,batch_size=8,epochs=10,verbose=1,validation_split=0.25)
+    model.fit(train_data,dummy_labels,batch_size=8,epochs=12,verbose=1,validation_split=0.1)
 
     # Evaluate against test data
     score = model.evaluate(test_data,dummy_test_labels)
     print("\n%s: %.2f%%" % (model.metrics_names[1], score[1]*100))
-    predictions = model.predict(test_data)
 
     # Save model architecture in json file & save weights in another file.
+    print('Saving model....\r',end='')
     to_be_saved_model = model.to_json()
     with open('model.json','w') as model_file: model_file.write(to_be_saved_model)
     model.save_weights('weights.h5')
+
+    print('You may now segment an image!')
 
 
 # Program starts here
