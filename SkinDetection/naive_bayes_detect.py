@@ -25,7 +25,7 @@ def read_uci_data():
 			desired_values.append(desired_value)
 
 def read_silatra_data():
-	with open('silatra_dataset.txt') as f:
+	with open('silatra_dataset_complete.txt') as f:
 		row_count=1
 		print('Reading the Silatra dataset...\r',end='')
 		while True:
@@ -80,9 +80,9 @@ def evaluate():
 		elif desired_value is 1 and prediction is 0: false_positives += 1
 		elif desired_value is 1 and prediction is 1: false_negatives += 1
 	
-	print('Confusion matrix:    \n\n---------------------------------\nC  |\tS\t|\tNS\t|\n---------------------------------')
-	print('S  |\t'+str(true_positives)+'\t|\t'+str(true_negatives)+'\t|')
-	print('NS |\t'+str(false_positives)+'\t|\t'+str(false_negatives)+'\t|',end='\n')
+	print('Confusion matrix:    \n\n---------------------------------\n|  C  |\tS\t|\tNS\t|\n---------------------------------')
+	print('|  S  |\t'+str(true_positives)+'\t|\t'+str(true_negatives)+'\t|')
+	print('|  NS |\t'+str(false_positives)+'\t|\t'+str(false_negatives)+'\t|',end='\n')
 	print('---------------------------------')
 	correct_predictions = true_positives + false_negatives
 	print('Accuracy: '+str(correct_predictions)+' / '+str(len(test_data))+' = '+str(round(float(correct_predictions/len(test_data)), 4)*100)+'%')
@@ -90,7 +90,7 @@ def evaluate():
 if __name__=="__main__":
 	MODULUS = 1
 	data, attributes_info, classes, desired_values = [], [{}, {}, {}], [0,0], []
-	read_uci_data()
+	#read_uci_data()
 	read_silatra_data()
 
 	train_data, test_data, train_labels, test_labels = train_test_split(data, desired_values, test_size=0.3, random_state=31)
@@ -152,8 +152,8 @@ if __name__=="__main__":
 			for k in range(3): image[i][j][k] = float(binary_image[i][j][k])
 
 	time_for_image = time.time() - time_for_image
-	print('\n\nTime required per pixel = '+str(time_per_pixel)+' micro-seconds')
-	print('Time required for segmentation = '+str(time_for_image)+' micro-seconds')
+	print('\n\nTime required per pixel = '+str(time_per_pixel)+' seconds')
+	print('Time required for segmentation = '+str(time_for_image)+' seconds')
 	cv2.imshow('Segmentation results',hstack([original, cv2.cvtColor(array(image, uint8), cv2.COLOR_HSV2BGR)]))
 	print()
 	cv2.waitKey(100000)
