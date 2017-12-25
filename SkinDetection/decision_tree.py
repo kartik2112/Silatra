@@ -12,9 +12,9 @@ def evaluate_score(clf,X,Y):
 # Loading the file
 X=[]
 Y=[]
-input_file=open("skin_data.csv","r")
+input_file=open("silatra_dataset_complete.txt","r")
 for line in input_file:
-    attrs=line.split(",")
+    attrs=line.split("\t")
     Y.append(int(attrs[-1].strip()))
     X.append(list(map(int,attrs[0:3])))
 print("Number of samples loaded:"+str(len(X)))
