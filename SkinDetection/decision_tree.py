@@ -12,9 +12,9 @@ def evaluate_score(clf,X,Y):
 # Loading the file
 X=[]
 Y=[]
-input_file=open("skin_data.csv","r")
+input_file=open("silatra_dataset_complete.txt","r")
 for line in input_file:
-    attrs=line.split(",")
+    attrs=line.split("\t")
     Y.append(int(attrs[-1].strip()))
     X.append(list(map(int,attrs[0:3])))
 print("Number of samples loaded:"+str(len(X)))
@@ -45,8 +45,13 @@ print("Accuracy on test set:"+str(test_score))
 # Trying the classifier on an image
 import cv2,numpy as np,time
 start = time.clock()
-img=cv2.imread('Test_Images/varun.jpg')
-img = cv2.resize(img,(320,240))
+img=cv2.imread('Test_Images/we.jpg')
+if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (180,320))
+elif float(len(img)/len(img[0])) == float(9/16): img = cv2.resize(img, (320,180))
+elif float(len(img)/len(img[0])) == float(4/3): img = cv2.resize(img, (320,240))
+elif float(len(img)/len(img[0])) == float(3/4): img = cv2.resize(img, (240,320))
+elif float(len(img)/len(img[0])) == 1: img = cv2.resize(img, (300,300))
+else: img = cv2.resize(img, (250,250))
 img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 img = img.tolist()
 seg_img=[]
