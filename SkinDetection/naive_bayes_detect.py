@@ -1,6 +1,7 @@
-import cv2, time, argparse
+import cv2, time, argparse, matplotlib.pyplot as plt
 from numpy import array,uint8,hstack
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import roc_curve, auc
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-i","--image", help='Use this flag followed by image file to do segmentation on an image')
@@ -79,6 +80,7 @@ def evaluate():
 		elif desired_value is 0 and prediction is 1: true_negatives += 1
 		elif desired_value is 1 and prediction is 0: false_positives += 1
 		elif desired_value is 1 and prediction is 1: false_negatives += 1
+		model_predictions.append(prediction)
 	
 	print('Confusion matrix:    \n\n---------------------------------\n|  C  |\tS\t|\tNS\t|\n---------------------------------')
 	print('|  S  |\t'+str(true_positives)+'\t|\t'+str(true_negatives)+'\t|')
@@ -100,7 +102,20 @@ if __name__=="__main__":
 	build_probabilities()
 
 	print('Testing in process...\r',end='')
+	model_predictions=[]
 	evaluate()
+	fpr,tpr,_ = roc_curve(test_labels, model_predictions)
+	roc_auc = auc(fpr, tpr)
+	plt.title('ROC for Naive Bayesian')
+	plt.plot(fpr, tpr, 'b', label = 'AUC = %0.4f' % roc_auc)
+	plt.legend(loc = 'lower right')
+	plt.plot([0, 1], [0, 1],'r--')
+	plt.xlim([0, 1])
+	plt.ylim([0, 1])
+	plt.ylabel('True Positive Rate')
+	plt.xlabel('False Positive Rate')
+	plt.show()
+
 
 	print('\nProbabilistic model ready!')
 	image_file = 'Test_Images/'

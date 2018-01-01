@@ -46,7 +46,12 @@ print("Accuracy on test set:"+str(test_score))
 import cv2,numpy as np,time
 start = time.clock()
 img=cv2.imread('Test_Images/varun.jpg')
-img = cv2.resize(img,(320,240))
+if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (180,320))
+elif float(len(img)/len(img[0])) == float(9/16): img = cv2.resize(img, (320,180))
+elif float(len(img)/len(img[0])) == float(4/3): img = cv2.resize(img, (320,240))
+elif float(len(img)/len(img[0])) == float(3/4): img = cv2.resize(img, (240,320))
+elif float(len(img)/len(img[0])) == 1: img = cv2.resize(img, (300,300))
+else: img = cv2.resize(img, (250,250))
 img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 img = img.tolist()
 seg_img=[]

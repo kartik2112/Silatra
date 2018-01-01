@@ -20,12 +20,12 @@ print('\n--------------- Silatra skin detector ---------------')
 
 # Read model architecture
 model_data = ''
-with open('uci_model.json') as model_file: model_data = model_file.read()
+with open('model.json') as model_file: model_data = model_file.read()
 model = model_from_json(model_data)
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Load saved weights
-model.load_weights('uci_weights.h5')
+model.load_weights('weights.h5')
 print('\nModel ready for testing. ',end='')
 
 def predict_skin_pixels(img_file, return_flag=False):
