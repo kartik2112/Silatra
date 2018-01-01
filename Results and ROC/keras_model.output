@@ -1,0 +1,87 @@
+Inka average lele
+
+
+--------------- Silatra skin detector ---------------
+
+Model ready for testing. 
+
+Using: varun.jpg
+Image size = 320x180 = 57600 pixels
+
+10.0K / 57.6K
+20.0K / 57.6K
+30.0K / 57.6K
+40.0K / 57.6K
+50.0K / 57.6K
+57.6K / 57.6K
+Skin segmented from image.
+Time required for actual segmentation -> 1.9858345985412598 seconds
+Time required for segmentation: 2.396s
+
+--------------- Silatra skin detector ---------------
+
+Model ready for testing. 
+
+Using: varun.jpg
+Image size = 320x180 = 57600 pixels
+
+10.0K / 57.6K
+20.0K / 57.6K
+30.0K / 57.6K
+40.0K / 57.6K
+50.0K / 57.6K
+57.6K / 57.6K
+Skin segmented from image.
+Time required for actual segmentation -> 1.9488420486450195 seconds
+Time required for segmentation: 2.369s
+
+--------------- Silatra skin detector ---------------
+
+Model ready for testing. 
+
+Using: varun.jpg
+Image size = 320x180 = 57600 pixels
+
+10.0K / 57.6K
+20.0K / 57.6K
+30.0K / 57.6K
+40.0K / 57.6K
+50.0K / 57.6K
+57.6K / 57.6K
+Skin segmented from image.
+Time required for actual segmentation -> 1.9712560176849365 seconds
+Time required for segmentation: 2.381s
+
+--------------- Silatra skin detector ---------------
+
+Model ready for testing. 
+
+Using: varun.jpg
+Image size = 320x180 = 57600 pixels
+
+10.0K / 57.6K
+20.0K / 57.6K
+30.0K / 57.6K
+40.0K / 57.6K
+50.0K / 57.6K
+57.6K / 57.6K
+Skin segmented from image.
+Time required for actual segmentation -> 1.9638705253601074 seconds
+Time required for segmentation: 2.274s
+
+--------------- Silatra skin detector ---------------
+
+Model ready for testing. 
+
+Using: varun.jpg
+Image size = 320x180 = 57600 pixels
+
+10.0K / 57.6K
+20.0K / 57.6K
+30.0K / 57.6K
+40.0K / 57.6K
+50.0K / 57.6K
+57.6K / 57.6K
+Skin segmented from image.
+Time required for actual segmentation -> 1.967310905456543 seconds
+Time required for segmentation: 2.256s

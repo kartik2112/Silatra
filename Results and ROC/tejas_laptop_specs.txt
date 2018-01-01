@@ -1,0 +1,4 @@
+Processor	Intel Core i7-5500 CPU, 2.40 GHz
+RAM			8 GB
+OS			Windows 10 Home
+System      64-bit Operating System, x64-based processor
