@@ -45,7 +45,7 @@ print("Accuracy on test set:"+str(test_score))
 # Trying the classifier on an image
 import cv2,numpy as np,time
 start = time.clock()
-img=cv2.imread('Test_Images/we.jpg')
+img=cv2.imread('Test_Images/varun.jpg')
 if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (180,320))
 elif float(len(img)/len(img[0])) == float(9/16): img = cv2.resize(img, (320,180))
 elif float(len(img)/len(img[0])) == float(4/3): img = cv2.resize(img, (320,240))
