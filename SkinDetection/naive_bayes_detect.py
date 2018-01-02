@@ -4,90 +4,102 @@ from numpy import array,uint8,hstack
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_curve, auc
 
-ap = argparse.ArgumentParser()
+''' ap = argparse.ArgumentParser()
 ap.add_argument("-i","--image", help='Use this flag followed by image file to do segmentation on an image')
-args = vars(ap.parse_args())
+args = vars(ap.parse_args()) '''
 
 n, true_positives, true_negatives, false_positives, false_negatives = 0, 0, 0, 0, 0
-def read_silatra_data():
-	with open('silatra_dataset_complete.txt') as f:
-		row_count=1
-		print('Reading the Silatra dataset...\r',end='')
-		while True:
-			# Read attributes_info row by row
-			line = f.readline()
-			if line == '': break                    # End of file
-			line = line.split('\t')
-			pixel = line[0:len(line)-1]             # attributes_info comes as: [h,s,v,class].
-			for i in range(len(pixel)): pixel[i] = int(pixel[i])
-			data.append(pixel)
-			desired_value = int(line[len(line)-1]) - 1
-			desired_values.append(desired_value)
-
-def build_data():
-	global n
-	for i in range(len(train_data)):
-		pixel = train_data[i]
-		desired_value = train_labels[i]
-
-		# Build count for each bin and desired value
-		classes[desired_value] += 1
-		n += 1
-		for i in range(len(pixel)):
-			near_val = pixel[i] - pixel[i]%MODULUS
-			try: attributes_info[i][near_val][desired_value] += 1
-			except: attributes_info[i][near_val] = [0,0]
-
-def build_probabilities():
-	global n
-	for attribute in attributes_info:
-		for key in attribute.keys():
-			attribute[key][0] = float(attribute[key][0])/classes[0]
-			attribute[key][1] = float(attribute[key][1])/classes[1]
-	classes[0] = float(classes[0]) / n
-	classes[1] = float(classes[1]) / n
-
-def evaluate():
-	global true_positives, true_negatives, false_positives, false_negatives
-	for i in range(len(test_data)):
-		pixel = test_data[i]
-		desired_value = test_labels[i]
-
-		probability_skin, probability_non_skin, prediction = classes[0], classes[1], 0
-		for channel in range(len(pixel)):
-			value = pixel[channel] - pixel[channel]%MODULUS
-			probability_skin *= attributes_info[channel][value][0]
-			probability_non_skin *= attributes_info[channel][value][1]
-		
-		if probability_skin <= probability_non_skin: prediction = 1
-		if desired_value is 0 and prediction is 0: true_positives += 1
-		elif desired_value is 0 and prediction is 1: true_negatives += 1
-		elif desired_value is 1 and prediction is 0: false_positives += 1
-		elif desired_value is 1 and prediction is 1: false_negatives += 1
-		model_predictions.append(prediction)
+test_skin_samples, test_non_skin_samples = 0, 0
 
 MODULUS = 1
 data, attributes_info, classes, desired_values = [], [{}, {}, {}], [0,0], []
-#read_uci_data()
-read_silatra_data()
 
-train_data, test_data, train_labels, test_labels = train_test_split(data, desired_values, test_size=0.3, random_state=31)
-print('                                                             \r',end='')
-print('Just a minute....\r',end='')
-build_data()
-build_probabilities()
+'''
+# If below line gives an error, uncomment this block comment and comment the line below it. DO NOT REMOVE IT.
+with open('silatra_dataset_complete.txt') as f:
+'''
 
-print('Testing in process...\r',end='')
-model_predictions=[]
-evaluate()
+with open('SkinDetection\silatra_dataset_complete.txt') as f:
+	row_count=1
+	print('Reading the Silatra dataset...\r',end='')
+	while True:
+		# Read attributes_info row by row
+		line = f.readline()
+		if line == '': break                    # End of file
+		line = line.split('\t')
+		pixel = line[0:len(line)-1]             # attributes_info comes as: [h,s,v,class].
+		for i in range(len(pixel)): pixel[i] = int(pixel[i])
+		data.append(pixel)
+		desired_value = int(line[len(line)-1]) - 1
+		desired_values.append(desired_value)
 
 #%%
+train_data, test_data, train_labels, test_labels = train_test_split(data, desired_values, test_size=0.3, random_state=31)
+print('                                                             \r',end='')
+print('Just a minute...\r',end='')
+for i in range(len(train_data)):
+	pixel = train_data[i]
+	desired_value = train_labels[i]
+
+	# Build count for each bin and desired value
+	classes[desired_value] += 1
+	n += 1
+	for i in range(len(pixel)):
+		near_val = pixel[i] - pixel[i]%MODULUS
+		try: attributes_info[i][near_val][desired_value] += 1
+		except: attributes_info[i][near_val] = [0,0]
+
+for attribute in attributes_info:
+	for key in attribute.keys():
+		attribute[key][0] = float(attribute[key][0])/classes[0]
+		attribute[key][1] = float(attribute[key][1])/classes[1]
+classes[0] = float(classes[0]) / n
+classes[1] = float(classes[1]) / n
+print('Model is ready\r',end='')
+
+#%%
+print('Testing in process...\r',end='')
+model_predictions=[]
+for i in range(len(test_data)):
+	pixel = test_data[i]
+	desired_value = test_labels[i]
+
+	probability_skin, probability_non_skin, prediction = classes[0], classes[1], 0
+	for channel in range(len(pixel)):
+		value = pixel[channel] - pixel[channel]%MODULUS
+		probability_skin *= attributes_info[channel][value][0]
+		probability_non_skin *= attributes_info[channel][value][1]
+	
+	if probability_skin <= probability_non_skin: prediction = 1
+
+	if desired_value is 0: test_skin_samples += 1
+	else: test_non_skin_samples += 1
+
+	if desired_value is 0 and prediction is 0: true_positives += 1
+	elif desired_value is 0 and prediction is 1: true_negatives += 1
+	elif desired_value is 1 and prediction is 0: false_positives += 1
+	elif desired_value is 1 and prediction is 1: false_negatives += 1
+	model_predictions.append(prediction)
+print('Testing complete\r',end='')
+
+#%%
+print('Model characterisitics: \n')
 print('Confusion matrix:    \n\n---------------------------------\n|  C  |\tS\t|\tNS\t|\n---------------------------------')
 print('|  S  |\t'+str(true_positives)+'\t|\t'+str(true_negatives)+'\t|')
 print('|  NS |\t'+str(false_positives)+'\t|\t'+str(false_negatives)+'\t|',end='\n')
 print('---------------------------------')
 correct_predictions = true_positives + false_negatives
 print('Accuracy: '+str(correct_predictions)+' / '+str(len(test_data))+' = '+str(round(float(correct_predictions/len(test_data)), 4)*100)+'%')
+
+sensitivity = true_positives*1.0/test_skin_samples
+specificity = true_negatives*1.0/test_non_skin_samples
+precision = true_positives*1.0/(true_positives+false_negatives)
+f1_score = 2*true_positives*1.0/(2*true_positives+false_positives+false_negatives)
+
+print('Sensitivity of model: %0.4f' % sensitivity)
+print('Specificity of model: %0.4f' % specificity)
+print('Precision of model: %0.4f' % precision)
+print('F1 score of model: %0.4f' % f1_score)
 
 #%%
 fpr,tpr,_ = roc_curve(test_labels, model_predictions)
@@ -105,10 +117,11 @@ print('\nProbabilistic model ready!')
 
 #%%
 image_file = 'Test_Images/'
-if not args.get('image'): image_file += input('\nInput image: ')
+image_file += input('\nInput image: ')
+''' if not args.get('image'): image_file += input('\nInput image: ')
 else:
 	image_file += args.get('image')
-	print('\nUsing: '+image_file)
+	print('\nUsing: '+image_file) '''
 
 image = cv2.imread(image_file)
 if float(len(image)/len(image[0])) == float(16/9): image = cv2.resize(image, (180,320))
