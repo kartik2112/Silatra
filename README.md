@@ -57,6 +57,9 @@ The *Files found Online* are those files that have been downloaded and might hav
 ### Git Related Usage
 * This repository has stored datasets. These are of sizes greater than 100 MB (max limit for Normal Github usage)
   For this purpose, Git LFS (Large File Storage) extension has been found. To install this on Ubuntu, execute the following commands:
+  1. `sudo apt-get install software-properties-common` to install add-apt-repository (or sudo apt-get install python-software-properties if you are on Ubuntu <= 12.04)
+  2. `sudo add-apt-repository ppa:git-core/ppa`
+  3. The curl script below calls apt-get update, if you aren't using it, don't forget to call `apt-get update` before installing git-lfs.
   
   `curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash`
   
@@ -73,3 +76,5 @@ The *Files found Online* are those files that have been downloaded and might hav
   `git lfs track "*.zip"`
   
 For more information, refer [Github LFS Reference](https://help.github.com/articles/working-with-large-files/)
+
+#### If this doesn't work out for you, follow [Installing Git Large File Storage](https://help.github.com/articles/installing-git-large-file-storage/)
