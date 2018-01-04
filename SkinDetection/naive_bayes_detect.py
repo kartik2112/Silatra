@@ -14,12 +14,7 @@ test_skin_samples, test_non_skin_samples = 0, 0
 MODULUS = 1
 data, attributes_info, classes, desired_values = [], [{}, {}, {}], [0,0], []
 
-'''
-# If below line gives an error, uncomment this block comment and comment the line below it. DO NOT REMOVE IT.
 with open('silatra_dataset_complete.txt') as f:
-'''
-
-with open('SkinDetection\silatra_dataset_complete.txt') as f:
 	row_count=1
 	print('Reading the Silatra dataset...\r',end='')
 	while True:
@@ -143,7 +138,7 @@ pixels_processed = 0
 time_for_image = time.time()
 time_per_pixel = 0
 
-for row in image:
+''' for row in image:
 	binary_row = []
 	for pixel in row:
 		probability_skin, probability_non_skin = classes[0] ,classes[1]
@@ -163,10 +158,63 @@ for row in image:
 print('Pixels processed: '+str(total_pixels/1000)+'k / '+str(total_pixels/1000)+'k\r',end='')
 for i in range(len(image)):
 	for j in range(len(image[i])):
-		for k in range(3): image[i][j][k] = float(binary_image[i][j][k])
+		for k in range(3): image[i][j][k] = float(binary_image[i][j][k]) '''
+
+
+def predict(row):
+	prediction = []
+	for pixel in row:
+		probability_skin, probability_non_skin = classes[0] ,classes[1]
+		for channel in range(3):
+			value = pixel[channel] - pixel[channel]%MODULUS
+			probability_skin *= attributes_info[channel][value][0]
+			probability_non_skin *= attributes_info[channel][value][1]
+		prediction.append([probability_skin, probability_non_skin])
+	return prediction
+
+upper_row_predictions, curr_row_predictions, lower_row_predictions = [], predict(image[0]), predict(image[1])
+n, k1, K = len(image[0]), 1.0, 1
+for i in range(len(image)):
+	for j in range(len(curr_row_predictions)):
+		l_skin, count = 0.0, 0
+		if i is not 0:
+			count += 1
+			if j > 0:
+				l_skin = upper_row_predictions[j-1][0]
+				count += 1
+			l_skin += upper_row_predictions[j][0]
+			if j < n-1:
+				l_skin += upper_row_predictions[j+1][0]
+				count += 1
+		if j > 0:
+			l_skin += curr_row_predictions[j-1][0]
+			count += 1
+		if j < n-1:
+			l_skin += curr_row_predictions[j+1][0]
+			count += 1
+		if i is not len(image)-1:
+			count += 1
+			if j > 0:
+				l_skin += lower_row_predictions[j-1][0]
+				count += 1
+			l_skin += lower_row_predictions[j][0]
+			if j < n-1:
+				l_skin += lower_row_predictions[j+1][0]
+				count += 1
+		alpha = l_skin
+		l_skin = l_skin*k1/(1.0*count)
+		if curr_row_predictions[j][0]*l_skin >= 0.5: k1 = count*1.0*K/alpha
+		else:
+			image[i][j] = [0.0,0.0,0.0]
+			k1 = 1
+		pixels_processed += 1
+		if pixels_processed%10000 == 0: print('Pixels processed: '+str(pixels_processed/1000)+'k / '+str(total_pixels/1000)+'k\r',end='')
+	upper_row_predictions = curr_row_predictions
+	curr_row_predictions = lower_row_predictions
+	if i < len(image)-2: lower_row_predictions = predict(image[i+2])
 
 time_for_image = time.time() - time_for_image
-print('\n\nTime required per pixel = '+str(time_per_pixel)+' seconds')
+#print('\n\nTime required per pixel = '+str(time_per_pixel)+' seconds')
 print('Time required for segmentation = '+str(time_for_image)+' seconds')
 cv2.imshow('Segmentation results',hstack([original, cv2.cvtColor(array(image, uint8), cv2.COLOR_HSV2BGR)]))
 print()

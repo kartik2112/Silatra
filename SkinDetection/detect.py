@@ -110,7 +110,6 @@ def predict_skin_pixels(img_file, return_flag=False):
                     count += 1
             alpha = l_skin
             l_skin = l_skin*k1/(1.0*count)
-            s += str(count-k1*alpha) + '\n'
             if curr_row_predictions[j][0]*l_skin >= 0.5:
                 for k in range(3): img[i][j][k] *= float(ranges[k])
                 k1 = count*1.0*K/alpha
@@ -124,6 +123,16 @@ def predict_skin_pixels(img_file, return_flag=False):
         if i < len(img)-2: lower_row_predictions = model.predict(img[i+2])
     print(str(total_pixels/1000)+'K / '+str(total_pixels/1000)+'K\r',end='')
     print('Skin segmented from image.')
+    ''' for i in range(len(img)):
+        predictions = model.predict(img[i])
+        for j in range(len(predictions)):
+            if predictions[j][0] > predictions[j][1]:
+                for k in range(3): img[i][j][k] *= ranges[k]
+            else: img[i][j] = [0,0,0]
+            completed += 1
+            if completed%10000 == 0: print(str(completed/1000)+'K / '+str(total_pixels/1000)+'K\r',end='')
+    print(str(total_pixels/1000)+'K / '+str(total_pixels/1000)+'K\r',end='')
+    print('Skin segmented from image.') '''
     t2 = time.time()
     print('Time required for actual segmentation -> '+str(t2-t1)+' seconds')
 
