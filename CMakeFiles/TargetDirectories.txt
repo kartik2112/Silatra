@@ -1,3 +1,0 @@
-/home/varun/Silatra/CMakeFiles/edit_cache.dir
-/home/varun/Silatra/CMakeFiles/rebuild_cache.dir
-/home/varun/Silatra/CMakeFiles/SiLaTra.dir
