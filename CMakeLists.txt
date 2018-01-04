@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project( SiLaTra )
 find_package( OpenCV REQUIRED )
+add_compiler_options(-std=c++14)
 include_directories( ${OpenCV_INCLUDE_DIRS} /usr/local/include/python3.5)
 add_executable( SiLaTra SiLaTra.cpp ./GetMyHand/handDetection.cpp ./GetMyHand/skinColorSegmentation.cpp ./GetMyHand/trackBarHandling.cpp)
 target_link_libraries( SiLaTra ${OpenCV_LIBS} stdc++fs python3.5m)
