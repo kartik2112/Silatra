@@ -110,7 +110,6 @@ def predict_skin_pixels(img_file, return_flag=False):
                     count += 1
             alpha = l_skin
             l_skin = l_skin*k1/(1.0*count)
-            s += str(count-k1*alpha) + '\n'
             if curr_row_predictions[j][0]*l_skin >= 0.5:
                 for k in range(3): img[i][j][k] *= float(ranges[k])
                 k1 = count*1.0*K/alpha
@@ -124,60 +123,23 @@ def predict_skin_pixels(img_file, return_flag=False):
         if i < len(img)-2: lower_row_predictions = model.predict(img[i+2])
     print(str(total_pixels/1000)+'K / '+str(total_pixels/1000)+'K\r',end='')
     print('Skin segmented from image.')
+    ''' for i in range(len(img)):
+        predictions = model.predict(img[i])
+        for j in range(len(predictions)):
+            if predictions[j][0] > predictions[j][1]:
+                for k in range(3): img[i][j][k] *= ranges[k]
+            else: img[i][j] = [0,0,0]
+            completed += 1
+            if completed%10000 == 0: print(str(completed/1000)+'K / '+str(total_pixels/1000)+'K\r',end='')
+    print(str(total_pixels/1000)+'K / '+str(total_pixels/1000)+'K\r',end='')
+    print('Skin segmented from image.') '''
     t2 = time.time()
     print('Time required for actual segmentation -> '+str(t2-t1)+' seconds')
 
-    ''' columns = len(img)
-    t1 = time.time()
-    img = reshape(array(img),(1,-1,3)).tolist()[0]
-    t2 = time.time()
-    print('Time required for reshape 1 -> '+str(t2-t1)+' seconds')
-    predictions = model.predict(img)
-    for i in range(len(predictions)):
-        l_skin, count = 0.0, 0
-        if i > n:
-            count += 1
-            if i%n != 0:
-                l_skin += predictions[i-n-1][0]
-                count += 1
-            l_skin += predictions[i-n][0]
-            if i%n != n-1:
-                l_skin += predictions[i-n+1][0]
-                count += 1
-        if i%n != 0:
-            l_skin += predictions[i-1][0]
-            count += 1
-        if i%n < n-1:
-            l_skin += predictions[i+1][0]
-            count += 1
-        if i < n*(columns-1):
-            count += 1
-            if i%n != 0:
-                l_skin += predictions[i+n-1][0]
-                count += 1
-            l_skin += predictions[i+n][0]
-            if i%n < n-1:
-                l_skin += predictions[i+n+1][0]
-                count += 1
-        l_skin /= 1.0*count
-        l_non_skin = 1 - l_skin
-        if predictions[i][0]*l_skin >= 0.5:
-            for k in range(3): img[i][k] *= 1.0*ranges[k]
-        else: img[i] = [0.0,0.0,0.0]
-        if i%10000 == 0: print(str(i/1000)+'K / '+str(total_pixels/1000)+'K\r',end='')
-    print(str(total_pixels/1000)+'K / '+str(total_pixels/1000)+'K\r',end='')
-    
-    t1 = time.time()
-    print('Time required for actual segmentation -> '+str(t1-t2)+'seconds')
-    img = array(img, uint8)
-    img = reshape(img, (columns,n,3))
-    t2 = time.time()
-    print('Time required for reshape 2 -> '+str(t2-t1)+'seconds') '''
     # Stop timer and measure the time for segmentation
     end = time.clock()
     print('Time required for segmentation: '+str(round(end-start,3))+'s')
 
-    with open('likeliness.txt','w') as f: f.write(s)
     # Show results
     img = array(img, uint8)
     if not return_flag: cv2.imshow('Segmentation results',hstack([original, cv2.cvtColor(array(img, uint8), cv2.COLOR_HSV2BGR)]))
