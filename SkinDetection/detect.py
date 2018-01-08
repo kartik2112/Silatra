@@ -10,26 +10,30 @@ from keras.models import model_from_json
 from numpy import array,uint8,hstack,reshape
 import cv2, time
 import argparse
+from math import ceil
 
 # Add support for using flags such as -i and --image for direct image input
 ap = argparse.ArgumentParser()
-ap.add_argument("-i","--image", help='Use this flag followed by image file to do segmentation on an image')
+ap.add_argument("-i","--image", help='Use this flag followed by image file to do segmentation on an image from any folder (use absolute path)')
+ap.add_argument("-ts","--test_image", help='Use this flag followed by image file to do segmentation on an image from Test_Images folder')
+ap.add_argument("-tr","--train_image", help='Use this flag followed by image file to do segmentation on an image from training-images folder')
 args = vars(ap.parse_args())
 
 print('\n--------------- Silatra skin detector ---------------')
 
 # Read model architecture
 model_data = ''
-with open('model.json') as model_file: model_data = model_file.read()
+with open('deep_model.json') as model_file: model_data = model_file.read()
 model = model_from_json(model_data)
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Load saved weights
-model.load_weights('weights.h5')
+model.load_weights('deep_weights.h5')
 print('\nModel ready for testing. ',end='')
 
 def predict_skin_pixels(img_file, return_flag=False):
-    if img_file is not '': img_file = 'Test_Images/'+img_file
+    if img_file is not '' and not args.get('image') and not args.get('test_image'): img_file = '../training-images/Digits/'+img_file
+    elif args.get('test_image'): img_file = 'Test_Images/'+img_file
 
     # Start timer
     start = time.clock()
@@ -46,7 +50,8 @@ def predict_skin_pixels(img_file, return_flag=False):
     elif float(len(img)/len(img[0])) == 1: img = cv2.resize(img, (300,300))
     else: img = cv2.resize(img, (250,250))
     original = img.copy()
-
+    h,w,_ = img.shape
+    img = cv2.resize(img, (ceil(w/3), ceil(h/3)))
 
     # Conversion to HSV & Normalization of image pixels
     ranges = [179.0,255.0,255.0]
@@ -81,7 +86,9 @@ def predict_skin_pixels(img_file, return_flag=False):
     t1 = time.time()
     upper_row_predictions, curr_row_predictions, lower_row_predictions = '', model.predict(img[0]), model.predict(img[1])
     k1, K = 1.0, 1
+    mask = []
     for i in range(len(img)):
+        mask_row = []
         for j in range(len(curr_row_predictions)):
             l_skin, count = 0.0, 0
             if i is not 0:
@@ -111,15 +118,18 @@ def predict_skin_pixels(img_file, return_flag=False):
             alpha = l_skin
             l_skin = l_skin*k1/(1.0*count)
             if curr_row_predictions[j][0]*l_skin >= 0.5:
-                for k in range(3): img[i][j][k] *= float(ranges[k])
+                #for k in range(3): img[i][j][k] *= float(ranges[k])
+                mask_row.append([0.001,0.001,255.0])
                 k1 = count*1.0*K/alpha
             else:
-                img[i][j] = [0.0,0.0,0.0]
+                #img[i][j] = [0.0,0.0,0.0]
+                mask_row.append([0.0,0.0,0.0])
                 k1 = 1
             completed += 1
             if completed%10000 == 0: print(str(completed/1000)+'K / '+str(total_pixels/1000)+'K\r',end='')
         upper_row_predictions = curr_row_predictions
         curr_row_predictions = lower_row_predictions
+        mask.append(mask_row)
         if i < len(img)-2: lower_row_predictions = model.predict(img[i+2])
     print(str(total_pixels/1000)+'K / '+str(total_pixels/1000)+'K\r',end='')
     print('Skin segmented from image.')
@@ -136,19 +146,28 @@ def predict_skin_pixels(img_file, return_flag=False):
     t2 = time.time()
     print('Time required for actual segmentation -> '+str(t2-t1)+' seconds')
 
+    mask = cv2.resize(array(mask), (w, h))
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11))
+    mask = cv2.dilate(mask, kernel)
+    cv2.imshow('Mask',cv2.cvtColor(array(mask, uint8), cv2.COLOR_HSV2BGR))
+
+    mask, segmented_img = mask.tolist(), cv2.cvtColor(original, cv2.COLOR_BGR2HSV)
+    for i in range(len(segmented_img)):
+        for j in range(len(segmented_img[i])):
+            for k in range(3):
+                if mask[i][j][k] == 0.0: segmented_img[i][j][k] = 0.0
     # Stop timer and measure the time for segmentation
     end = time.clock()
     print('Time required for segmentation: '+str(round(end-start,3))+'s')
 
     # Show results
-    img = array(img, uint8)
-    if not return_flag: cv2.imshow('Segmentation results',hstack([original, cv2.cvtColor(array(img, uint8), cv2.COLOR_HSV2BGR)]))
+    if not return_flag: cv2.imshow('Segmentation results',hstack([original, cv2.cvtColor(array(segmented_img, uint8), cv2.COLOR_HSV2BGR)]))
     else: return cv2.cvtColor(array(img, uint8), cv2.COLOR_HSV2BGR)
     cv2.waitKey(100000)
     cv2.destroyAllWindows()
 
 # If no flags specified, execution starts here
-if not args.get('image'):
+if not args.get('image') and not args.get('train_image') and not args.get('test_image'):
     print('Keep image file empty for test image.\n')
     image_file = input('Image file: ')
     predict_skin_pixels(image_file)
@@ -163,6 +182,8 @@ if not args.get('image'):
 else:
     print('\n')
     image_file = args.get('image')
+    if not args.get('image') and not args.get('test_image'): image_file = args.get('train_image')
+    elif not args.get('image'): image_file = args.get('test_image')
     print('Using: '+image_file)
     predict_skin_pixels(image_file)
     cv2.waitKey(100000)
