@@ -61,6 +61,9 @@ int main(int argc, char** argv){
 	args = argv;
 	args_c = argc;
 
+	// cuda::setDevice(0);
+	// cuda::printShortCudaDeviceInfo(cuda::getDevice());
+	
 	Py_Initialize();
 
 	if(argc==3 && strcmp(argv[1],"-img")==0){	

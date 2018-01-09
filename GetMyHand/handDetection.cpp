@@ -6,7 +6,9 @@
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
-#include <opencv2/highgui.hpp>
+#include "opencv2/highgui.hpp"
+#include "opencv2/cudafilters.hpp"
+#include "opencv2/cudaimgproc.hpp"
 
 #include "skinColorSegmentation.hpp"
 #include "trackBarHandling.hpp"
@@ -116,6 +118,27 @@ Mat getMyHand(Mat& imageOG){
 // 	erode(dstEroded,dstEroded,morphOpenElement);
 // /**/	imshow("Round 2 - Eroded Segment - MorphologyEx - MORPH_CLOSE",dstEroded);
 	
+
+	// cuda::GpuMat r1_In,r2_In,r3_In,r4_In;
+
+	// r1_In.upload(dst);
+
+	// Ptr<cuda::Filter> r1_Filter = cuda::createMorphologyFilter(MORPH_OPEN, r1_In.type(), morphOpenElement);
+	// r1_Filter->apply(r1_In, r2_In);
+
+
+	// r1_Filter = cuda::createMorphologyFilter(MORPH_CLOSE, r2_In.type(), morphCloseElement);
+	// r1_Filter->apply(r2_In, r3_In);
+
+	// r1_Filter = cuda::createMorphologyFilter(MORPH_DILATE, r3_In.type(), morphCloseElement);
+	// r1_Filter->apply(r3_In, r3_In);
+	// r1_Filter = cuda::createMorphologyFilter(MORPH_DILATE, r3_In.type(), morphCloseElement);
+	// r1_Filter->apply(r3_In, r3_In);
+	// r1_Filter = cuda::createMorphologyFilter(MORPH_DILATE, r3_In.type(), morphCloseElement);
+	// r1_Filter->apply(r3_In, r3_In);
+	
+	// r2_In.download(dstEroded);
+
 	/* 
 	This will act make white areas smaller then make them larger
 	i.e. this will do dilate(erode(img))
