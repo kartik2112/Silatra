@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 
 
 # Initializers
-dataInds = [1,2,3,4,5,6]
+dataInds = [1,2,3,4,5,6,7,8]
 subFolderNames = ['Normal'] #,'Rotated'
 noOfDescriptors = 10
 noOfSamples = []
@@ -99,6 +99,7 @@ def KNearestNeighbors():
 			correctlyClassified += 1
 	print("Accuracy: ",correctlyClassified,"/",len(testData_S),"=",correctlyClassified/len(testData_S))
 	pickle.dump(neigh, open('KNNModelDump.sav','wb'))
+	print("Model saved as 'KNNModelDump.sav'")
 
 def SVMLearning():
 	global noOfSamples,fftData,dataInds,correctLabels
@@ -156,8 +157,8 @@ def KerasDeepLearning():
 	print("\n%s: %.2f%%" % ("Accuracy on Testing set", scores[1]*100))
     # Next code is for saving the model to a JSON file:
   	# Model saving code:
-  	'''
-  	print("Saving Model.")
+	'''
+	print("Saving Model.")
 	model_json = model.to_json()
 	with open("MLModels/KerasModel.json", "w") as json_file:
 		json_file.write(model_json)
@@ -194,9 +195,9 @@ for i in range(len(noOfSamples)):
 dumpData()
 
 # KMeansClustering()
-# KNearestNeighbors()
+KNearestNeighbors()
 # SVMLearning()
-KerasDeepLearning()
+# KerasDeepLearning()
 
 # plotFeatures()   # Keep this as the last statement if uncommented. Because this is a blocking operation
 # Until you close the corresponding window created, program wont proceed any further.
