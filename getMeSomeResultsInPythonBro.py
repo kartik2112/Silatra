@@ -154,13 +154,15 @@ def KerasDeepLearning():
 	print("\n%s: %.2f%%" % ("Accuracy on Training set", scores[1]*100))
 	scores = model.evaluate(test_x,dummy_test_y)
 	print("\n%s: %.2f%%" % ("Accuracy on Testing set", scores[1]*100))
-	print("Saving Model.")
-	model_json = toBeSavedModel.to_json()
+  # Model saving code:
+  '''
+  print("Saving Model.")
+	model_json = model.to_json()
 	with open("MLModels/KerasModel.json", "w") as json_file:
 		json_file.write(model_json)
 	model.save_weights("MLModels/KerasModel.h5")
 	print("Saved model to disk")
-
+  '''
 
 ############# Main flow starts here #################
 

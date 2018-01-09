@@ -1,5 +1,4 @@
 build/*
-training-images/*
 Backups/*
 Cache/*
 CachedData/*
@@ -15,8 +14,6 @@ Prefences
 machineid
 SkinDetection/segmented.jpg
 */build/*
-CCDC-Data/*
-data.csv
 .vscode/*
 Tejas is coding here/*
 */__pycache__
