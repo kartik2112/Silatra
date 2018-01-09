@@ -1,4 +1,4 @@
 {
     "python.linting.pylintEnabled": false,
-    "python.pythonPath": "G:/Softwares/Miniconda3/python"
+    "python.pythonPath": "/usr/bin/python3.5"
 }
