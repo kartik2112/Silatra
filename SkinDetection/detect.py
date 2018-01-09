@@ -4,6 +4,22 @@ create_data.py & then build_model.py
 
 Segments skin from an image. Input image is taken from Test_Images folder as of now.
 '''
+''' Determination of pixels - skin and non-skin
+
+    How probability of a pixel being skin or non-skin is calculated:
+    The probability that a pixel is skin pixel depends on following factors:
+    1. Whether colour of pixel is skin colour
+    2. Whether neighbouring colours are skin (Belonging in a skin area)
+
+    Thus, we can decide probability of a pixel being skin by using following equation:
+    P(pixel: skin) = P(pixel: skin_colour) x L(pixel: skin)
+
+    where L(pixel: skin) represents the likelihood of pixel being skin. 
+    More the chance of neighbouring pixels being of skin colour, more the chance of current pixel being skin.abs
+    Thus, we calculate L(pixel: skin) by taking average of the probabilities of being skin colour of the 8 neighbouring pixels.
+    L(pixel: skin) = Avg(P(pixel-i: skin_colour)) where pixel-i is one of the 8 neighbouring pixel.
+
+'''
 
 # Imports
 from keras.models import model_from_json
@@ -65,24 +81,7 @@ def predict_skin_pixels(img_file, return_flag=False):
     total_pixels = len(img)*len(img[0])
     print('Image size = '+str(len(img))+'x'+str(len(img[0]))+' = '+str(total_pixels)+' pixels\n')
 
-    ''' Determination of pixels - skin and non-skin
-
-        How probability of a pixel being skin or non-skin is calculated:
-        The probability that a pixel is skin pixel depends on following factors:
-        1. Whether colour of pixel is skin colour
-        2. Whether neighbouring colours are skin (Belonging in a skin area)
-
-        Thus, we can decide probability of a pixel being skin by using following equation:
-        P(pixel: skin) = P(pixel: skin_colour) x L(pixel: skin)
-
-        where L(pixel: skin) represents the likelihood of pixel being skin. 
-        More the chance of neighbouring pixels being of skin colour, more the chance of current pixel being skin.abs
-        Thus, we calculate L(pixel: skin) by taking average of the probabilities of being skin colour of the 8 neighbouring pixels.
-        L(pixel: skin) = Avg(P(pixel-i: skin_colour)) where pixel-i is one of the 8 neighbouring pixel.
-
-    '''
     completed, n = 0, len(img[0])
-    s=''
     t1 = time.time()
     upper_row_predictions, curr_row_predictions, lower_row_predictions = '', model.predict(img[0]), model.predict(img[1])
     k1, K = 1.0, 1
@@ -118,11 +117,9 @@ def predict_skin_pixels(img_file, return_flag=False):
             alpha = l_skin
             l_skin = l_skin*k1/(1.0*count)
             if curr_row_predictions[j][0]*l_skin >= 0.5:
-                #for k in range(3): img[i][j][k] *= float(ranges[k])
                 mask_row.append([0.001,0.001,255.0])
                 k1 = count*1.0*K/alpha
             else:
-                #img[i][j] = [0.0,0.0,0.0]
                 mask_row.append([0.0,0.0,0.0])
                 k1 = 1
             completed += 1
@@ -133,16 +130,6 @@ def predict_skin_pixels(img_file, return_flag=False):
         if i < len(img)-2: lower_row_predictions = model.predict(img[i+2])
     print(str(total_pixels/1000)+'K / '+str(total_pixels/1000)+'K\r',end='')
     print('Skin segmented from image.')
-    ''' for i in range(len(img)):
-        predictions = model.predict(img[i])
-        for j in range(len(predictions)):
-            if predictions[j][0] > predictions[j][1]:
-                for k in range(3): img[i][j][k] *= ranges[k]
-            else: img[i][j] = [0,0,0]
-            completed += 1
-            if completed%10000 == 0: print(str(completed/1000)+'K / '+str(total_pixels/1000)+'K\r',end='')
-    print(str(total_pixels/1000)+'K / '+str(total_pixels/1000)+'K\r',end='')
-    print('Skin segmented from image.') '''
     t2 = time.time()
     print('Time required for actual segmentation -> '+str(t2-t1)+' seconds')
 
