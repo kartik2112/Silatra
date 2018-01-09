@@ -8,20 +8,26 @@ import pickle
 from sklearn.svm import SVC
 import pandas as pd
 from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import Dropout
+from keras.layers import Dense,Dropout
 from keras.wrappers.scikit_learn import KerasClassifier
 from keras.utils import np_utils
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import KFold
 from sklearn.preprocessing import LabelEncoder
 from sklearn.pipeline import Pipeline
-
-
 #For plotting parallel coordinates
-from pandas.plotting import parallel_coordinates
-import matplotlib.pyplot as plt
-#import pandas as pd
+# from pandas.plotting import parallel_coordinates
+# import matplotlib.pyplot as plt
+# import pandas as pd
+
+# Initializers
+dataInds = [1,2,3,4,5,6,7,8]
+subFolderNames = ['Normal'] #,'Rotated'
+noOfDescriptors = 10
+noOfSamples = []
+fftData=[]
+# storeAsLabelledFeaturesFile = True
+storeAsLabelledFeaturesFile = False
 
 def normalise(x):
 	'''
@@ -38,20 +44,32 @@ def normalise(x):
 			x[i][j]=(new_max-new_min)/(max_along_columns[j]-min_along_columns[j])*(x[i][j]-min_along_columns[j])+new_min
             # You can just put np.amin and np.amax straight in, but I put those seperately cause heyo dumbchucks remember :)
 
-# Initializers
-dataInds = [1,2,3,4,5,6,7,8]
-subFolderNames = ['Normal'] #,'Rotated'
-noOfDescriptors = 10
-noOfSamples = []
-fftData=[]
-# storeAsLabelledFeaturesFile = True
-storeAsLabelledFeaturesFile = False
+def duplicate(X,Y,per_sample=200):
+	'''
+		This function will increase the number of samples in the set by duplication.
+	'''
+	from random import randint
+	dataops=[1,2,3,4,5,6,7,8]
+	new_X_len=len(dataops)*per_sample
+	new_X=np.zeros(shape=(new_X_len,10))
+	new_Y=np.zeros(shape=(new_X_len,1))
+	main_index=0
+	for i in range(len(dataops)):
+	    temp_data=[]
+	    for j in range(len(Y)):
+	        if Y[j]==dataops[i]:
+	            temp_data.append(X[j])
+	    used_samples=0
+	    while used_samples<per_sample:
+	        index_chosen=randint(0,len(temp_data)-1)
+	        new_X[main_index]=temp_data[index_chosen]
+	        new_Y[main_index]=dataops[i]
+	        main_index+=1
+	        used_samples+=1
+	# print("Shape of X:"+str(new_X.shape))
+	# print("Shape of Y:"+str(new_Y.shape))
+	return new_X,new_Y
 
-#Initializers forSVMLearning
-
-epochs_num=100
-batch=128
-verbose_stat=1
 
 def dumpData():
 	global fftData,correctLabels
@@ -127,9 +145,12 @@ def SVMLearning():
 
 def KerasDeepLearning():
 	#Install Keras and Tensorflow/Theanos before using this function.
-	train_x,test_x,train_y,test_y = train_test_split(fftData,correctLabels,test_size = 0.33,random_state=42)
+	X,Y=duplicate(fftData,correctLabels,600)
+	train_x,test_x,train_y,test_y = train_test_split(X,Y,test_size = 0.33,random_state=42)
 	normalise(train_x)
 	normalise(test_x)
+	print("Training Set Size:"+str(train_x.shape[0]))
+	print("Testing Set Size:"+str(test_x.shape[0]))
 	# One-Hot encoding
 	encoder = LabelEncoder()
 	encoder.fit(train_y)
@@ -141,21 +162,15 @@ def KerasDeepLearning():
 	dummy_test_y = np_utils.to_categorical(encoded_test_Y)
 	model = Sequential()
 	model.add(Dense(10, input_dim=10, activation='relu'))
-	# model.add(Dense(32, activation='relu'))
-	# model.add(Dense(32, activation='relu'))
-	# model.add(Dense(64, activation='relu'))
+	model.add(Dense(64, activation='relu'))
 	model.add(Dense(128, activation='relu'))
 	model.add(Dense(128, activation='relu'))
-	model.add(Dense(256, activation='relu'))
 	model.add(Dense(256, activation='relu'))
 	model.add(Dense(64, activation='relu'))
-	# model.add(Dense(64, activation='relu'))
-	# model.add(Dense(32, activation='relu'))
-	# model.add(Dense(32, activation='relu'))
 	model.add(Dense(len(dataInds), activation='softmax'))
 	# Compile model
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-	model.fit(train_x,dummy_train_y,validation_split=0.15,epochs=300,batch_size=35,verbose=1)
+	model.fit(train_x,dummy_train_y,validation_split=0.1,epochs=150,batch_size=65,verbose=1)
 	scores = model.evaluate(train_x,dummy_train_y)
 	print("\n%s: %.2f%%" % ("Accuracy on Training set", scores[1]*100))
 	scores = model.evaluate(test_x,dummy_test_y)
@@ -198,9 +213,9 @@ for i in range(len(noOfSamples)):
 dumpData()
 
 # KMeansClustering()
-KNearestNeighbors()
+# KNearestNeighbors()
 # SVMLearning()
-# KerasDeepLearning()
+KerasDeepLearning()
 
 # plotFeatures()   # Keep this as the last statement if uncommented. Because this is a blocking operation
 # Until you close the corresponding window created, program wont proceed any further.
