@@ -9,6 +9,7 @@ from sklearn.svm import SVC
 import pandas as pd
 from keras.models import Sequential
 from keras.layers import Dense
+from keras.layers import Dropout
 from keras.wrappers.scikit_learn import KerasClassifier
 from keras.utils import np_utils
 from sklearn.model_selection import cross_val_score
@@ -109,20 +110,14 @@ def SVMLearning():
 	print("Accuracy on training set:"+str(svm.score(trainData_S,trainData_L)*100))
 	print("Accuracy on training set:"+str(svm.score(testData_S,testData_L)*100))
 
-def baseline_model():
+def KerasDeepLearning():
 	#Install Keras and Tensorflow/Theanos before using this function.
-	seed=7
-	np.random.seed(seed)
-	#load the stuff
-	dataframe = pd.read_csv("data.csv", header=None)
-	Y=dataframe[10]
-	del dataframe[10]
-	X=dataframe
 	X1,X2,Y1,Y2 = train_test_split(X,Y,test_size = 0.33,random_state=42)
 	train_x=X1.values
 	train_y=Y1.values
 	test_x=X2.values
 	test_y=Y2.values
+	# One-Hot encoding
 	encoder = LabelEncoder()
 	encoder.fit(train_y)
 	encoded_train_Y = encoder.transform(train_y)
@@ -132,53 +127,42 @@ def baseline_model():
 	encoded_test_Y = encoder.transform(test_y)
 	dummy_test_y = np_utils.to_categorical(encoded_test_Y)
 	model = Sequential()
-	model.add(Dense(64, input_dim=10, activation='relu'))
-	model.add(Dense(64, activation='relu'))
-	model.add(Dense(128, activation='relu'))
-	model.add(Dense(128, activation='relu'))
-	model.add(Dense(256, activation='relu'))
-	model.add(Dense(256, activation='relu'))
-	model.add(Dense(64, activation='relu'))
-	model.add(Dense(64, activation='relu'))
-	model.add(Dense(32, activation='relu'))
-	model.add(Dense(32, activation='relu'))
+	model.add(Dense(10, input_dim=10, activation='relu'))
+	model.add(Dropout(0.4))
+	model.add(Dense(300, activation='relu'))
+	model.add(Dropout(0.4))
+	model.add(Dense(300, activation='relu'))
+	model.add(Dropout(0.4))
+	model.add(Dense(300, activation='relu'))
+	model.add(Dropout(0.4))
+	model.add(Dense(200, activation='relu'))
+	model.add(Dropout(0.4))
+	model.add(Dense(200, activation='relu'))
+	model.add(Dropout(0.4))
+	model.add(Dense(200, activation='relu'))
+	model.add(Dropout(0.4))
+	model.add(Dense(100, activation='relu'))
+	model.add(Dropout(0.4))
+	model.add(Dense(100, activation='relu'))
+	model.add(Dropout(0.4))
+	model.add(Dense(100, activation='relu'))
 	model.add(Dense(6, activation='softmax'))
 	# Compile model
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-	return model
-
-def KerasDeepLearning():
-	#Install Keras and Tensorflow/Theanos before using this function.
-	seed=7
-	np.random.seed(seed)
-	#load the stuff
-	dataframe = pd.read_csv("data.csv", header=None)
-	
-	# Normalization of the frame
-	dataf_norm = (dataframe - dataframe.mean()) / (dataframe.max() - dataframe.min())
-	dataset = dataf_norm.values
-	
-	X = dataset[:,0:10].astype(float)
-	Y = dataset[:,10]
-	encoder = LabelEncoder()
-	encoder.fit(Y)
-	encoded_Y = encoder.transform(Y)
-	# convert integers to dummy variables (i.e. one hot encoded)
-	dummy_y = np_utils.to_categorical(encoded_Y)
-	estimator = KerasClassifier(build_fn=baseline_model, epochs=epochs_num, batch_size=batch, verbose=verbose_stat)
-	print("Estimator created.")
-	kfold = KFold(n_splits=10, shuffle=True, random_state=seed)
-	results = cross_val_score(estimator, X, dummy_y, cv=kfold)
-	print("\nBaseline: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
-	print("Saving Model.")
-	toBeSavedModel=baseline_model()
-	toBeSavedModel.fit(X,dummy_y,epochs=epochs_num,batch_size=batch,verbose=1)
-	model_json = toBeSavedModel.to_json()
+	model.fit(train_x,dummy_train_y,epochs=150,batch_size=28,verbose=1)
+	scores = model.evaluate(train_x,dummy_train_y)
+	print("\n%s: %.2f%%" % ("Accuracy on Training set", scores[1]*100))
+	scores = model.evaluate(test_x,dummy_test_y)
+	print("\n%s: %.2f%%" % ("Accuracy on Testing set", scores[1]*100))
+  # Model saving code:
+  '''
+  print("Saving Model.")
+	model_json = model.to_json()
 	with open("MLModels/KerasModel.json", "w") as json_file:
 		json_file.write(model_json)
 	model.save_weights("MLModels/KerasModel.h5")
 	print("Saved model to disk")
-
+  '''
 
 ############# Main flow starts here #################
 
