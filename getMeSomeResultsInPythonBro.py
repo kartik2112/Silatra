@@ -170,19 +170,24 @@ def KerasDeepLearning():
 	model.add(Dense(len(dataInds), activation='softmax'))
 	# Compile model
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-	model.fit(train_x,dummy_train_y,validation_split=0.1,epochs=150,batch_size=65,verbose=1)
-	scores = model.evaluate(train_x,dummy_train_y)
-	print("\n%s: %.2f%%" % ("Accuracy on Training set", scores[1]*100))
-	scores = model.evaluate(test_x,dummy_test_y)
-	print("\n%s: %.2f%%" % ("Accuracy on Testing set", scores[1]*100))
+	model.fit(train_x,dummy_train_y,validation_split=0.1,epochs=150,batch_size=60,verbose=1)
+	train_scores = model.evaluate(train_x,dummy_train_y)
+	print("\n%s: %.2f%%" % ("Accuracy on Training set", train_scores[1]*100))
+	test_scores = model.evaluate(test_x,dummy_test_y)
+	print("\n%s: %.2f%%" % ("Accuracy on Testing set", test_scores[1]*100))
+	from math import floor,ceil
+	wrong_train_classified=floor((train_x.shape[0])*(1-train_scores[1]))
+	print("Number of training samples wrong classified:"+str(wrong_train_classified))
+	wrong_test_classified=ceil((test_x.shape[0])*(1-test_scores[1]))
+	print("Number of testing samples wrong classified:"+str(wrong_test_classified))
+	print("Total wrong classified:"+str(wrong_train_classified+wrong_test_classified))
     # Next code is for saving the model to a JSON file:
-  	# Model saving code:
-  	# print("Saving Model.")
-	# model_json = model.to_json()
-	# with open("MLModels/KerasModel.json", "w") as json_file:
-	# 	json_file.write(model_json)
-	# model.save_weights("MLModels/KerasModel.h5")
-	# print("Saved model to disk")
+  	print("Saving Model.")
+	model_json = model.to_json()
+	with open("MLModels/KerasModel.json", "w") as json_file:
+		json_file.write(model_json)
+	model.save_weights("MLModels/KerasModel.h5")
+	print("Saved model to disk")
 
 ############# Main flow starts here #################
 
