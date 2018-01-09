@@ -153,11 +153,11 @@ def KerasDeepLearning():
 	np.random.seed(seed)
 	#load the stuff
 	dataframe = pd.read_csv("data.csv", header=None)
-	
+
 	# Normalization of the frame
 	dataf_norm = (dataframe - dataframe.mean()) / (dataframe.max() - dataframe.min())
 	dataset = dataf_norm.values
-	
+
 	X = dataset[:,0:10].astype(float)
 	Y = dataset[:,10]
 	encoder = LabelEncoder()
