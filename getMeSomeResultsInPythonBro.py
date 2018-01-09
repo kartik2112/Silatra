@@ -113,11 +113,7 @@ def SVMLearning():
 
 def KerasDeepLearning():
 	#Install Keras and Tensorflow/Theanos before using this function.
-	X1,X2,Y1,Y2 = train_test_split(fftData,correctLabels,test_size = 0.33,random_state=42)
-	train_x=X1.values
-	train_y=Y1.values
-	test_x=X2.values
-	test_y=Y2.values
+	train_x,test_x,train_y,test_y = train_test_split(fftData,correctLabels,test_size = 0.33,random_state=42)
 	# One-Hot encoding
 	encoder = LabelEncoder()
 	encoder.fit(train_y)
@@ -129,42 +125,33 @@ def KerasDeepLearning():
 	dummy_test_y = np_utils.to_categorical(encoded_test_Y)
 	model = Sequential()
 	model.add(Dense(10, input_dim=10, activation='relu'))
-	model.add(Dropout(0.4))
-	model.add(Dense(300, activation='relu'))
-	model.add(Dropout(0.4))
-	model.add(Dense(300, activation='relu'))
-	model.add(Dropout(0.4))
-	model.add(Dense(300, activation='relu'))
-	model.add(Dropout(0.4))
-	model.add(Dense(200, activation='relu'))
-	model.add(Dropout(0.4))
-	model.add(Dense(200, activation='relu'))
-	model.add(Dropout(0.4))
-	model.add(Dense(200, activation='relu'))
-	model.add(Dropout(0.4))
-	model.add(Dense(100, activation='relu'))
-	model.add(Dropout(0.4))
-	model.add(Dense(100, activation='relu'))
-	model.add(Dropout(0.4))
-	model.add(Dense(100, activation='relu'))
-	model.add(Dense(6, activation='softmax'))
+	model.add(Dense(64, activation='relu'))
+	model.add(Dense(128, activation='relu'))
+	model.add(Dense(128, activation='relu'))
+	model.add(Dense(256, activation='relu'))
+	model.add(Dense(256, activation='relu'))
+	model.add(Dense(64, activation='relu'))
+	model.add(Dense(64, activation='relu'))
+	model.add(Dense(32, activation='relu'))
+	model.add(Dense(32, activation='relu'))
+	model.add(Dense(len(dataInds), activation='softmax'))
 	# Compile model
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-	model.fit(train_x,dummy_train_y,epochs=150,batch_size=28,verbose=1)
+	model.fit(train_x,dummy_train_y,epochs=200,batch_size=35,verbose=1)
 	scores = model.evaluate(train_x,dummy_train_y)
 	print("\n%s: %.2f%%" % ("Accuracy on Training set", scores[1]*100))
 	scores = model.evaluate(test_x,dummy_test_y)
 	print("\n%s: %.2f%%" % ("Accuracy on Testing set", scores[1]*100))
     # Next code is for saving the model to a JSON file:
   	# Model saving code:
-	'''
-	print("Saving Model.")
-	model_json = model.to_json()
-	with open("MLModels/KerasModel.json", "w") as json_file:
-		json_file.write(model_json)
-	model.save_weights("MLModels/KerasModel.h5")
-	print("Saved model to disk")
-	'''
+  	# '''
+  	# print("Saving Model.")
+	# model_json = model.to_json()
+	# with open("MLModels/KerasModel.json", "w") as json_file:
+	# 	json_file.write(model_json)
+	# model.save_weights("MLModels/KerasModel.h5")
+	# print("Saved model to disk")
+	# '''
 
 ############# Main flow starts here #################
 
