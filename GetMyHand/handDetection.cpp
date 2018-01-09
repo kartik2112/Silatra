@@ -615,9 +615,18 @@ void findClassUsingPythonModels( vector<float> &distVector ){
 
 
 	// Py_Initialize();   //Moved to main() of Silatra.cpp
-	FILE* file = fopen("testThisSampleInPython.py","r");
-	PyRun_SimpleFile(file,"testThisSampleInPython.py");
-	// PyRun_SimpleFile(file,"LoadSavedModel.py");
+
+
+
+	// FILE* file = fopen("testThisSampleInPython.py","r");
+	// PyRun_SimpleFile(file,"testThisSampleInPython.py");
+
+	PyRun_SimpleString("import sys");
+	PyRun_SimpleString("if not hasattr(sys, 'argv'): sys.argv  = ['']");
+	FILE* file = fopen("LoadSavedModel.py","r");
+	PyRun_SimpleFile(file,"LoadSavedModel.py");
+
+	
 	// Py_Finalize();   //Moved to main() of Silatra.cpp
 	fclose(file);
 
