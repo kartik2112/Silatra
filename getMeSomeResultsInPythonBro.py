@@ -112,7 +112,7 @@ def SVMLearning():
 
 def KerasDeepLearning():
 	#Install Keras and Tensorflow/Theanos before using this function.
-	X1,X2,Y1,Y2 = train_test_split(X,Y,test_size = 0.33,random_state=42)
+	X1,X2,Y1,Y2 = train_test_split(fftData,correctLabels,test_size = 0.33,random_state=42)
 	train_x=X1.values
 	train_y=Y1.values
 	test_x=X2.values
@@ -154,25 +154,16 @@ def KerasDeepLearning():
 	print("\n%s: %.2f%%" % ("Accuracy on Training set", scores[1]*100))
 	scores = model.evaluate(test_x,dummy_test_y)
 	print("\n%s: %.2f%%" % ("Accuracy on Testing set", scores[1]*100))
-<<<<<<< HEAD
     # Next code is for saving the model to a JSON file:
-	'''
-	print("Saving Model.")
-=======
-  # Model saving code:
-  '''
-  print("Saving Model.")
->>>>>>> ea8965a6a549d95893c67745fd5cd17ddd13b9c3
+  	# Model saving code:
+  	'''
+  	print("Saving Model.")
 	model_json = model.to_json()
 	with open("MLModels/KerasModel.json", "w") as json_file:
 		json_file.write(model_json)
 	model.save_weights("MLModels/KerasModel.h5")
 	print("Saved model to disk")
-<<<<<<< HEAD
 	'''
-=======
-  '''
->>>>>>> ea8965a6a549d95893c67745fd5cd17ddd13b9c3
 
 ############# Main flow starts here #################
 
