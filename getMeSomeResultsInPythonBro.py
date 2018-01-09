@@ -23,6 +23,20 @@ from pandas.plotting import parallel_coordinates
 import matplotlib.pyplot as plt
 #import pandas as pd
 
+def normalise(x):
+	'''
+		Returns a numpy array normalised ALONG the COLUMNS.
+		The new range is 0 to 1.
+		This range can be changed by changing the variables new_min and new_max
+	'''
+	new_min,new_max=0,1
+	# There's really no need to elaborate this code, its for dumbchucks like me :)
+	min_along_columns=np.amin(x,axis=0)
+	max_along_columns=np.amax(x,axis=0)
+	for i in range(x.shape[0]):
+		for j in range(x.shape[1]):
+			x[i][j]=(new_max-new_min)/(max_along_columns[j]-min_along_columns[j])*(x[i][j]-min_along_columns[j])+new_min
+            # You can just put np.amin and np.amax straight in, but I put those seperately cause heyo dumbchucks remember :)
 
 # Initializers
 dataInds = [1,2,3,4,5,6]
@@ -113,6 +127,8 @@ def SVMLearning():
 def KerasDeepLearning():
 	#Install Keras and Tensorflow/Theanos before using this function.
 	train_x,test_x,train_y,test_y = train_test_split(fftData,correctLabels,test_size = 0.33,random_state=42)
+	normalise(train_x)
+	normalise(test_x)
 	# One-Hot encoding
 	encoder = LabelEncoder()
 	encoder.fit(train_y)
@@ -124,33 +140,33 @@ def KerasDeepLearning():
 	dummy_test_y = np_utils.to_categorical(encoded_test_Y)
 	model = Sequential()
 	model.add(Dense(10, input_dim=10, activation='relu'))
-	model.add(Dense(64, activation='relu'))
+	# model.add(Dense(32, activation='relu'))
+	# model.add(Dense(32, activation='relu'))
+	# model.add(Dense(64, activation='relu'))
 	model.add(Dense(128, activation='relu'))
 	model.add(Dense(128, activation='relu'))
 	model.add(Dense(256, activation='relu'))
 	model.add(Dense(256, activation='relu'))
 	model.add(Dense(64, activation='relu'))
-	model.add(Dense(64, activation='relu'))
-	model.add(Dense(32, activation='relu'))
-	model.add(Dense(32, activation='relu'))
+	# model.add(Dense(64, activation='relu'))
+	# model.add(Dense(32, activation='relu'))
+	# model.add(Dense(32, activation='relu'))
 	model.add(Dense(len(dataInds), activation='softmax'))
 	# Compile model
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-	model.fit(train_x,dummy_train_y,epochs=200,batch_size=35,verbose=1)
+	model.fit(train_x,dummy_train_y,validation_split=0.15,epochs=300,batch_size=35,verbose=1)
 	scores = model.evaluate(train_x,dummy_train_y)
 	print("\n%s: %.2f%%" % ("Accuracy on Training set", scores[1]*100))
 	scores = model.evaluate(test_x,dummy_test_y)
 	print("\n%s: %.2f%%" % ("Accuracy on Testing set", scores[1]*100))
     # Next code is for saving the model to a JSON file:
   	# Model saving code:
-  	# '''
   	# print("Saving Model.")
 	# model_json = model.to_json()
 	# with open("MLModels/KerasModel.json", "w") as json_file:
 	# 	json_file.write(model_json)
 	# model.save_weights("MLModels/KerasModel.h5")
 	# print("Saved model to disk")
-	# '''
 
 ############# Main flow starts here #################
 
