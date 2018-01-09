@@ -145,7 +145,7 @@ def SVMLearning():
 
 def KerasDeepLearning():
 	#Install Keras and Tensorflow/Theanos before using this function.
-	X,Y=duplicate(fftData,correctLabels,600)
+	X,Y=duplicate(fftData,correctLabels,500)
 	train_x,test_x,train_y,test_y = train_test_split(X,Y,test_size = 0.33,random_state=42)
 	normalise(train_x)
 	normalise(test_x)
@@ -162,15 +162,14 @@ def KerasDeepLearning():
 	dummy_test_y = np_utils.to_categorical(encoded_test_Y)
 	model = Sequential()
 	model.add(Dense(10, input_dim=10, activation='relu'))
-	model.add(Dense(64, activation='relu'))
+	# model.add(Dense(64, activation='relu'))
 	model.add(Dense(128, activation='relu'))
 	model.add(Dense(128, activation='relu'))
 	model.add(Dense(256, activation='relu'))
-	model.add(Dense(64, activation='relu'))
 	model.add(Dense(len(dataInds), activation='softmax'))
 	# Compile model
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-	model.fit(train_x,dummy_train_y,validation_split=0.1,epochs=150,batch_size=60,verbose=1)
+	model.fit(train_x,dummy_train_y,validation_split=0.1,epochs=150,batch_size=85,verbose=1)
 	train_scores = model.evaluate(train_x,dummy_train_y)
 	print("\n%s: %.2f%%" % ("Accuracy on Training set", train_scores[1]*100))
 	test_scores = model.evaluate(test_x,dummy_test_y)
@@ -182,11 +181,11 @@ def KerasDeepLearning():
 	print("Number of testing samples wrong classified:"+str(wrong_test_classified))
 	print("Total wrong classified:"+str(wrong_train_classified+wrong_test_classified))
     # Next code is for saving the model to a JSON file:
-  	print("Saving Model.")
+	print("Saving Model.")
 	model_json = model.to_json()
-	with open("MLModels/KerasModel.json", "w") as json_file:
+	with open("Classification Models/DigitClassifierModel.json", "w") as json_file:
 		json_file.write(model_json)
-	model.save_weights("MLModels/KerasModel.h5")
+	model.save_weights("Classification Models/DigitClassifierModel.h5")
 	print("Saved model to disk")
 
 ############# Main flow starts here #################
