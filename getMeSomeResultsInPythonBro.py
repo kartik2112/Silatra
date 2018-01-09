@@ -8,21 +8,17 @@ import pickle
 from sklearn.svm import SVC
 import pandas as pd
 from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import Dropout
+from keras.layers import Dense,Dropout
 from keras.wrappers.scikit_learn import KerasClassifier
 from keras.utils import np_utils
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import KFold
 from sklearn.preprocessing import LabelEncoder
 from sklearn.pipeline import Pipeline
-
-
 #For plotting parallel coordinates
-from pandas.plotting import parallel_coordinates
-import matplotlib.pyplot as plt
-#import pandas as pd
-
+# from pandas.plotting import parallel_coordinates
+# import matplotlib.pyplot as plt
+# import pandas as pd
 
 # Initializers
 dataInds = [1,2,3,4,5,6,7,8]
@@ -33,11 +29,47 @@ fftData=[]
 # storeAsLabelledFeaturesFile = True
 storeAsLabelledFeaturesFile = False
 
-#Initializers forSVMLearning
+def normalise(x):
+	'''
+		Returns a numpy array normalised ALONG the COLUMNS.
+		The new range is 0 to 1.
+		This range can be changed by changing the variables new_min and new_max
+	'''
+	new_min,new_max=0,1
+	# There's really no need to elaborate this code, its for dumbchucks like me :)
+	min_along_columns=np.amin(x,axis=0)
+	max_along_columns=np.amax(x,axis=0)
+	for i in range(x.shape[0]):
+		for j in range(x.shape[1]):
+			x[i][j]=(new_max-new_min)/(max_along_columns[j]-min_along_columns[j])*(x[i][j]-min_along_columns[j])+new_min
+            # You can just put np.amin and np.amax straight in, but I put those seperately cause heyo dumbchucks remember :)
 
-epochs_num=100
-batch=128
-verbose_stat=1
+def duplicate(X,Y,per_sample=200):
+	'''
+		This function will increase the number of samples in the set by duplication.
+	'''
+	from random import randint
+	dataops=[1,2,3,4,5,6,7,8]
+	new_X_len=len(dataops)*per_sample
+	new_X=np.zeros(shape=(new_X_len,10))
+	new_Y=np.zeros(shape=(new_X_len,1))
+	main_index=0
+	for i in range(len(dataops)):
+	    temp_data=[]
+	    for j in range(len(Y)):
+	        if Y[j]==dataops[i]:
+	            temp_data.append(X[j])
+	    used_samples=0
+	    while used_samples<per_sample:
+	        index_chosen=randint(0,len(temp_data)-1)
+	        new_X[main_index]=temp_data[index_chosen]
+	        new_Y[main_index]=dataops[i]
+	        main_index+=1
+	        used_samples+=1
+	# print("Shape of X:"+str(new_X.shape))
+	# print("Shape of Y:"+str(new_Y.shape))
+	return new_X,new_Y
+
 
 def dumpData():
 	global fftData,correctLabels
@@ -113,7 +145,12 @@ def SVMLearning():
 
 def KerasDeepLearning():
 	#Install Keras and Tensorflow/Theanos before using this function.
-	train_x,test_x,train_y,test_y = train_test_split(fftData,correctLabels,test_size = 0.33,random_state=42)
+	X,Y=duplicate(fftData,correctLabels,500)
+	train_x,test_x,train_y,test_y = train_test_split(X,Y,test_size = 0.33,random_state=42)
+	normalise(train_x)
+	normalise(test_x)
+	print("Training Set Size:"+str(train_x.shape[0]))
+	print("Testing Set Size:"+str(test_x.shape[0]))
 	# One-Hot encoding
 	encoder = LabelEncoder()
 	encoder.fit(train_y)
@@ -125,30 +162,31 @@ def KerasDeepLearning():
 	dummy_test_y = np_utils.to_categorical(encoded_test_Y)
 	model = Sequential()
 	model.add(Dense(10, input_dim=10, activation='relu'))
-	model.add(Dense(64, activation='relu'))
+	# model.add(Dense(64, activation='relu'))
 	model.add(Dense(128, activation='relu'))
 	model.add(Dense(128, activation='relu'))
 	model.add(Dense(256, activation='relu'))
-	model.add(Dense(256, activation='relu'))
-	model.add(Dense(64, activation='relu'))
-	model.add(Dense(64, activation='relu'))
-	model.add(Dense(32, activation='relu'))
-	model.add(Dense(32, activation='relu'))
 	model.add(Dense(len(dataInds), activation='softmax'))
 	# Compile model
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-	model.fit(train_x,dummy_train_y,epochs=200,batch_size=35,verbose=1)
-	scores = model.evaluate(train_x,dummy_train_y)
-	print("\n%s: %.2f%%" % ("Accuracy on Training set", scores[1]*100))
-	scores = model.evaluate(test_x,dummy_test_y)
-	print("\n%s: %.2f%%" % ("Accuracy on Testing set", scores[1]*100))
+	model.fit(train_x,dummy_train_y,validation_split=0.1,epochs=150,batch_size=85,verbose=1)
+	train_scores = model.evaluate(train_x,dummy_train_y)
+	print("\n%s: %.2f%%" % ("Accuracy on Training set", train_scores[1]*100))
+	test_scores = model.evaluate(test_x,dummy_test_y)
+	print("\n%s: %.2f%%" % ("Accuracy on Testing set", test_scores[1]*100))
+	from math import floor,ceil
+	wrong_train_classified=floor((train_x.shape[0])*(1-train_scores[1]))
+	print("Number of training samples wrong classified:"+str(wrong_train_classified))
+	wrong_test_classified=ceil((test_x.shape[0])*(1-test_scores[1]))
+	print("Number of testing samples wrong classified:"+str(wrong_test_classified))
+	print("Total wrong classified:"+str(wrong_train_classified+wrong_test_classified))
     # Next code is for saving the model to a JSON file:
-  	# Model saving code:
 	print("Saving Model.")
 	model_json = model.to_json()
-	with open("MLModels/KerasModel.json", "w") as json_file:
+	with open("Classification Models/DigitClassifierModel.json", "w") as json_file:
 		json_file.write(model_json)
-	model.save_weights("MLModels/KerasModel.h5")
+	model.save_weights("Classification Models/DigitClassifierModel.h5")
+
 	print("Saved model to disk")
 
 ############# Main flow starts here #################
