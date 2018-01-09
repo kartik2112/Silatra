@@ -84,7 +84,7 @@ Mat getMyHand(Mat& imageOG){
 	
 	//blur(image,image,Size(kernSize,kernSize),Point(-1,-1));
 	GaussianBlur(imageOG,image,Size(2*kernSize+1,2*kernSize+1),0,0);
-/**/	imshow("Gaussian Blurred Image",image); 
+	// imshow("Gaussian Blurred Image",image); 
 	//medianBlur(image,image,2*kernSize+1);
 	
 	/* Convert BGR Image into HSV, YCrCb Images */
@@ -95,7 +95,7 @@ Mat getMyHand(Mat& imageOG){
 	inRange(imageHSV,Scalar(lH,lS,lV),Scalar(hH,hS,hV),dstHSV);
 	
 	Mat dst=extractSkinColorRange(image,imageHSV,imageYCrCb);
-/**/	imshow("Skin Color Range Pixels Extracted Image (using HSV, BGR ranges)",dst); 
+	// imshow("Skin Color Range Pixels Extracted Image (using HSV, BGR ranges)",dst); 
 	
 	
 	frameStepsTimes[ SKIN_COLOR_EXTRACTION ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
@@ -131,7 +131,7 @@ Mat getMyHand(Mat& imageOG){
 	
 	/* This will enlarge white areas */
 	dilate(dstEroded,dstEroded,morphCloseElement,Point(-1,-1),morphCloseNoOfIterations);
-/**/	imshow("Round 3 - Dilated Segment - to expand segmented area",dstEroded);
+	// imshow("Round 3 - Dilated Segment - to expand segmented area",dstEroded);
 	
 	
 	//cout<<dst.type()<<" "<<image.type()<<endl;
@@ -147,7 +147,7 @@ Mat getMyHand(Mat& imageOG){
 	/* This will enlarge white areas */
 	dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
 	//dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
-/**/	imshow("Round 4,5 - After morphologyEx(MORPH_CLOSE) and dilate segment",dstEroded);
+	// imshow("Round 4,5 - After morphologyEx(MORPH_CLOSE) and dilate segment",dstEroded);
 
 	frameStepsTimes[ MORPHOLOGY_OPERATIONS ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
 	startTime=(double)getTickCount();  //---Timing related part
@@ -168,12 +168,12 @@ Mat getMyHand(Mat& imageOG){
 	
 	/// Show in a window  
 	imshow("Contours", contouredImg );	
-	//imwrite("./ContourImages/img.png",contouredImg);
-	imshow("Morphed Mask",dstEroded);
+	// imwrite("./ContourImages/img.png",contouredImg);
+	// imshow("Morphed Mask",dstEroded);
 	imshow("Masked Image",maskedImg);
 	imshow("Final Image",finImg);
 	imshow("HSV + BGR Mask",dst);
-	imshow("HSV Mask",dstHSV);
+	// imshow("HSV Mask",dstHSV);
 
 
 
@@ -195,7 +195,7 @@ Mat combineExtractedWithMain(Mat& maskedImg,Mat& image){
 	
 	Mat dst;
 	GaussianBlur(image,dst,Size(25,25),0,0);
-/**/	imshow("Gaussian Blur on BG",dst);
+	// imshow("Gaussian Blur on BG",dst);
 		
 	uchar *blurredRow,*extractedRow,*dstRow;
 	for(int i=0;i<nRows;i++){
@@ -233,8 +233,8 @@ Mat findHandContours(Mat& src){
 	/// Detect edges using canny
 	Canny( src_gray, canny_output, thresh, thresh*2, 3 );
 	
-	Mat morphCloseElement = getStructuringElement(MORPH_ELLIPSE,Size(5*2+1,5*2+1),Point(5,5));
-	//morphologyEx(canny_output,canny_output,MORPH_CLOSE,morphCloseElement);
+	// Mat morphCloseElement = getStructuringElement(MORPH_ELLIPSE,Size(5*2+1,5*2+1),Point(5,5));
+	// morphologyEx(canny_output,canny_output,MORPH_CLOSE,morphCloseElement);
 	
 	imshow("Canny",canny_output);
 	/// Find contours
@@ -346,14 +346,14 @@ Mat findHandContours(Mat& src){
 		
 		start = convD[i][0]; end = convD[i][1];
 		far = convD[i][2]; farDist = convD[i][3];
-		// cout<<start<<","<<end<<","<<far<<","<<farDist/256.0<<endl;
+		cout<<start<<","<<end<<","<<far<<","<<farDist/256.0<<endl;
 		if(farDist/256.0 > 70){
 			contourPoints++;
 		}
 		Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-		//circle( drawing, contours[indMaxArea][start], 4, color, -1, 8, 0 );
-		//circle( drawing, contours[indMaxArea][end], 4, color, -1, 8, 0 );
-		//circle( drawing, contours[indMaxArea][far], 4, color, -1, 8, 0 );
+		circle( drawing, contours[indMaxArea][start], 4, color, -1, 8, 0 );
+		circle( drawing, contours[indMaxArea][end], 4, color, -1, 8, 0 );
+		circle( drawing, contours[indMaxArea][far], 4, color, -1, 8, 0 );
 	}
 	
 	// cout<<contourPoints<<" Convex Defects Detected"<<endl;
@@ -387,8 +387,8 @@ Mat findHandContours(Mat& src){
 
 
 
-	if( (args_c==3 && ( strcmp(args[1],"-img")==0 || strcmp(args[1],"-AllImgs")==0 ) ) || waitKey(30)=='m' )
-		findClassUsingPythonModels(distVector);
+	// if( (args_c==3 && ( strcmp(args[1],"-img")==0 || strcmp(args[1],"-AllImgs")==0 ) ) || waitKey(30)=='m' )
+	// 	findClassUsingPythonModels(distVector);
 
 
 

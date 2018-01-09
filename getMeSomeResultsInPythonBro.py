@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt
 
 
 # Initializers
-dataInds = [1,2,3,4,5]
+dataInds = [1,2,3,4,5,6]
 subFolderNames = ['Normal'] #,'Rotated'
 noOfDescriptors = 10
 noOfSamples = []
@@ -109,7 +109,7 @@ def SVMLearning():
 	print("Accuracy on training set:"+str(svm.score(trainData_S,trainData_L)*100))
 	print("Accuracy on training set:"+str(svm.score(testData_S,testData_L)*100))
 
-def KerasDeepLearning():
+def baseline_model():
 	#Install Keras and Tensorflow/Theanos before using this function.
 	seed=7
 	np.random.seed(seed)
@@ -142,7 +142,7 @@ def KerasDeepLearning():
 	model.add(Dense(64, activation='relu'))
 	model.add(Dense(32, activation='relu'))
 	model.add(Dense(32, activation='relu'))
-	model.add(Dense(5, activation='softmax'))
+	model.add(Dense(6, activation='softmax'))
 	# Compile model
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 	return model
