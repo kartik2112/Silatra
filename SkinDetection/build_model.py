@@ -38,7 +38,7 @@ def read_uci_data(data,d):
             d.append(line[len(line)-1])
 
 def read_silatra_data(data,d):
-    with open('silatra_dataset_complete.txt') as f:
+    with open('data.txt') as f:
         row_count=1
         print('Reading the Silatra dataset... Read 0 Lakh rows\r',end='')
         while True:
@@ -64,7 +64,7 @@ def deep(data,d):
     # Imports
     import numpy as np
     from keras.models import Sequential
-    from keras.layers import Dense
+    from keras.layers import Dense, Dropout
     from sklearn.preprocessing import LabelEncoder
     from sklearn.pipeline import Pipeline
     from keras.utils import np_utils
@@ -95,7 +95,11 @@ def deep(data,d):
     '''
 
     model = Sequential()
-    model.add(Dense(8,input_dim=3,activation='relu', name='hidden_layer'))
+    model.add(Dense(40,input_dim=3,activation='relu', name='hidden_layer_1'))
+    model.add(Dropout(0.2))
+    model.add(Dense(80,activation='relu', name='hidden_layer_2'))
+    model.add(Dropout(0.2))
+    model.add(Dense(120,activation='relu', name='hidden_layer_3'))
     model.add(Dense(2, activation='softmax', name='output_layer'))
 
     # Compile model & fit data to model.
@@ -109,8 +113,8 @@ def deep(data,d):
     # Save model architecture in json file & save weights in another file.
     print('Saving model....\r',end='')
     to_be_saved_model = model.to_json()
-    with open('uci_model.json','w') as model_file: model_file.write(to_be_saved_model)
-    model.save_weights('uci_weights.h5')
+    with open('model1.json','w') as model_file: model_file.write(to_be_saved_model)
+    model.save_weights('weights1.h5')
 
     print('You may now segment an image!')
 
@@ -120,7 +124,7 @@ if __name__ == "__main__":
     print('\n----- Silatra Deep Learning -----\n')
 
     data, d = [], []
-    #read_uci_data(data,d)
+    read_uci_data(data,d)
     read_silatra_data(data,d)
 
     # Split data for training & testing. Ratio = 33%

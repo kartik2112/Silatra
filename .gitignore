@@ -6,7 +6,6 @@ GPUCache/*
 Local Storage/*
 User/*
 KNNModelDump.sav
-MLModels/*
 Cookies
 Cookies-journal
 storage.json
@@ -16,5 +15,5 @@ SkinDetection/segmented.jpg
 */build/*
 .vscode/*
 Tejas is coding here/*
-*/__pycache__
+*/__pycache__/*
 .ipynb_checkpoints/*

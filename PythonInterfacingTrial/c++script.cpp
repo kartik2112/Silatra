@@ -57,6 +57,9 @@ Then run
 
 #include <iostream>
 #include <boost/python.hpp>
+// For this to work you need to install boost
+// sudo apt-get install libboost-all-dev
+// Reference: https://stackoverflow.com/a/12578564/5370202
 
 #include "cv_cpp_py_interface.h"
 
@@ -209,7 +212,8 @@ int main(int argc, char *argv[])
 
     PyRun_SimpleString("import sys\n"
     "sys.path.insert(0, './')\n"
-    "print(sys.path)");  // This statement added from reference: https://stackoverflow.com/a/24492775/5370202
+    "print(sys.path)\n"
+    "if not hasattr(sys, 'argv'): sys.argv  = ['']");  // This statement added from reference: https://stackoverflow.com/a/24492775/5370202
 
     cout<<"Check 2"<<endl;
 
