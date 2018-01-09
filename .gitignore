@@ -6,7 +6,6 @@ GPUCache/*
 Local Storage/*
 User/*
 KNNModelDump.sav
-MLModels/*
 Cookies
 Cookies-journal
 storage.json
@@ -14,8 +13,6 @@ Prefences
 machineid
 SkinDetection/segmented.jpg
 */build/*
-CCDC-Data/*
-data.csv
 .vscode/*
 Tejas is coding here/*
 */__pycache__/*
