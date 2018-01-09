@@ -184,7 +184,7 @@ void maintainTrackOfTimings(){
 void processFrame(Mat& image){
 	/* All processing functions go after this point */
 		
-	Mat contours = getMyHand(image);  //Defined in GetMyContours/getMyContours.cpp
+	Mat contours = getMyHand(image);  //Defined in GetMyHand/handDetection.cpp
 
 	/* All processing functions come before this point */
 }

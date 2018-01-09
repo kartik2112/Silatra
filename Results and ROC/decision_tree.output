@@ -1,0 +1,43 @@
+In sabka average lele
+
+Number of samples loaded:299629
+Number of Training samples:269666
+Number of Testing samples:29963
+Accuracy on training set:98.45957591984158
+Accuracy on test set:96.09184661082001
+Time required for segmentation: 0.546s
+
+Number of samples loaded:299629
+Number of Training samples:269666
+Number of Testing samples:29963
+Accuracy on training set:98.44400109765414
+Accuracy on test set:96.24870673831059
+Time required for segmentation: 0.586s
+
+Number of samples loaded:299629
+Number of Training samples:269666
+Number of Testing samples:29963
+Accuracy on training set:98.43843866115863
+Accuracy on test set:96.35550512298502
+Time required for segmentation: 0.601s
+
+Number of samples loaded:299629
+Number of Training samples:269666
+Number of Testing samples:29963
+Accuracy on training set:98.43843866115863
+Accuracy on test set:96.24203183926842
+Time required for segmentation: 0.605s
+
+Number of samples loaded:299629
+Number of Training samples:269666
+Number of Testing samples:29963
+Accuracy on training set:98.45030519234905
+Accuracy on test set:96.20865734405767
+Time required for segmentation: 0.57s
+
+Number of samples loaded:299629
+Number of Training samples:269666
+Number of Testing samples:29963
+Accuracy on training set:98.47107162193231
+Accuracy on test set:96.09184661082001
+Time required for segmentation: 0.561s

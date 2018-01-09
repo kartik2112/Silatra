@@ -1,0 +1,29 @@
+Reading the Silatra dataset...
+                                                             
+Just a minute....
+Testing in process...
+Confusion matrix:    
+
+---------------------------------
+|  C  |	S	|	NS	|
+---------------------------------
+|  S  |	19533	|	1974	|
+|  NS |	4044	|	64338	|
+---------------------------------
+Accuracy: 83871 / 89889 = 93.31%
+
+Probabilistic model ready!
+
+Input image: 
+320x180=57600 pixels
+Segmentation is starting...
+Pixels processed: 10.0k / 57.6k
+Pixels processed: 20.0k / 57.6k
+Pixels processed: 30.0k / 57.6k
+Pixels processed: 40.0k / 57.6k
+Pixels processed: 50.0k / 57.6k
+Pixels processed: 57.6k / 57.6k
+
+
+Time required per pixel = 0.0 seconds
+Time required for segmentation = 0.3991658687591553 seconds

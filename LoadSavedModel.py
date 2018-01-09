@@ -4,12 +4,13 @@ from keras.models import model_from_json
 import pandas as pd
 import numpy as np
 
+
 # Loading the data
-dataframe = pd.read_csv("test_data.csv", header=None)
+dataframe = pd.read_csv("TestSampleDistancesData.csv", header=None)
 # dataframe = pd.read_csv("TestSampleDistancesData.csv", header=None)
 dataset = dataframe.values
 X = dataset[:,0:10].astype(float)
-class_array=["1","2","3","4","5"]
+class_array=["1","2","3","4","5","6","7","8","9"]
 #For Keras Model
 print("Getting the saved model.")
 json_file = open('MLModels/KerasModel.json', 'r')

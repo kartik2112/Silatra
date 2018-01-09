@@ -14,6 +14,7 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <cstdlib>
 
 #include <experimental/filesystem>
 
@@ -36,7 +37,7 @@ Mat findHandContours(Mat& src);
 Mat combineExtractedWithMain(Mat& maskedImg,Mat& image);
 void prepareWindows();
 void connectContours(vector<vector<Point> > &contours);
-void reduceClusterPoints(vector< vector< Point > > &contours);
+void reduceClusterPoints(vector< vector< Point > > &contours, vector<vector<Point> > &hull);
 void findClassUsingPythonModels( vector<float> &distVector );
 
 
@@ -84,7 +85,7 @@ Mat getMyHand(Mat& imageOG){
 	
 	//blur(image,image,Size(kernSize,kernSize),Point(-1,-1));
 	GaussianBlur(imageOG,image,Size(2*kernSize+1,2*kernSize+1),0,0);
-/**/	imshow("Gaussian Blurred Image",image); 
+	// imshow("Gaussian Blurred Image",image); 
 	//medianBlur(image,image,2*kernSize+1);
 	
 	/* Convert BGR Image into HSV, YCrCb Images */
@@ -95,7 +96,7 @@ Mat getMyHand(Mat& imageOG){
 	inRange(imageHSV,Scalar(lH,lS,lV),Scalar(hH,hS,hV),dstHSV);
 	
 	Mat dst=extractSkinColorRange(image,imageHSV,imageYCrCb);
-/**/	imshow("Skin Color Range Pixels Extracted Image (using HSV, BGR ranges)",dst); 
+	// imshow("Skin Color Range Pixels Extracted Image (using HSV, BGR ranges)",dst); 
 	
 	
 	frameStepsTimes[ SKIN_COLOR_EXTRACTION ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
@@ -131,7 +132,7 @@ Mat getMyHand(Mat& imageOG){
 	
 	/* This will enlarge white areas */
 	dilate(dstEroded,dstEroded,morphCloseElement,Point(-1,-1),morphCloseNoOfIterations);
-/**/	imshow("Round 3 - Dilated Segment - to expand segmented area",dstEroded);
+	// imshow("Round 3 - Dilated Segment - to expand segmented area",dstEroded);
 	
 	
 	//cout<<dst.type()<<" "<<image.type()<<endl;
@@ -147,7 +148,7 @@ Mat getMyHand(Mat& imageOG){
 	/* This will enlarge white areas */
 	dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
 	//dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
-/**/	imshow("Round 4,5 - After morphologyEx(MORPH_CLOSE) and dilate segment",dstEroded);
+	// imshow("Round 4,5 - After morphologyEx(MORPH_CLOSE) and dilate segment",dstEroded);
 
 	frameStepsTimes[ MORPHOLOGY_OPERATIONS ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
 	startTime=(double)getTickCount();  //---Timing related part
@@ -168,12 +169,12 @@ Mat getMyHand(Mat& imageOG){
 	
 	/// Show in a window  
 	imshow("Contours", contouredImg );	
-	//imwrite("./ContourImages/img.png",contouredImg);
-	imshow("Morphed Mask",dstEroded);
+	// imwrite("./ContourImages/img.png",contouredImg);
+	// imshow("Morphed Mask",dstEroded);
 	imshow("Masked Image",maskedImg);
 	imshow("Final Image",finImg);
 	imshow("HSV + BGR Mask",dst);
-	imshow("HSV Mask",dstHSV);
+	// imshow("HSV Mask",dstHSV);
 
 
 
@@ -195,7 +196,7 @@ Mat combineExtractedWithMain(Mat& maskedImg,Mat& image){
 	
 	Mat dst;
 	GaussianBlur(image,dst,Size(25,25),0,0);
-/**/	imshow("Gaussian Blur on BG",dst);
+	// imshow("Gaussian Blur on BG",dst);
 		
 	uchar *blurredRow,*extractedRow,*dstRow;
 	for(int i=0;i<nRows;i++){
@@ -233,8 +234,8 @@ Mat findHandContours(Mat& src){
 	/// Detect edges using canny
 	Canny( src_gray, canny_output, thresh, thresh*2, 3 );
 	
-	Mat morphCloseElement = getStructuringElement(MORPH_ELLIPSE,Size(5*2+1,5*2+1),Point(5,5));
-	//morphologyEx(canny_output,canny_output,MORPH_CLOSE,morphCloseElement);
+	// Mat morphCloseElement = getStructuringElement(MORPH_ELLIPSE,Size(5*2+1,5*2+1),Point(5,5));
+	// morphologyEx(canny_output,canny_output,MORPH_CLOSE,morphCloseElement);
 	
 	imshow("Canny",canny_output);
 	/// Find contours
@@ -279,7 +280,6 @@ Mat findHandContours(Mat& src){
 	
 	connectContours( contours );
 	
-	// reduceClusterPoints( contours );
 
 
 	frameStepsTimes[ CONTOURS_IMPROVEMENT ] = (getTickCount()-(double)startTime1)/getTickFrequency();   //---Timing related part
@@ -291,6 +291,7 @@ Mat findHandContours(Mat& src){
 	for( size_t i = 0; i < contours.size(); i++ )
 	{   convexHull( Mat(contours[i]), hull[i], false ); }
 	
+	// reduceClusterPoints( contours , hull );
 	
 	/// Get the moments
 	vector<Moments> mu(hull.size() );
@@ -308,12 +309,12 @@ Mat findHandContours(Mat& src){
 	for( size_t i = 0; i< contours.size(); i++ )
 	{
 		Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-		drawContours( drawing, contours, (int)i, color, 1, 8, vector<Vec4i>(), 0, Point() );
-		drawContours( drawing, hull, (int)i, color, 1, 8, vector<Vec4i>(), 0, Point() );
-		circle( drawing, mc[i], 4, color, -1, 8, 0 );
+		// drawContours( drawing, contours, (int)i, color, 1, 8, vector<Vec4i>(), 0, Point() );
+		// drawContours( drawing, hull, (int)i, color, 1, 8, vector<Vec4i>(), 0, Point() );
+		// circle( drawing, mc[i], 4, color, -1, 8, 0 );
 		cout<<"Contour "<<(i+1)<<" size: "<<contours[i].size()<<":"<<endl;
-		circle( drawing, contours[i][0], 4, Scalar(255,0,0), -1, 8, 0 );
-		circle( drawing, contours[i][10], 4, Scalar(255,0,0), -1, 8, 0 );
+		// circle( drawing, contours[i][0], 4, Scalar(255,0,0), -1, 8, 0 );
+		// circle( drawing, contours[i][10], 4, Scalar(255,0,0), -1, 8, 0 );
 		// for(auto p:contours[i]){
 		// 	cout<<"("<<p.x<<","<<p.y<<")"<<", ";
 		// }
@@ -339,21 +340,26 @@ Mat findHandContours(Mat& src){
 	if(contours[indMaxArea].size()>2 && convHull.size()>2)
 		convexityDefects(contours[indMaxArea],convHull,convD);
 	int contourPoints=0;
-	
+
+	Scalar color123 = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
+	drawContours( drawing, contours, (int)indMaxArea, color123, 1, 8, vector<Vec4i>(), 0, Point() );
+	drawContours( drawing, hull, (int)indMaxArea, color123, 1, 8, vector<Vec4i>(), 0, Point() );
+	circle( drawing, mc[(int)indMaxArea], 4, color123, -1, 8, 0 );
+
 	for(int i=0;i<convD.size();i++){
 		int start,end,far;
 		double farDist;
 		
 		start = convD[i][0]; end = convD[i][1];
 		far = convD[i][2]; farDist = convD[i][3];
-		// cout<<start<<","<<end<<","<<far<<","<<farDist/256.0<<endl;
+		cout<<start<<","<<end<<","<<far<<","<<farDist/256.0<<endl;
 		if(farDist/256.0 > 70){
 			contourPoints++;
 		}
 		Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-		//circle( drawing, contours[indMaxArea][start], 4, color, -1, 8, 0 );
-		//circle( drawing, contours[indMaxArea][end], 4, color, -1, 8, 0 );
-		//circle( drawing, contours[indMaxArea][far], 4, color, -1, 8, 0 );
+		circle( drawing, contours[indMaxArea][start], 4, color, -1, 8, 0 );
+		circle( drawing, contours[indMaxArea][end], 4, color, -1, 8, 0 );
+		circle( drawing, contours[indMaxArea][far], 4, color, -1, 8, 0 );
 	}
 	
 	// cout<<contourPoints<<" Convex Defects Detected"<<endl;
@@ -470,32 +476,114 @@ void connectContours(vector<vector<Point> > &contours){
 /*
 Okayishly efficient but horribly innacurate for noisy intersecting contours
 */
-void reduceClusterPoints(vector< vector< Point > > &contours){
-	int maxI = -1, max = 0;
+void reduceClusterPoints(vector< vector< Point > > &contours, vector<vector<Point> > &hull){
+	// int maxI = -1, max = 0;
+	// for(int i = 0 ; i < contours.size() ; i++){
+	// 	cout<<contours[i].size()<<", ";
+	// 	if(contours[i].size()>max){
+	// 		max = contours[i].size();
+	// 		maxI = i;
+	// 	}
+	// }
+	// cout<<endl;
+	
+	// long long minDist = 9223372036854775805;
+	// int minDistI = -1;
+	// for(int i = 7 ; i < contours[ maxI ].size() - 7; i++){
+	// 	long long tempDist = ( contours[maxI][i].x - contours[maxI][0].x ) * ( contours[maxI][i].x - contours[maxI][0].x ) + ( contours[maxI][i].y - contours[maxI][0].y ) * ( contours[maxI][i].y - contours[maxI][0].y );
+	// 	if(tempDist>=0 && tempDist<=minDist){
+	// 		minDist = tempDist;
+	// 		minDistI = i;
+	// 	}
+	// }
+	
+	// int firstHalfEnd = minDistI / 2, secondHalfEnd = minDistI + (contours[maxI].size() - minDistI - 1) / 2;
+	
+	// cout<<firstHalfEnd<<", "<<minDistI<<", "<<secondHalfEnd<<", "<<contours[maxI].size()-1<<endl;
+	// contours[maxI].insert(contours[maxI].begin(), contours[maxI].begin()+secondHalfEnd, contours[maxI].end());
+	// contours[maxI].erase(contours[maxI].begin()+firstHalfEnd+secondHalfEnd-minDistI,contours[maxI].end());
+
+	int maxI = -1, maxArea = 0;
 	for(int i = 0 ; i < contours.size() ; i++){
-		cout<<contours[i].size()<<", ";
-		if(contours[i].size()>max){
-			max = contours[i].size();
+		if(contours[i].size()>maxArea){
+			maxArea = contours[i].size();
 			maxI = i;
 		}
 	}
-	cout<<endl;
-	
-	long long minDist = 9223372036854775805;
-	int minDistI = -1;
-	for(int i = 7 ; i < contours[ maxI ].size() - 7; i++){
-		long long tempDist = ( contours[maxI][i].x - contours[maxI][0].x ) * ( contours[maxI][i].x - contours[maxI][0].x ) + ( contours[maxI][i].y - contours[maxI][0].y ) * ( contours[maxI][i].y - contours[maxI][0].y );
-		if(tempDist>=0 && tempDist<=minDist){
-			minDist = tempDist;
-			minDistI = i;
+	cout<<hull[maxI].size()<<endl;
+
+	vector<int> possibleEndpointIndices;
+	int size123 = contours[maxI].size();
+
+	for(int i = 0 ; i < contours[maxI].size() ; i++){
+		bool convexHullPoint = false;
+		for(int j = 0 ; j < hull[maxI].size() ; j++){
+			if((contours[maxI][i].x == hull[maxI][j].x) && (contours[maxI][i].y == hull[maxI][j].y)){
+				convexHullPoint = true;
+				break;
+			}
+		}
+		if(convexHullPoint){
+			int leftI = (i-5)%size123;
+			int rightI = (i+5)%size123;
+			cout<<leftI<<","<<rightI<<endl;
+			cout<<"("<<contours[maxI][leftI].x<<","<<contours[maxI][leftI].y<<")"<<endl;
+			long long sumDists = 0;
+			for(int ctrComps = 0 ; ctrComps < 5 ; ctrComps++, leftI=(leftI+1)%size123, rightI=(rightI-1)%size123){
+				cout<<"("<<contours[maxI][leftI].x<<","<<contours[maxI][leftI].y<<") - ("<<contours[maxI][rightI].x<<","<<contours[maxI][rightI].y<<")"<<endl;
+				sumDists += ( (long long)contours[maxI][leftI].x - contours[maxI][rightI].x ) * ( (long long)contours[maxI][leftI].x - contours[maxI][rightI].x ) + ( (long long)contours[maxI][leftI].y - contours[maxI][rightI].y ) * ( (long long)contours[maxI][leftI].y - contours[maxI][rightI].y );
+			}
+			cout<<sumDists<<endl;
+
+			if(sumDists < 30000){
+				possibleEndpointIndices.push_back(i);
+			}
+		}
+	}
+
+	for(int i=0;i<possibleEndpointIndices.size();i++){
+		cout<<possibleEndpointIndices[i]<<", ";
+	}
+
+	cout<<endl<<possibleEndpointIndices.size()<<endl;
+
+	if(possibleEndpointIndices.size()<2){
+		cout<<"Points reduction failed"<<endl;
+	}
+	else if(possibleEndpointIndices.size()==2){
+		if(possibleEndpointIndices[0]<possibleEndpointIndices[1]){
+			contours[maxI].erase(contours[maxI].begin()+possibleEndpointIndices[1]+1,contours[maxI].end());
+			contours[maxI].erase(contours[maxI].begin(),contours[maxI].begin()+possibleEndpointIndices[0]);
+		}
+		else{
+			contours[maxI].erase(contours[maxI].begin()+possibleEndpointIndices[0]+1,contours[maxI].end());
+			contours[maxI].erase(contours[maxI].begin(),contours[maxI].begin()+possibleEndpointIndices[1]);
+		}
+	}
+	else{
+		long long minErrorNoofPoints = 9223372036854775805;
+		int endPointI=-1,endPointJ=-1;
+		for(int i=0 ; i < possibleEndpointIndices.size()-1 ; i++){
+			for(int j = 0 ; j < possibleEndpointIndices.size() ; j++){
+				long long temp = abs(abs(possibleEndpointIndices[i]-possibleEndpointIndices[j])-size123/2);
+				if(temp<minErrorNoofPoints){
+					minErrorNoofPoints = temp;
+					endPointI = possibleEndpointIndices[i];
+					endPointJ = possibleEndpointIndices[j];
+				}
+			}
+		}
+		if(endPointI < endPointJ){
+			contours[maxI].erase(contours[maxI].begin() + endPointJ + 1,contours[maxI].end());
+			contours[maxI].erase(contours[maxI].begin(),contours[maxI].begin() + endPointI);
+		}
+		else{
+			contours[maxI].erase(contours[maxI].begin() + endPointI + 1,contours[maxI].end());
+			contours[maxI].erase(contours[maxI].begin(),contours[maxI].begin() + endPointJ);
 		}
 	}
 	
-	int firstHalfEnd = minDistI / 2, secondHalfEnd = minDistI + (contours[maxI].size() - minDistI - 1) / 2;
 	
-	cout<<firstHalfEnd<<", "<<minDistI<<", "<<secondHalfEnd<<", "<<contours[maxI].size()-1<<endl;
-	contours[maxI].insert(contours[maxI].begin(), contours[maxI].begin()+secondHalfEnd, contours[maxI].end());
-	contours[maxI].erase(contours[maxI].begin()+firstHalfEnd+secondHalfEnd-minDistI,contours[maxI].end());
 }
 
 
@@ -527,9 +615,18 @@ void findClassUsingPythonModels( vector<float> &distVector ){
 
 
 	// Py_Initialize();   //Moved to main() of Silatra.cpp
-	FILE* file = fopen("testThisSampleInPython.py","r");
-	PyRun_SimpleFile(file,"testThisSampleInPython.py");
-	// PyRun_SimpleFile(file,"LoadSavedModel.py");
+
+
+
+	// FILE* file = fopen("testThisSampleInPython.py","r");
+	// PyRun_SimpleFile(file,"testThisSampleInPython.py");
+
+	PyRun_SimpleString("import sys");
+	PyRun_SimpleString("if not hasattr(sys, 'argv'): sys.argv  = ['']");
+	FILE* file = fopen("LoadSavedModel.py","r");
+	PyRun_SimpleFile(file,"LoadSavedModel.py");
+
+	
 	// Py_Finalize();   //Moved to main() of Silatra.cpp
 	fclose(file);
 
