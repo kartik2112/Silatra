@@ -12,8 +12,8 @@ args = vars(ap.parse_args())
  
 # define the upper and lower boundaries of the HSV pixel
 # intensities to be considered 'skin'
-lower = np.array([0,143,77],np.uint8)
-upper = np.array([255,173,127],np.uint8)
+lower = np.array([0,140,60],np.uint8)
+upper = np.array([255,180,127],np.uint8)
 
 # if a video path was not supplied, grab the reference
 # to the gray
@@ -26,7 +26,6 @@ else:
 
 
 start_tracking = False
-r_old, h_old, c_old, w_old = 0,0,0,0
 # keep looping over the frames in the video
 while True:
     # grab the current frame
@@ -46,46 +45,40 @@ while True:
     # apply a series of erosions and dilations to the mask
     # using an elliptical kernel
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11))
-    skinMask = cv2.dilate(skinMask, kernel, iterations = 3)
-    skinMask = cv2.erode(skinMask, kernel, iterations = 2)
     skinMask = cv2.dilate(skinMask, kernel, iterations = 2)
+    skinMask = cv2.erode(skinMask, kernel, iterations = 2)
+    skinMask = cv2.dilate(skinMask, kernel, iterations = 1)
 
     # blur the mask to help remove noise, then apply the
     # mask to the frame
     skinMask = cv2.GaussianBlur(skinMask, (3, 3), 0)
     skin = cv2.bitwise_and(frame, frame, mask = skinMask)
 
-    skin = cv2.resize(skin, (1280,640))
-    r,h,c,w = 100,200,100,200
+    #skin = frame.copy()
+    #skin = cv2.resize(skin, (1920,1080))
+    r,h,c,w = 300,150,300,150
 
     frame = skin.copy()
-    skin = cv2.rectangle(skin, (r,c), (r+w,c+h), (0,0,255), 3)
-    track_window = (c_old, r_old, h_old, w_old)
+    skin = cv2.rectangle(skin, (r,c), (r+w,c+h), (0,0,255), 2)
+
     if not start_tracking:
-        roi = frame[r:r+h, c:c+w]
-        hsv_roi =  cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
-        mask = cv2.inRange(hsv_roi, np.array((0., 60.,32.)), np.array((180.,255.,255.)))
-        roi_hist = cv2.calcHist([hsv_roi],[0],mask,[180],[0,180])
-        cv2.normalize(roi_hist,roi_hist,0,255,cv2.NORM_MINMAX)
-        r_old, h_old, c_old, w_old = r,h,c,w
-        cv2.imshow('Segmented',skin)
+        tracker = cv2.Tracker_create('MIL')
+        bounding_box = (r, c, w, h)
+        #bounding_box = cv2.selectROI(frame, False)
+        ok = tracker.init(frame, bounding_box)
+        cv2.imshow('Place your hand within the red box',skin)
     else:
-        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        dst = cv2.calcBackProject([hsv],[0],roi_hist,[0,180],1)
-
-        # apply meanshift to get the new location
-        ret, track_window = cv2.CamShift(dst, track_window, term_crit)
-
-        # Draw it on image
-        pts = cv2.boxPoints(ret)
-        pts = np.int0(pts)
-        img2 = cv2.polylines(frame,[pts],True, 255,2)
-        cv2.imshow('img2',img2)
-        r_old, h_old, c_old, w_old = r,h,c,w
-
-    # Setup the termination criteria, either 10 iteration or move by atleast 1 pt
-    term_crit = ( cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1 )
-
+        ok = tracker.init(frame, bounding_box)
+        ok, bounding_box = tracker.update(frame)
+        if ok:
+            # Tracking is successful
+            p1 = (int(bounding_box[0]), int(bounding_box[1]))
+            p2 = (int(bounding_box[0] + bounding_box[2]), int(bounding_box[1] + bounding_box[3]))
+            cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
+        else:
+            # Tracking failure
+            cv2.putText(frame, "Tracking failure detected", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
+        cv2.imshow("Tracking result", frame)
     """
     image = skin.copy()
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
