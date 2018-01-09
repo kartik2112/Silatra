@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project( PythonInterfacingTrial )
 find_package( OpenCV REQUIRED )
-include_directories( ${OpenCV_INCLUDE_DIRS} /usr/local/include/python3.5)
+include_directories( ${OpenCV_INCLUDE_DIRS} /usr/local/include/python3.5 /home/kartik/.virtualenvs/cvAcc/lib/python3.5/site-packages/numpy/core/include)
 add_executable( PythonInterfacingTrial c++script.cpp cv_cpp_py_interface.cpp)
 target_link_libraries( PythonInterfacingTrial ${OpenCV_LIBS} stdc++fs python3.5m)

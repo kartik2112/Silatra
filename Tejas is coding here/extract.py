@@ -1,5 +1,4 @@
 # import the necessary packages
-import imutils
 import numpy as np
 import argparse
 import cv2
@@ -13,8 +12,8 @@ args = vars(ap.parse_args())
  
 # define the upper and lower boundaries of the HSV pixel
 # intensities to be considered 'skin'
-lower = np.array([0,143,77],np.uint8)
-upper = np.array([255,173,127],np.uint8)
+lower = np.array([0,140,60],np.uint8)
+upper = np.array([255,180,127],np.uint8)
 
 # if a video path was not supplied, grab the reference
 # to the gray
@@ -25,6 +24,8 @@ if not args.get("video", False):
 else:
 	camera = cv2.VideoCapture(args["video"])
 
+
+start_tracking = False
 # keep looping over the frames in the video
 while True:
     # grab the current frame
@@ -38,21 +39,46 @@ while True:
     # resize the frame, convert it to the HSV color space,
     # and determine the HSV pixel intensities that fall into
     # the speicifed upper and lower boundaries
-    frame = imutils.resize(frame, width = 400)
     converted = cv2.cvtColor(frame, cv2.COLOR_BGR2YCR_CB)
     skinMask = cv2.inRange(converted, lower, upper)
 
     # apply a series of erosions and dilations to the mask
     # using an elliptical kernel
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11))
-    skinMask = cv2.dilate(skinMask, kernel, iterations = 3)
+    skinMask = cv2.dilate(skinMask, kernel, iterations = 2)
     skinMask = cv2.erode(skinMask, kernel, iterations = 2)
+    skinMask = cv2.dilate(skinMask, kernel, iterations = 1)
 
     # blur the mask to help remove noise, then apply the
     # mask to the frame
     skinMask = cv2.GaussianBlur(skinMask, (3, 3), 0)
     skin = cv2.bitwise_and(frame, frame, mask = skinMask)
 
+    #skin = frame.copy()
+    #skin = cv2.resize(skin, (1920,1080))
+    r,h,c,w = 300,150,300,150
+
+    frame = skin.copy()
+    skin = cv2.rectangle(skin, (r,c), (r+w,c+h), (0,0,255), 2)
+
+    if not start_tracking:
+        tracker = cv2.Tracker_create('MIL')
+        bounding_box = (r, c, w, h)
+        #bounding_box = cv2.selectROI(frame, False)
+        ok = tracker.init(frame, bounding_box)
+        cv2.imshow('Place your hand within the red box',skin)
+    else:
+        ok = tracker.init(frame, bounding_box)
+        ok, bounding_box = tracker.update(frame)
+        if ok:
+            # Tracking is successful
+            p1 = (int(bounding_box[0]), int(bounding_box[1]))
+            p2 = (int(bounding_box[0] + bounding_box[2]), int(bounding_box[1] + bounding_box[3]))
+            cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
+        else:
+            # Tracking failure
+            cv2.putText(frame, "Tracking failure detected", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
+        cv2.imshow("Tracking result", frame)
     """
     image = skin.copy()
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -75,7 +101,7 @@ while True:
     
     """
 
-    # ORB feature detection code
+    ''' # ORB feature detection code
     image = skin.copy()
     orb = cv2.ORB_create()
     kp = orb.detect(image, None)
@@ -85,19 +111,13 @@ while True:
     img = cv2.drawKeypoints(image, kp, None, color=(0,255,0), flags=0)
 
     cv2.imshow("Actual image, Skin detected, Extreme points detected", np.hstack([frame, skin, img]))
-    
+     '''
     # if the 'q' key is pressed, stop the loop
     k=cv2.waitKey(1)
     if k == ord("q"):
         break
-    elif k == ord("c"):
-        with open("Data/1.csv","a") as f:
-            s=''
-            for keyp in kp:
-               p=keyp.pt
-               f.write(str(p[0])+","+str(p[1]))
-            f.write('\n')
-
+    elif k == ord('s'):
+        start_tracking = True
 
 # cleanup the camera and close any open windows
 camera.release()
