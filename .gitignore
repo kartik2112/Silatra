@@ -15,5 +15,5 @@ SkinDetection/segmented.jpg
 */build/*
 .vscode/*
 Tejas is coding here/*
-*/__pycache__
+*/__pycache__/*
 .ipynb_checkpoints/*
