@@ -2,26 +2,29 @@
 from keras.models import model_from_json
 from numpy import array,uint8
 import cv2
+from math import ceil
 
 # Read model architecture
 model_data = ''
-with open('SkinDetection/model.json') as model_file: model_data = model_file.read()
+with open('SkinDetection/deep_model.json') as model_file: model_data = model_file.read()
 model = model_from_json(model_data)
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Load saved weights
-model.load_weights('SkinDetection/weights.h5')
+model.load_weights('SkinDetection/deep_weights.h5')
 
-def predict_skin_pixels(img_file='./SkinDetection/Test_Images/test_img.jpg'):
-    img, segmented_img, completed = cv2.imread(img_file), [], 0
+def segment(img, return_mask=False):
 
     # Decide aspect ratio and resize the image.
     if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (180,320))
     elif float(len(img)/len(img[0])) == float(9/16): img = cv2.resize(img, (320,180))
-    elif float(len(img)/len(img[0])) == float(4/3): img = cv2.resize(img, (320,240))
-    elif float(len(img)/len(img[0])) == float(3/4): img = cv2.resize(img, (240,320))
+    elif float(len(img)/len(img[0])) == float(4/3): img = cv2.resize(img, (160,120))
+    elif float(len(img)/len(img[0])) == float(3/4): img = cv2.resize(img, (160,120))
     elif float(len(img)/len(img[0])) == 1: img = cv2.resize(img, (300,300))
     else: img = cv2.resize(img, (250,250))
+    original = img.copy()
+    h,w,_ = img.shape
+    img = cv2.resize(img, (ceil(w/2), ceil(h/2)))
 
     # Conversion to HSV & Normalization of image pixels
     ranges = [179.0,255.0,255.0]
@@ -32,10 +35,15 @@ def predict_skin_pixels(img_file='./SkinDetection/Test_Images/test_img.jpg'):
             for k in range(3):                                  # Each channel (h/s/v)
                 img[i][j][k] = img[i][j][k]*1.0/ranges[k]
 
-    completed, n, total_pixels = 0, len(img[0]), len(img)*len(img[0])
+    total_pixels = len(img)*len(img[0])
+
+    completed, n = 0, len(img[0])
+    segmented_img = []
     upper_row_predictions, curr_row_predictions, lower_row_predictions = '', model.predict(img[0]), model.predict(img[1])
     k1, K = 1.0, 1
+    mask = []
     for i in range(len(img)):
+        mask_row = []
         for j in range(len(curr_row_predictions)):
             l_skin, count = 0.0, 0
             if i is not 0:
@@ -65,15 +73,24 @@ def predict_skin_pixels(img_file='./SkinDetection/Test_Images/test_img.jpg'):
             alpha = l_skin
             l_skin = l_skin*k1/(1.0*count)
             if curr_row_predictions[j][0]*l_skin >= 0.5:
-                for k in range(3): img[i][j][k] *= float(ranges[k])
+                mask_row.append([0.001,0.001,255.0])
                 k1 = count*1.0*K/alpha
             else:
-                img[i][j] = [0.0,0.0,0.0]
+                mask_row.append([0.0,0.0,0.0])
                 k1 = 1
             completed += 1
-            if completed%10000 == 0: print('Skin segmentation in process: '+str(completed/1000)+'K / '+str(total_pixels/1000)+'K\r',end='')
         upper_row_predictions = curr_row_predictions
         curr_row_predictions = lower_row_predictions
+        mask.append(mask_row)
         if i < len(img)-2: lower_row_predictions = model.predict(img[i+2])
-    print('                                                                                                                                \r',end='')
-    return cv2.cvtColor(array(img, uint8), cv2.COLOR_HSV2BGR)
+    mask = cv2.resize(array(mask), (w, h))
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11))
+    mask = cv2.dilate(mask, kernel, iterations=1)
+
+    mask, segmented_img = mask.tolist(), cv2.cvtColor(original, cv2.COLOR_BGR2HSV)
+    for i in range(len(segmented_img)):
+        for j in range(len(segmented_img[i])):
+            for k in range(3):
+                if mask[i][j][k] == 0.0: segmented_img[i][j][k] = 0.0
+    if not return_mask: return cv2.cvtColor(array(segmented_img, uint8), cv2.COLOR_HSV2BGR)
+    else: return cv2.cvtColor(array(mask, uint8), cv2.COLOR_HSV2BGR)

@@ -63,6 +63,7 @@ int main(int argc, char** argv){
 
 	// cuda::setDevice(0);
 	// cuda::printShortCudaDeviceInfo(cuda::getDevice());
+	// Reference for OpenCV CUDA codes: https://github.com/opencv/opencv/blob/master/samples/gpu/morphology.cpp
 	
 	Py_Initialize();
 
