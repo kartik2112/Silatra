@@ -6,12 +6,12 @@ from math import ceil
 
 # Read model architecture
 model_data = ''
-with open('SkinDetection/deep_model.json') as model_file: model_data = model_file.read()
+with open('../SkinDetection/deep_model.json') as model_file: model_data = model_file.read()
 model = model_from_json(model_data)
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Load saved weights
-model.load_weights('SkinDetection/deep_weights.h5')
+model.load_weights('../SkinDetection/deep_weights.h5')
 
 def segment(img, return_mask=False):
 

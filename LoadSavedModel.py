@@ -13,12 +13,14 @@ X = dataset[:,0:10].astype(float)
 class_array=["1","2","3","4","5","6","7","8","9"]
 #For Keras Model
 print("Getting the saved model.")
-json_file = open('MLModels/KerasModel.json', 'r')
+# json_file = open('MLModels/KerasModel.json', 'r')
+json_file = open('Classification Models/DigitClassifierModel.json', 'r')
 loaded_model_json = json_file.read()
 json_file.close()
 loaded_model = model_from_json(loaded_model_json)
 # load weights into new model
-loaded_model.load_weights("MLModels/KerasModel.h5")
+# loaded_model.load_weights("MLModels/KerasModel.h5")
+loaded_model.load_weights("Classification Models/DigitClassifierModel.h5")
 print("Loaded model from disk")
 
 print("Compiling the loaded model.")
