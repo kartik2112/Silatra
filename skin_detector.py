@@ -13,7 +13,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accur
 # Load saved weights
 model.load_weights('SkinDetection/deep_weights.h5')
 
-def segment(img):
+def segment(img, return_mask=False):
 
     # Decide aspect ratio and resize the image.
     if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (180,320))
@@ -92,4 +92,5 @@ def segment(img):
         for j in range(len(segmented_img[i])):
             for k in range(3):
                 if mask[i][j][k] == 0.0: segmented_img[i][j][k] = 0.0
-    return cv2.cvtColor(array(segmented_img, uint8), cv2.COLOR_HSV2BGR)
+    if not return_mask: return cv2.cvtColor(array(segmented_img, uint8), cv2.COLOR_HSV2BGR)
+    else: return cv2.cvtColor(array(mask, uint8), cv2.COLOR_HSV2BGR)
