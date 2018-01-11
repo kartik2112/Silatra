@@ -21,7 +21,7 @@ from sklearn.pipeline import Pipeline
 # import pandas as pd
 
 # Initializers
-dataInds = [0,1,2,3,4,5,6,7,8,9]
+dataInds = [1,2,3,4,5,6,7,8,9]
 subFolderNames = ['Normal'] #,'Rotated'
 noOfDescriptors = 10
 noOfSamples = []
@@ -145,10 +145,11 @@ def SVMLearning():
 
 def KerasDeepLearning():
 	#Install Keras and Tensorflow/Theanos before using this function.
-	X,Y=duplicate(fftData,correctLabels,500)
-	train_x,test_x,train_y,test_y = train_test_split(X,Y,test_size = 0.33,random_state=42)
-	normalise(train_x)
-	normalise(test_x)
+	# X,Y=duplicate(fftData,correctLabels,500)
+	# train_x,test_x,train_y,test_y = train_test_split(X,Y,test_size = 0.33,random_state=42)
+	train_x,test_x,train_y,test_y = train_test_split(fftData,correctLabels,test_size = 0.33,random_state=42)
+	# normalise(train_x)
+	# normalise(test_x)
 	print("Training Set Size:"+str(train_x.shape[0]))
 	print("Testing Set Size:"+str(test_x.shape[0]))
 	# One-Hot encoding

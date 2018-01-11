@@ -32,7 +32,7 @@ using namespace std;
 using namespace cv;
 
 
-Mat* extractSkinColorRange(Mat& srcBGR,Mat& srcHSV,Mat& srcYCrCb);
+Mat extractSkinColorRange(Mat& srcBGR,Mat& srcHSV,Mat& srcYCrCb);
 bool isInSkinRangeBGR(const u_char& B,const u_char& G,const u_char& R);
 bool isInSkinRangeHSV(const u_char& H,const u_char& S,const u_char& V);
 bool isInSkinRangeYCrCb(const u_char& Y, const u_char& Cr, const u_char& Cb);
@@ -48,18 +48,17 @@ int Rlow=60,Glow=40,Blow=20,gap=9,Rhigh=220,Ghigh=210,Bhigh=170;
 
 
 
-Mat* extractSkinColorRange(Mat& srcBGR,Mat& srcHSV,Mat& srcYCrCb){
+Mat extractSkinColorRange(Mat& srcBGR,Mat& srcHSV,Mat& srcYCrCb){
 	displaySkinColorDetectionTrackbarsIfNeeded();
 	int nRows=srcBGR.rows;
 	int nCols=srcBGR.cols*3;
 	
-	static Mat dsts[3];
+	// static Mat dsts[3];
+	// for(int i=0;i<3;i++){
+	// 	dsts[i] = Mat(nRows,srcBGR.cols,CV_8UC1,Scalar(0));
+	// }
 
-	for(int i=0;i<3;i++){
-		dsts[i] = Mat(nRows,srcBGR.cols,CV_8UC1,Scalar(0));
-	}
-
-	// Mat dst(nRows,srcBGR.cols,CV_8UC1,Scalar(0));
+	Mat dst(nRows,srcBGR.cols,CV_8UC1,Scalar(0));
 		
 	uchar *bgrRow, *hsvRow, *YCrCbRow, *dstRow;
 	uchar *dstBGRRow, *dstHSVRow, *dstYCrCbRow;
@@ -67,34 +66,36 @@ Mat* extractSkinColorRange(Mat& srcBGR,Mat& srcHSV,Mat& srcYCrCb){
 		bgrRow = srcBGR.ptr<uchar>(i);
 		hsvRow = srcHSV.ptr<uchar>(i);
 		YCrCbRow = srcYCrCb.ptr<uchar>(i);
-		// dstRow = dst.ptr<uchar>(i);
+		dstRow = dst.ptr<uchar>(i);
 
-		dstBGRRow = dsts[0].ptr<uchar>(i);
-		dstHSVRow = dsts[1].ptr<uchar>(i);
-		dstYCrCbRow = dsts[2].ptr<uchar>(i);
+		// dstBGRRow = dsts[0].ptr<uchar>(i);
+		// dstHSVRow = dsts[1].ptr<uchar>(i);
+		// dstYCrCbRow = dsts[2].ptr<uchar>(i);
 		
-		// for(int j=0;j<nCols;j+=3){
-		// 	if( isInSkinRangeBGR(bgrRow[j],bgrRow[j+1],bgrRow[j+2])
-		// 		/*&& isInSkinRangeYCrCb(YCrCbRow[j],YCrCbRow[j+1],YCrCbRow[j+2])*/
-		// 		&& isInSkinRangeHSV(hsvRow[j],hsvRow[j+1],hsvRow[j+2]) ){
-		// 		dstRow[j/3]=255;
-		// 	}
-		// }
-
 		for(int j=0;j<nCols;j+=3){
-			if( isInSkinRangeBGR(bgrRow[j],bgrRow[j+1],bgrRow[j+2])){
-				dstBGRRow[j/3]=255;
-			}
-			if( isInSkinRangeHSV(hsvRow[j],hsvRow[j+1],hsvRow[j+2]) ){
-				dstHSVRow[j/3]=255;
-			}
-			if( isInSkinRangeYCrCb(YCrCbRow[j],YCrCbRow[j+1],YCrCbRow[j+2]) ){
-				dstYCrCbRow[j/3]=255;
+			if( /* isInSkinRangeBGR(bgrRow[j],bgrRow[j+1],bgrRow[j+2])*/
+				isInSkinRangeYCrCb(YCrCbRow[j],YCrCbRow[j+1],YCrCbRow[j+2])
+				/* && isInSkinRangeHSV(hsvRow[j],hsvRow[j+1],hsvRow[j+2])*/ ){
+				dstRow[j/3]=255;
 			}
 		}
+
+		// for(int j=0;j<nCols;j+=3){
+		// 	if( isInSkinRangeBGR(bgrRow[j],bgrRow[j+1],bgrRow[j+2])){
+		// 		dstBGRRow[j/3]=255;
+		// 	}
+		// 	if( isInSkinRangeHSV(hsvRow[j],hsvRow[j+1],hsvRow[j+2]) ){
+		// 		dstHSVRow[j/3]=255;
+		// 	}
+		// 	if( isInSkinRangeYCrCb(YCrCbRow[j],YCrCbRow[j+1],YCrCbRow[j+2]) ){
+		// 		dstYCrCbRow[j/3]=255;
+		// 	}
+		// }
 	}
 	
-	return dsts;
+	// return dsts;
+
+	return dst;
 }
 
 

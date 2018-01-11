@@ -19,8 +19,22 @@ To run a.out file from commandline, use:
     `./a.out`
 
 For parameter passing main function, use:
-    `./a.out pythonscript multiply 5,3`
+    `./a.out pythonscript multiply 5 3`
 
+*/
+
+
+/*
+If you are getting error: 
+    fatal error: pyconfig.h: No such file or directory
+    compilation terminated.
+    compilation terminated.
+You should first execute: export CPLUS_INCLUDE_PATH=/usr/include/python3.5m
+
+
+In builder.sh file, this is already included
+
+Reference: https://github.com/BVLC/caffe/issues/410
 */
 
 

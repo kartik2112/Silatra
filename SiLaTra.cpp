@@ -10,6 +10,7 @@
 #include <opencv2/highgui.hpp>
 
 #include "GetMyHand/handDetection.hpp"
+#include "GetMyHand/Classification/classifyPythonAPI.hpp"
 
 #include <iostream>
 #include <ctime>
@@ -52,20 +53,20 @@ vector<double> avgTimes(timesLabels.size(),0);
 vector<double> frameStepsTimes(timesLabels.size());
 double noOfFramesCollected = 0;
 
-char** args;
+char** args_v;
 int args_c;
 
 
 int main(int argc, char** argv){
 
-	args = argv;
+	args_v = argv;
 	args_c = argc;
 
 	// cuda::setDevice(0);
 	// cuda::printShortCudaDeviceInfo(cuda::getDevice());
 	// Reference for OpenCV CUDA codes: https://github.com/opencv/opencv/blob/master/samples/gpu/morphology.cpp
 	
-	Py_Initialize();
+	initializePythonInterpreter();
 
 	if(argc==3 && strcmp(argv[1],"-img")==0){	
 		subDirName = string(argv[2]);
