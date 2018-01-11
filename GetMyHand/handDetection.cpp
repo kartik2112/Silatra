@@ -97,9 +97,14 @@ Mat getMyHand(Mat& imageOG){
 	Mat dstHSV;
 	inRange(imageHSV,Scalar(lH,lS,lV),Scalar(hH,hS,hV),dstHSV);
 	
-	Mat dst=extractSkinColorRange(image,imageHSV,imageYCrCb);
+	// Mat dst=extractSkinColorRange(image,imageHSV,imageYCrCb);
+	Mat* dsts = extractSkinColorRange(image,imageHSV,imageYCrCb);
 	// imshow("Skin Color Range Pixels Extracted Image (using HSV, BGR ranges)",dst); 
-	
+	imshow("BGR Mask",dsts[0]);
+	imshow("HSV Mask",dsts[1]);
+	imshow("YCrCb Mask",dsts[2]);
+
+	Mat dst = dsts[2];
 	
 	frameStepsTimes[ SKIN_COLOR_EXTRACTION ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
 	startTime=(double)getTickCount();  //---Timing related part
@@ -154,7 +159,7 @@ Mat getMyHand(Mat& imageOG){
 	morphologyEx(dstEroded,dstEroded,MORPH_CLOSE,morphCloseElement);
 	
 	/* This will enlarge white areas */
-	dilate(dstEroded,dstEroded,morphCloseElement,Point(-1,-1),morphCloseNoOfIterations);
+	// dilate(dstEroded,dstEroded,morphCloseElement,Point(-1,-1),morphCloseNoOfIterations);
 	// imshow("Round 3 - Dilated Segment - to expand segmented area",dstEroded);
 	
 	
@@ -169,8 +174,7 @@ Mat getMyHand(Mat& imageOG){
 	
 	Mat dilateElement = getStructuringElement(MORPH_ELLIPSE,Size(8,8),Point(4,4));
 	/* This will enlarge white areas */
-	dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
-	//dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
+	// dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
 	// imshow("Round 4,5 - After morphologyEx(MORPH_CLOSE) and dilate segment",dstEroded);
 
 	frameStepsTimes[ MORPHOLOGY_OPERATIONS ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
@@ -180,7 +184,8 @@ Mat getMyHand(Mat& imageOG){
 	cvtColor(dstEroded,dstEroded,CV_GRAY2BGR);
 	bitwise_and(dstEroded,imageOG,maskedImg);
 	
-	Mat finImg=combineExtractedWithMain(maskedImg,image);
+	// Mat finImg=combineExtractedWithMain(maskedImg,image);
+	Mat finImg = dstEroded;
 
 	frameStepsTimes[ MODIFIED_IMAGE_GENERATION ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
 	startTime=(double)getTickCount();  //---Timing related part
@@ -262,18 +267,20 @@ Mat findHandContours(Mat& src){
 	
 	imshow("Canny",canny_output);
 	/// Find contours
-	findContours( canny_output, contours1, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
+	// findContours( canny_output, contours1, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
+
+	findContours( src_gray, contours1, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
 	
 	contours.resize(contours1.size());
 	
-	for( size_t i = 0; i< contours.size(); i++ )
-	{	
-		cout<<"Contour "<<(i+1)<<" size: "<<contours1[i].size()<<":"<<endl;
-		// for(auto p:contours1[i]){
-		// 	cout<<"("<<p.x<<","<<p.y<<")"<<", ";
-		// }
-		// cout<<endl<<endl;
-	}
+	// for( size_t i = 0; i< contours.size(); i++ )
+	// {	
+	// 	cout<<"Contour "<<(i+1)<<" size: "<<contours1[i].size()<<":"<<endl;
+	// 	// for(auto p:contours1[i]){
+	// 	// 	cout<<"("<<p.x<<","<<p.y<<")"<<", ";
+	// 	// }
+	// 	// cout<<endl<<endl;
+	// }
 	
 	/// Draw contours
 	Mat drawingOGContours = Mat::zeros( canny_output.size(), CV_8UC3 );
@@ -290,7 +297,7 @@ Mat findHandContours(Mat& src){
 	
 	for( size_t i = 0; i< contours1.size(); i++ )
 	{		
-		approxPolyDP(Mat(contours1[i]),contours[i],3,true);
+		approxPolyDP(Mat(contours1[i]),contours[i],1.5,true);
 	}
 
 
@@ -301,7 +308,7 @@ Mat findHandContours(Mat& src){
 
 
 	
-	connectContours( contours );
+	// connectContours( contours );
 	
 
 
@@ -332,12 +339,12 @@ Mat findHandContours(Mat& src){
 	for( size_t i = 0; i< contours.size(); i++ )
 	{
 		Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-		// drawContours( drawing, contours, (int)i, color, 1, 8, vector<Vec4i>(), 0, Point() );
-		// drawContours( drawing, hull, (int)i, color, 1, 8, vector<Vec4i>(), 0, Point() );
-		// circle( drawing, mc[i], 4, color, -1, 8, 0 );
-		cout<<"Contour "<<(i+1)<<" size: "<<contours[i].size()<<":"<<endl;
-		// circle( drawing, contours[i][0], 4, Scalar(255,0,0), -1, 8, 0 );
-		// circle( drawing, contours[i][10], 4, Scalar(255,0,0), -1, 8, 0 );
+		drawContours( drawing, contours, (int)i, color, 1, 8, vector<Vec4i>(), 0, Point() );
+		drawContours( drawing, hull, (int)i, color, 1, 8, vector<Vec4i>(), 0, Point() );
+		circle( drawing, mc[i], 4, color, -1, 8, 0 );
+		// cout<<"Contour "<<(i+1)<<" size: "<<contours[i].size()<<":"<<endl;
+		circle( drawing, contours[i][0], 4, Scalar(255,0,0), -1, 8, 0 );
+		circle( drawing, contours[i][10], 4, Scalar(255,0,0), -1, 8, 0 );
 		// for(auto p:contours[i]){
 		// 	cout<<"("<<p.x<<","<<p.y<<")"<<", ";
 		// }
@@ -375,7 +382,7 @@ Mat findHandContours(Mat& src){
 		
 		start = convD[i][0]; end = convD[i][1];
 		far = convD[i][2]; farDist = convD[i][3];
-		cout<<start<<","<<end<<","<<far<<","<<farDist/256.0<<endl;
+		// cout<<start<<","<<end<<","<<far<<","<<farDist/256.0<<endl;
 		if(farDist/256.0 > 70){
 			contourPoints++;
 		}
@@ -390,7 +397,6 @@ Mat findHandContours(Mat& src){
 	
 		
 	ofstream csvFile;
-	csvFile.open(subDirName+"/data.csv",std::ios_base::app);
 	vector<float> distVector(contours[indMaxArea].size());
 	float maxDist = 0;
 	for(int i=0;i<contours[indMaxArea].size();i++){
@@ -401,13 +407,15 @@ Mat findHandContours(Mat& src){
 		}
 	}
 	
-	for(int i=0;i<contours[indMaxArea].size();i++){
-		distVector[i] = (distVector[i]/maxDist*10);
-		csvFile << distVector[i];
-		if(i!=contours[indMaxArea].size()-1) csvFile << ", ";
-	}
-	csvFile << "\n";
-	csvFile.close();
+	if( args_c==3 && ( strcmp(args[1],"-AllImgs")==0 ) )
+		csvFile.open(subDirName+"/data.csv",std::ios_base::app);
+		for(int i=0;i<contours[indMaxArea].size();i++){
+			distVector[i] = (distVector[i]/maxDist*10);
+			csvFile << distVector[i];
+			if(i!=contours[indMaxArea].size()-1) csvFile << ", ";
+		}
+		csvFile << "\n";
+		csvFile.close();
 
 
 
@@ -533,7 +541,7 @@ void reduceClusterPoints(vector< vector< Point > > &contours, vector<vector<Poin
 			maxI = i;
 		}
 	}
-	cout<<hull[maxI].size()<<endl;
+	// cout<<hull[maxI].size()<<endl;
 
 	vector<int> possibleEndpointIndices;
 	int size123 = contours[maxI].size();
@@ -640,14 +648,14 @@ void findClassUsingPythonModels( vector<float> &distVector ){
 	// Py_Initialize();   //Moved to main() of Silatra.cpp
 
 
-
-	// FILE* file = fopen("testThisSampleInPython.py","r");
-	// PyRun_SimpleFile(file,"testThisSampleInPython.py");
-
 	PyRun_SimpleString("import sys");
 	PyRun_SimpleString("if not hasattr(sys, 'argv'): sys.argv  = ['']");
-	FILE* file = fopen("LoadSavedModel.py","r");
-	PyRun_SimpleFile(file,"LoadSavedModel.py");
+
+	FILE* file = fopen("testThisSampleInPython.py","r");
+	PyRun_SimpleFile(file,"testThisSampleInPython.py");
+
+	// FILE* file = fopen("LoadSavedModel.py","r");
+	// PyRun_SimpleFile(file,"LoadSavedModel.py");
 
 	
 	// Py_Finalize();   //Moved to main() of Silatra.cpp

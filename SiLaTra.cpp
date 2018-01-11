@@ -154,6 +154,7 @@ int main(int argc, char** argv){
 			if(argc==3 && waitKey(30)=='c'){
 				imwrite(trainingImagesFolderPath+"/"+to_string(imgNo)+".png",image);
 				imgNo++;
+				cout<<endl<<"Captured image No. "<<imgNo<<endl;
 			}
 
 		}
