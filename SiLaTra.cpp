@@ -61,6 +61,10 @@ int main(int argc, char** argv){
 	args = argv;
 	args_c = argc;
 
+	// cuda::setDevice(0);
+	// cuda::printShortCudaDeviceInfo(cuda::getDevice());
+	// Reference for OpenCV CUDA codes: https://github.com/opencv/opencv/blob/master/samples/gpu/morphology.cpp
+	
 	Py_Initialize();
 
 	if(argc==3 && strcmp(argv[1],"-img")==0){	
@@ -150,6 +154,7 @@ int main(int argc, char** argv){
 			if(argc==3 && waitKey(30)=='c'){
 				imwrite(trainingImagesFolderPath+"/"+to_string(imgNo)+".png",image);
 				imgNo++;
+				cout<<endl<<"Captured image No. "<<imgNo<<endl;
 			}
 
 		}

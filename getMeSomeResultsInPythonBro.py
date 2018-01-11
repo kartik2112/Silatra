@@ -21,7 +21,7 @@ from sklearn.pipeline import Pipeline
 # import pandas as pd
 
 # Initializers
-dataInds = [1,2,3,4,5,6,7,8]
+dataInds = [0,1,2,3,4,5,6,7,8,9]
 subFolderNames = ['Normal'] #,'Rotated'
 noOfDescriptors = 10
 noOfSamples = []

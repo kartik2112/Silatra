@@ -66,6 +66,13 @@ void displaySkinColorDetectionTrackbarsIfNeeded(){
 	createTrackbar("High Saturation","Skin Color Segmentation Controllers",&hS,255);
 	createTrackbar("Low Value","Skin Color Segmentation Controllers",&lV,255);
 	createTrackbar("High Value","Skin Color Segmentation Controllers",&hV,255);
+
+	createTrackbar("YMax","Skin Color Segmentation Controllers",&YMax,255);
+	createTrackbar("YMin","Skin Color Segmentation Controllers",&YMin,255);
+	createTrackbar("CrMax","Skin Color Segmentation Controllers",&CrMax,255);
+	createTrackbar("CrMin","Skin Color Segmentation Controllers",&CrMin,255);
+	createTrackbar("CbMax","Skin Color Segmentation Controllers",&CbMax,255);
+	createTrackbar("CbMin","Skin Color Segmentation Controllers",&CbMin,255);
 	
 	createTrackbar("I - R low","Skin Color Segmentation Controllers",&Rlow,255);
 	createTrackbar("I - G low","Skin Color Segmentation Controllers",&Glow,255);
