@@ -111,6 +111,35 @@ int main(int argc, char** argv){
 			maintainTrackOfTimings();
 		}
 	}
+	else if(argc>=3 && strcmp(argv[1],"-fullRefresh")==0){
+		for( int digitNo = 2 ; digitNo < argc ; digitNo++ ){
+			string subDirName1 = string(argv[digitNo]);
+			subDirName = "./CCDC-Data/"+subDirName1.substr(0,subDirName1.find_last_of("/"));
+			fs::create_directories(subDirName);
+			if(fs::exists(subDirName+"/data.csv"))
+				fs::remove(subDirName+"/data.csv");
+			cout<<subDirName<<endl;
+			
+			vector<string> files;
+			for(auto &tempp1:fs::directory_iterator(subDirName1)){
+				files.push_back(tempp1.path().string());
+			}
+
+			sort(files.begin(),files.end());
+
+			for(int i=0;i<files.size();i++){
+				cout<<"Processing "<<files[i]<<endl;
+				Mat image = imread(files[i],1);
+				
+				double startTime=(double)getTickCount();   //---Timing related part
+				
+				processFrame(image);		
+			
+				frameStepsTimes[ OVERALL ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
+				maintainTrackOfTimings();
+			}
+		}
+	}
 	else{
 	
 		string trainingImagesFolderPath;

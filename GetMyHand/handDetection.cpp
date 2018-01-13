@@ -47,7 +47,7 @@ void findClassUsingPythonModels( vector<float> &distVector );
 
 
 
-int morphOpenKernSize=2,morphCloseKernSize=2;
+int morphOpenKernSize=2,morphCloseKernSize=3;
 int morphCloseNoOfIterations=3;
 
 int kernSize=2;
@@ -172,11 +172,11 @@ Mat getMyHand(Mat& imageOG){
 	/* AND this eroded mask with HSV */
 	//bitwise_and(dstEroded,dstHSV,dstEroded);
 	
-	morphologyEx(dstEroded,dstEroded,MORPH_CLOSE,morphCloseElement1);
+	// morphologyEx(dstEroded,dstEroded,MORPH_CLOSE,morphCloseElement1);
 	
-	Mat dilateElement = getStructuringElement(MORPH_ELLIPSE,Size(8,8),Point(4,4));
+	Mat dilateElement = getStructuringElement(MORPH_ELLIPSE,Size(5,5),Point(2,2));
 	/* This will enlarge white areas */
-	// dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
+	dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
 	// imshow("Round 4,5 - After morphologyEx(MORPH_CLOSE) and dilate segment",dstEroded);
 
 	frameStepsTimes[ MORPHOLOGY_OPERATIONS ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
@@ -409,7 +409,7 @@ Mat findHandContours(Mat& src){
 	}
 	
 	ofstream csvFile;
-	if( args_c==3 && ( strcmp(args_v[1],"-AllImgs")==0 ) )
+	if( args_c>=3 && ( strcmp(args_v[1],"-AllImgs")==0 || strcmp(args_v[1],"-fullRefresh")==0 ) )
 		csvFile.open(subDirName+"/data.csv",std::ios_base::app);
 		for(int i=0;i<contours[indMaxArea].size();i++){
 			distVector[i] = (distVector[i]/maxDist*10);
