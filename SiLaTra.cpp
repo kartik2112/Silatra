@@ -10,6 +10,7 @@
 #include <opencv2/highgui.hpp>
 
 #include "GetMyHand/handDetection.hpp"
+#include "GetMyHand/Classification/classifyPythonAPI.hpp"
 
 #include <iostream>
 #include <ctime>
@@ -52,20 +53,20 @@ vector<double> avgTimes(timesLabels.size(),0);
 vector<double> frameStepsTimes(timesLabels.size());
 double noOfFramesCollected = 0;
 
-char** args;
+char** args_v;
 int args_c;
 
 
 int main(int argc, char** argv){
 
-	args = argv;
+	args_v = argv;
 	args_c = argc;
 
 	// cuda::setDevice(0);
 	// cuda::printShortCudaDeviceInfo(cuda::getDevice());
 	// Reference for OpenCV CUDA codes: https://github.com/opencv/opencv/blob/master/samples/gpu/morphology.cpp
 	
-	Py_Initialize();
+	initializePythonInterpreter();
 
 	if(argc==3 && strcmp(argv[1],"-img")==0){	
 		subDirName = string(argv[2]);
@@ -108,6 +109,35 @@ int main(int argc, char** argv){
 		
 			frameStepsTimes[ OVERALL ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
 			maintainTrackOfTimings();
+		}
+	}
+	else if(argc>=3 && strcmp(argv[1],"-fullRefresh")==0){
+		for( int digitNo = 2 ; digitNo < argc ; digitNo++ ){
+			string subDirName1 = string(argv[digitNo]);
+			subDirName = "./CCDC-Data/"+subDirName1.substr(0,subDirName1.find_last_of("/"));
+			fs::create_directories(subDirName);
+			if(fs::exists(subDirName+"/data.csv"))
+				fs::remove(subDirName+"/data.csv");
+			cout<<subDirName<<endl;
+			
+			vector<string> files;
+			for(auto &tempp1:fs::directory_iterator(subDirName1)){
+				files.push_back(tempp1.path().string());
+			}
+
+			sort(files.begin(),files.end());
+
+			for(int i=0;i<files.size();i++){
+				cout<<"Processing "<<files[i]<<endl;
+				Mat image = imread(files[i],1);
+				
+				double startTime=(double)getTickCount();   //---Timing related part
+				
+				processFrame(image);		
+			
+				frameStepsTimes[ OVERALL ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
+				maintainTrackOfTimings();
+			}
 		}
 	}
 	else{

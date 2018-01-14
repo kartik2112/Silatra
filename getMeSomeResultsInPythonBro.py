@@ -23,7 +23,7 @@ from sklearn.pipeline import Pipeline
 # Initializers
 dataInds = [0,1,2,3,4,5,6,7,8,9]
 subFolderNames = ['Normal'] #,'Rotated'
-noOfDescriptors = 10
+noOfDescriptors = 15
 noOfSamples = []
 fftData=[]
 # storeAsLabelledFeaturesFile = True
@@ -120,7 +120,7 @@ def KNearestNeighbors():
 	print("Applying K Nearest Neighbours Learning to data")
 	trainData_S,testData_S,trainData_L,testData_L = train_test_split(fftData,correctLabels,test_size = 0.33,random_state=42)
 
-	neigh = KNeighborsClassifier(n_neighbors = len(noOfSamples))
+	neigh = KNeighborsClassifier(n_neighbors = 70)
 	neigh.fit(trainData_S,trainData_L)
 
 	correctlyClassified = 0
@@ -145,8 +145,9 @@ def SVMLearning():
 
 def KerasDeepLearning():
 	#Install Keras and Tensorflow/Theanos before using this function.
-	X,Y=duplicate(fftData,correctLabels,500)
-	train_x,test_x,train_y,test_y = train_test_split(X,Y,test_size = 0.33,random_state=42)
+	# X,Y=duplicate(fftData,correctLabels,500)
+	# train_x,test_x,train_y,test_y = train_test_split(X,Y,test_size = 0.33,random_state=42)
+	train_x,test_x,train_y,test_y = train_test_split(fftData,correctLabels,test_size = 0.33,random_state=42)
 	normalise(train_x)
 	normalise(test_x)
 	print("Training Set Size:"+str(train_x.shape[0]))
@@ -161,15 +162,16 @@ def KerasDeepLearning():
 	encoded_test_Y = encoder.transform(test_y)
 	dummy_test_y = np_utils.to_categorical(encoded_test_Y)
 	model = Sequential()
-	model.add(Dense(10, input_dim=10, activation='relu'))
-	# model.add(Dense(64, activation='relu'))
-	model.add(Dense(128, activation='relu'))
-	model.add(Dense(128, activation='relu'))
-	model.add(Dense(256, activation='relu'))
+	model.add(Dense(10, input_dim=noOfDescriptors, activation='relu'))
+	model.add(Dense(40, activation='relu'))
+	model.add(Dense(60, activation='relu'))
+	model.add(Dense(80, activation='relu'))
+	model.add(Dense(100, activation='relu'))
+	model.add(Dense(120, activation='relu'))
 	model.add(Dense(len(dataInds), activation='softmax'))
 	# Compile model
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-	model.fit(train_x,dummy_train_y,validation_split=0.1,epochs=150,batch_size=85,verbose=1)
+	model.fit(train_x,dummy_train_y,validation_split=0.25,epochs=250,batch_size=85,verbose=1)
 	train_scores = model.evaluate(train_x,dummy_train_y)
 	print("\n%s: %.2f%%" % ("Accuracy on Training set", train_scores[1]*100))
 	test_scores = model.evaluate(test_x,dummy_test_y)

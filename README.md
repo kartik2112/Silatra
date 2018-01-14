@@ -39,6 +39,10 @@ But for simplicity the commands have been wrapped into a single file builder.sh
   To run the program on a set of images in a particular folder with the same label and store the distances in the corresponding csv file use (Here, each time the corresponding csv file is cleaned):
   
   `./build/SiLaTra -AllImgs ./training-images/Digits/1/Right_Hand/Normal/`
+
+  To run the program on multiple sets of images and generate the corresponding csv files use the following. This is similar too the previous mode, but can operate on multiple folders that are specified on commandline:
+
+  `./build/SiLaTra -fullRefresh ./training-images/Digits/1/Right_Hand/Normal/ ./training-images/Digits/2/Right_Hand/Normal/ ./training-images/Digits/3/Right_Hand/Normal/ ./training-images/Digits/4/Right_Hand/Normal/ ./training-images/Digits/5/Right_Hand/Normal/ ./training-images/Digits/6/Right_Hand/Normal/ ./training-images/Digits/7/Right_Hand/Normal/ ./training-images/Digits/8/Right_Hand/Normal/ ./training-images/Digits/9/Right_Hand/Normal/ ./training-images/Digits/0/Right_Hand/Normal/`
   
   To run the program and create the training data set while seeing the execution, use:
   

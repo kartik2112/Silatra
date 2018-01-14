@@ -12,6 +12,8 @@
 
 #include "skinColorSegmentation.hpp"
 #include "trackBarHandling.hpp"
+#include "predictionsHandler.hpp"
+#include "Classification/classifyPythonAPI.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -19,6 +21,7 @@
 #include <cstdlib>
 
 #include <experimental/filesystem>
+
 
 #define OVERALL 0
 #define SKIN_COLOR_EXTRACTION 1
@@ -45,7 +48,7 @@ void findClassUsingPythonModels( vector<float> &distVector );
 
 
 
-int morphOpenKernSize=2,morphCloseKernSize=2;
+int morphOpenKernSize=2,morphCloseKernSize=3;
 int morphCloseNoOfIterations=3;
 
 int kernSize=2;
@@ -58,7 +61,7 @@ extern string subDirName;
 
 extern vector<double> frameStepsTimes;
 
-extern char** args;
+extern char** args_v;
 extern int args_c;
 
 
@@ -88,7 +91,7 @@ Mat getMyHand(Mat& imageOG){
 	//blur(image,image,Size(kernSize,kernSize),Point(-1,-1));
 	GaussianBlur(imageOG,image,Size(2*kernSize+1,2*kernSize+1),0,0);
 	// imshow("Gaussian Blurred Image",image); 
-	//medianBlur(image,image,2*kernSize+1);
+	medianBlur(image,image,2*kernSize+1);
 	
 	/* Convert BGR Image into HSV, YCrCb Images */
 	cvtColor(image,imageHSV,CV_BGR2HSV);
@@ -97,14 +100,14 @@ Mat getMyHand(Mat& imageOG){
 	Mat dstHSV;
 	inRange(imageHSV,Scalar(lH,lS,lV),Scalar(hH,hS,hV),dstHSV);
 	
-	// Mat dst=extractSkinColorRange(image,imageHSV,imageYCrCb);
-	Mat* dsts = extractSkinColorRange(image,imageHSV,imageYCrCb);
+	Mat dst=extractSkinColorRange(image,imageHSV,imageYCrCb);
+	// Mat* dsts = extractSkinColorRange(image,imageHSV,imageYCrCb);
 	// imshow("Skin Color Range Pixels Extracted Image (using HSV, BGR ranges)",dst); 
-	imshow("BGR Mask",dsts[0]);
-	imshow("HSV Mask",dsts[1]);
-	imshow("YCrCb Mask",dsts[2]);
+	// imshow("BGR Mask",dsts[0]);
+	// imshow("HSV Mask",dsts[1]);
+	// imshow("YCrCb Mask",dsts[2]);
 
-	Mat dst = dsts[2];
+	// Mat dst = dsts[2];
 	
 	frameStepsTimes[ SKIN_COLOR_EXTRACTION ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
 	startTime=(double)getTickCount();  //---Timing related part
@@ -170,11 +173,11 @@ Mat getMyHand(Mat& imageOG){
 	/* AND this eroded mask with HSV */
 	//bitwise_and(dstEroded,dstHSV,dstEroded);
 	
-	morphologyEx(dstEroded,dstEroded,MORPH_CLOSE,morphCloseElement1);
+	// morphologyEx(dstEroded,dstEroded,MORPH_CLOSE,morphCloseElement1);
 	
-	Mat dilateElement = getStructuringElement(MORPH_ELLIPSE,Size(8,8),Point(4,4));
+	Mat dilateElement = getStructuringElement(MORPH_ELLIPSE,Size(5,5),Point(2,2));
 	/* This will enlarge white areas */
-	// dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
+	dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
 	// imshow("Round 4,5 - After morphologyEx(MORPH_CLOSE) and dilate segment",dstEroded);
 
 	frameStepsTimes[ MORPHOLOGY_OPERATIONS ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
@@ -265,7 +268,7 @@ Mat findHandContours(Mat& src){
 	// Mat morphCloseElement = getStructuringElement(MORPH_ELLIPSE,Size(5*2+1,5*2+1),Point(5,5));
 	// morphologyEx(canny_output,canny_output,MORPH_CLOSE,morphCloseElement);
 	
-	imshow("Canny",canny_output);
+	// imshow("Canny",canny_output);
 	/// Find contours
 	// findContours( canny_output, contours1, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
 
@@ -290,7 +293,7 @@ Mat findHandContours(Mat& src){
 		drawContours( drawingOGContours, contours1, i, color, 1, 8, hierarchy, 0, Point() );
 		//cout<<contours[i].size()<<endl;
 	}
-	imshow("OG Contours",drawingOGContours);
+	// imshow("OG Contours",drawingOGContours);
 	
 	
 	
@@ -362,7 +365,7 @@ Mat findHandContours(Mat& src){
 		}
 	}
 	
-	
+	// if()
 	vector<int> convHull;
 	convexHull( Mat(contours[indMaxArea]), convHull, false );   // Reason to keep int instead of Point for convexHull vector:
 																//   https://stackoverflow.com/a/20552514/5370202
@@ -396,7 +399,6 @@ Mat findHandContours(Mat& src){
 	
 	
 		
-	ofstream csvFile;
 	vector<float> distVector(contours[indMaxArea].size());
 	float maxDist = 0;
 	for(int i=0;i<contours[indMaxArea].size();i++){
@@ -407,7 +409,8 @@ Mat findHandContours(Mat& src){
 		}
 	}
 	
-	if( args_c==3 && ( strcmp(args[1],"-AllImgs")==0 ) )
+	ofstream csvFile;
+	if( args_c>=3 && ( strcmp(args_v[1],"-AllImgs")==0 || strcmp(args_v[1],"-fullRefresh")==0 ) )
 		csvFile.open(subDirName+"/data.csv",std::ios_base::app);
 		for(int i=0;i<contours[indMaxArea].size();i++){
 			distVector[i] = (distVector[i]/maxDist*10);
@@ -424,7 +427,10 @@ Mat findHandContours(Mat& src){
 
 
 
-	if( (args_c==3 && ( strcmp(args[1],"-img")==0 || strcmp(args[1],"-AllImgs")==0 ) ) || waitKey(30)=='m' )
+	// if( (args_c==3 && ( strcmp(args_v[1],"-img")==0 || strcmp(args_v[1],"-AllImgs")==0 ) ) || waitKey(30)=='m' )
+	// 	findClassUsingPythonModels(distVector);
+
+	if( contours[indMaxArea].size()>15 )
 		findClassUsingPythonModels(distVector);
 
 
@@ -450,6 +456,87 @@ void prepareWindows(){
 	namedWindow("Final Image",WINDOW_NORMAL);
 	namedWindow("Contours", WINDOW_NORMAL );
 }
+
+
+
+void findClassUsingPythonModels( vector<float> &distVector ){
+
+	// ofstream csvFile;
+	// fs::remove("./TestSampleDistancesData.csv");
+	// csvFile.open("./TestSampleDistancesData.csv",std::ios_base::app);
+
+	ostringstream CCDC_SS; // Reference: https://stackoverflow.com/a/2125888/5370202
+
+	for(int i=0;i<distVector.size();i++){
+		// csvFile << distVector[i];
+		CCDC_SS << distVector[i];
+
+		if(i!=distVector.size()-1){
+			// csvFile << ", ";
+			CCDC_SS << ",";
+		} 
+
+
+	}
+
+	string CCDC_Data(CCDC_SS.str());
+	// cout<<CCDC_Data<<endl;
+
+	// csvFile << "\n";
+	// csvFile.close();
+
+	// cout<<endl<<endl<<endl<<"CCDC Data dumped to TestSampleDistancesData.csv for fun. But data is being sent directly"<<endl;
+	
+	cout<<endl<<endl<<"Python Invocation from C++ begins here"<<endl<<endl;
+
+
+	/*
+	References for Python interfacing: 
+	Main code: https://docs.python.org/2/extending/embedding.html
+	For adding target_link_libraries in CMakeLists.txt: https://stackoverflow.com/a/21548557/5370202
+	*/
+	
+	// Py_Initialize();
+
+    // PyRun_SimpleString("import sys\n"
+    // "sys.path.insert(0, './')\n"
+    // "if not hasattr(sys, 'argv'): sys.argv  = ['']\n");  // This statement added from reference: https://stackoverflow.com/a/24492775/5370202
+
+	// FILE* file = fopen("testThisSampleInPython.old.py","r");
+	// PyRun_SimpleFile(file,"testThisSampleInPython.old.py");
+	// fclose(file);
+
+	// FILE* file = fopen("LoadSavedModel.py","r");
+	// PyRun_SimpleFile(file,"LoadSavedModel.py");
+	// fclose(file);
+
+	// Snippet reference: https://stackoverflow.com/a/347959/5370202
+	char * CCDC_Data_char = new char[CCDC_Data.size() + 1];
+	std::copy(CCDC_Data.begin(), CCDC_Data.end(), CCDC_Data_char);
+	CCDC_Data_char[CCDC_Data.size()] = '\0'; // don't forget the terminating 0
+	
+	long long predictedSign = predictSignByKNN_Py_Interface(CCDC_Data_char);	
+
+	cout<<"Current Predicted Sign is "<<predictedSign<<endl;
+
+	if( args_c==3 && ( strcmp(args_v[1],"-img")==0 ) ){
+		displaySignOnImage(predictedSign);		
+	}
+	else{
+		addPredictionToQueue(predictedSign);		
+		long long stablePrediction = predictSign();
+		if(stablePrediction==-1){
+			cout<<"Unable to predict anything!"<<endl;
+		}
+		else{
+			cout<<"Stable Predicted Sign is "<<stablePrediction<<endl;
+		}
+	}
+
+	cout<<endl<<"Python Invocation ends here"<<endl<<endl<<endl;
+
+}
+
 
 
 /* 
@@ -615,52 +702,4 @@ void reduceClusterPoints(vector< vector< Point > > &contours, vector<vector<Poin
 	}
 	
 	
-}
-
-
-void findClassUsingPythonModels( vector<float> &distVector ){
-
-	ofstream csvFile;
-	fs::remove("./TestSampleDistancesData.csv");
-	csvFile.open("./TestSampleDistancesData.csv",std::ios_base::app);
-
-	for(int i=0;i<distVector.size();i++){
-		csvFile << distVector[i];
-		if(i!=distVector.size()-1) csvFile << ", ";
-	}
-
-	csvFile << "\n";
-	csvFile.close();
-
-	cout<<endl<<endl<<endl<<"Python Invocation from from C++ begins here"<<endl;
-
-
-	/*
-	References for Python interfacing: 
-	Main code: https://docs.python.org/2/extending/embedding.html
-	For adding target_link_libraries in CMakeLists.txt: https://stackoverflow.com/a/21548557/5370202
-	*/
-
-	// PyRun_SimpleString("print('Python Invocation from from C++ begins here')");
-	// Py_SetProgramName();
-
-
-	// Py_Initialize();   //Moved to main() of Silatra.cpp
-
-
-	PyRun_SimpleString("import sys");
-	PyRun_SimpleString("if not hasattr(sys, 'argv'): sys.argv  = ['']");
-
-	FILE* file = fopen("testThisSampleInPython.py","r");
-	PyRun_SimpleFile(file,"testThisSampleInPython.py");
-
-	// FILE* file = fopen("LoadSavedModel.py","r");
-	// PyRun_SimpleFile(file,"LoadSavedModel.py");
-
-	
-	// Py_Finalize();   //Moved to main() of Silatra.cpp
-	fclose(file);
-
-	cout<<"Python Invocation ends here"<<endl<<endl<<endl;
-
 }
