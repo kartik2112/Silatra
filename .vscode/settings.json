@@ -1,4 +1,10 @@
 {
     "python.linting.pylintEnabled": false,
-    "python.pythonPath": "G:\\Softwares\\Miniconda3\\python.exe"
+    "python.pythonPath": "/usr/bin/python3.5",
+    "files.associations": {
+        "array": "cpp",
+        "initializer_list": "cpp",
+        "iostream": "cpp",
+        "*.tcc": "cpp"
+    }
 }

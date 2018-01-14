@@ -39,7 +39,8 @@ bool isInSkinRangeYCrCb(const u_char& Y, const u_char& Cr, const u_char& Cb);
 
 
 
-int YMax=0,YMin=255,CrMax=0,CrMin=255,CbMax=0,CbMin=255;
+// int YMax=0,YMin=255,CrMax=0,CrMin=255,CbMax=0,CbMin=255;
+int YMax=255,YMin=0,CrMax=180,CrMin=135,CbMax=130,CbMin=60;
 // int lH=0,hH=20,lS=20,hS=154,lV=50,hV=255;
 // int Rlow=60,Glow=40,Blow=20,gap=15,Rhigh=220,Ghigh=210,Bhigh=170;
 int lH=0,hH=20,lS=8,hS=154,lV=50,hV=255;
@@ -52,46 +53,72 @@ Mat extractSkinColorRange(Mat& srcBGR,Mat& srcHSV,Mat& srcYCrCb){
 	int nRows=srcBGR.rows;
 	int nCols=srcBGR.cols*3;
 	
+	// static Mat dsts[3];
+	// for(int i=0;i<3;i++){
+	// 	dsts[i] = Mat(nRows,srcBGR.cols,CV_8UC1,Scalar(0));
+	// }
+
 	Mat dst(nRows,srcBGR.cols,CV_8UC1,Scalar(0));
 		
 	uchar *bgrRow, *hsvRow, *YCrCbRow, *dstRow;
+	uchar *dstBGRRow, *dstHSVRow, *dstYCrCbRow;
 	for(int i=0;i<nRows;i++){
 		bgrRow = srcBGR.ptr<uchar>(i);
 		hsvRow = srcHSV.ptr<uchar>(i);
 		YCrCbRow = srcYCrCb.ptr<uchar>(i);
 		dstRow = dst.ptr<uchar>(i);
+
+		// dstBGRRow = dsts[0].ptr<uchar>(i);
+		// dstHSVRow = dsts[1].ptr<uchar>(i);
+		// dstYCrCbRow = dsts[2].ptr<uchar>(i);
 		
 		for(int j=0;j<nCols;j+=3){
-			if( isInSkinRangeBGR(bgrRow[j],bgrRow[j+1],bgrRow[j+2])
-				/*&& isInSkinRangeYCrCb(YCrCbRow[j],YCrCbRow[j+1],YCrCbRow[j+2])*/
-				&& isInSkinRangeHSV(hsvRow[j],hsvRow[j+1],hsvRow[j+2]) ){
+			if( /* isInSkinRangeBGR(bgrRow[j],bgrRow[j+1],bgrRow[j+2])*/
+				isInSkinRangeYCrCb(YCrCbRow[j],YCrCbRow[j+1],YCrCbRow[j+2])
+				/* && isInSkinRangeHSV(hsvRow[j],hsvRow[j+1],hsvRow[j+2])*/ ){
 				dstRow[j/3]=255;
 			}
 		}
+
+		// for(int j=0;j<nCols;j+=3){
+		// 	if( isInSkinRangeBGR(bgrRow[j],bgrRow[j+1],bgrRow[j+2])){
+		// 		dstBGRRow[j/3]=255;
+		// 	}
+		// 	if( isInSkinRangeHSV(hsvRow[j],hsvRow[j+1],hsvRow[j+2]) ){
+		// 		dstHSVRow[j/3]=255;
+		// 	}
+		// 	if( isInSkinRangeYCrCb(YCrCbRow[j],YCrCbRow[j+1],YCrCbRow[j+2]) ){
+		// 		dstYCrCbRow[j/3]=255;
+		// 	}
+		// }
 	}
 	
+	// return dsts;
+
 	return dst;
 }
 
 
 bool isInSkinRangeYCrCb(const u_char& Y, const u_char& Cr, const u_char& Cb){
-	//return Y>80 && Cb>85 && Cb<135 && Cr>135 && Cr<180;
+	return Y>YMin && Y<YMax && Cb>CbMin && Cb<CbMax && Cr>CrMin && Cr<CrMax;
 	//cout<<Y<<" "<<Cr<<" "<<Cb<<endl;
-	YMax=Y>YMax?Y:YMax;
-	CrMax=Cr>CrMax?Cr:CrMax;
-	CbMax=Cb>CbMax?Cb:CbMax;
+	// CrCb low  Night 135,140
+
+	// YMax=Y>YMax?Y:YMax;
+	// CrMax=Cr>CrMax?Cr:CrMax;
+	// CbMax=Cb>CbMax?Cb:CbMax;
 	
-	YMin=Y<YMin?Y:YMin;
-	CrMin=Cr<CrMin?Cr:CrMin;
-	CbMin=Cb<CbMin?Cb:CbMin;
+	// YMin=Y<YMin?Y:YMin;
+	// CrMin=Cr<CrMin?Cr:CrMin;
+	// CbMin=Cb<CbMin?Cb:CbMin;
 	
-	//return 1;
-	bool e3 = Cr <= 1.5862*Cb+20;
-    bool e4 = Cr >= 0.3448*Cb+76.2069;
-    bool e5 = Cr >= -4.5652*Cb+234.5652;
-    bool e6 = Cr <= -1.15*Cb+301.75;
-    bool e7 = Cr <= -2.2857*Cb+432.85;
-    return e3 && e4 && e5 && e6 && e7;
+	// //return 1;
+	// bool e3 = Cr <= 1.5862*Cb+20;
+    // bool e4 = Cr >= 0.3448*Cb+76.2069;
+    // bool e5 = Cr >= -4.5652*Cb+234.5652;
+    // bool e6 = Cr <= -1.15*Cb+301.75;
+    // bool e7 = Cr <= -2.2857*Cb+432.85;
+    // return e3 && e4 && e5 && e6 && e7;
 }
 
 
