@@ -23,7 +23,7 @@ from sklearn.pipeline import Pipeline
 # Initializers
 dataInds = [0,1,2,3,4,5,6,7,8,9]
 subFolderNames = ['Normal'] #,'Rotated'
-noOfDescriptors = 10
+noOfDescriptors = 15
 noOfSamples = []
 fftData=[]
 # storeAsLabelledFeaturesFile = True
@@ -220,9 +220,9 @@ for i in range(len(noOfSamples)):
 dumpData()
 
 # KMeansClustering()
-KNearestNeighbors()
+# KNearestNeighbors()
 # SVMLearning()
-# KerasDeepLearning()
+KerasDeepLearning()
 
 # plotFeatures()   # Keep this as the last statement if uncommented. Because this is a blocking operation
 # Until you close the corresponding window created, program wont proceed any further.

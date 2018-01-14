@@ -10,6 +10,6 @@ using namespace std;
 using namespace boost::python;
 
 bool initializePythonInterpreter();
-long predictSignByKNN_Py_Interface(char* data);
+long long predictSignByKNN_Py_Interface(char* data);
 
 #endif

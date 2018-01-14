@@ -126,13 +126,12 @@ bool initializePythonInterpreter(){
     // return false;
 }
 
-long predictSignByKNN_Py_Interface(char* CCDC_Data){
+long long predictSignByKNN_Py_Interface(char* CCDC_Data){
     // if(!PythonInterpreterInvoked){
     //     initializePythonInterpreter();
     // }
 
-
-
+    long long returnValue = -1;
 
     pName = PyUnicode_DecodeFSDefault(moduleName);
     /* Error checking of pName left out */
@@ -166,7 +165,8 @@ long predictSignByKNN_Py_Interface(char* CCDC_Data){
             pValue = PyObject_CallObject(pFunc, pArgs);
             Py_DECREF(pArgs);
             if (pValue != NULL) {
-                printf("Predicted Sign: %ld\n", PyLong_AsLong(pValue));
+                // printf("Predicted Sign: %ld\n", PyLong_AsLong(pValue));
+                returnValue = PyLong_AsLong(pValue);
                 Py_DECREF(pValue);
             }
             else {
@@ -194,14 +194,8 @@ long predictSignByKNN_Py_Interface(char* CCDC_Data){
         fprintf(stderr, "Failed to load \"%s\"\n", moduleName);        
     }
     PythonInterpreterInvoked = false;
-    // return false;
-
-
-
-
-
-
-
+    
+    return returnValue;
     
 }
 

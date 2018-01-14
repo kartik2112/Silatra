@@ -8,7 +8,7 @@ from sklearn.neighbors import KNeighborsClassifier
 import pickle
 
 def predictSignByKNN(line):
-    noOfDescriptors = 10
+    noOfDescriptors = 15
     fftData=[]
 
     # print("Received from C++",line)

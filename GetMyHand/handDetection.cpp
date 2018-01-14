@@ -12,6 +12,7 @@
 
 #include "skinColorSegmentation.hpp"
 #include "trackBarHandling.hpp"
+#include "predictionsHandler.hpp"
 #include "Classification/classifyPythonAPI.hpp"
 
 #include <iostream>
@@ -267,7 +268,7 @@ Mat findHandContours(Mat& src){
 	// Mat morphCloseElement = getStructuringElement(MORPH_ELLIPSE,Size(5*2+1,5*2+1),Point(5,5));
 	// morphologyEx(canny_output,canny_output,MORPH_CLOSE,morphCloseElement);
 	
-	imshow("Canny",canny_output);
+	// imshow("Canny",canny_output);
 	/// Find contours
 	// findContours( canny_output, contours1, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
 
@@ -292,7 +293,7 @@ Mat findHandContours(Mat& src){
 		drawContours( drawingOGContours, contours1, i, color, 1, 8, hierarchy, 0, Point() );
 		//cout<<contours[i].size()<<endl;
 	}
-	imshow("OG Contours",drawingOGContours);
+	// imshow("OG Contours",drawingOGContours);
 	
 	
 	
@@ -479,7 +480,7 @@ void findClassUsingPythonModels( vector<float> &distVector ){
 	}
 
 	string CCDC_Data(CCDC_SS.str());
-	cout<<CCDC_Data<<endl;
+	// cout<<CCDC_Data<<endl;
 
 	// csvFile << "\n";
 	// csvFile.close();
@@ -514,9 +515,23 @@ void findClassUsingPythonModels( vector<float> &distVector ){
 	std::copy(CCDC_Data.begin(), CCDC_Data.end(), CCDC_Data_char);
 	CCDC_Data_char[CCDC_Data.size()] = '\0'; // don't forget the terminating 0
 	
-	predictSignByKNN_Py_Interface(CCDC_Data_char);
+	long long predictedSign = predictSignByKNN_Py_Interface(CCDC_Data_char);	
 
-	
+	cout<<"Current Predicted Sign is "<<predictedSign<<endl;
+
+	if( args_c==3 && ( strcmp(args_v[1],"-img")==0 ) ){
+		displaySignOnImage(predictedSign);		
+	}
+	else{
+		addPredictionToQueue(predictedSign);		
+		long long stablePrediction = predictSign();
+		if(stablePrediction==-1){
+			cout<<"Unable to predict anything!"<<endl;
+		}
+		else{
+			cout<<"Stable Predicted Sign is "<<stablePrediction<<endl;
+		}
+	}
 
 	cout<<endl<<"Python Invocation ends here"<<endl<<endl<<endl;
 
