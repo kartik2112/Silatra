@@ -70,13 +70,13 @@ def predict_skin_pixels(img_file, return_flag=False):
     img = cv2.resize(img, (ceil(w/3), ceil(h/3)))
 
     # Conversion to HSV & Normalization of image pixels
-    # ranges = [179.0,255.0,255.0]
-    # img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    # img = img.tolist()
-    # for i in range(len(img)):                                   # Each row
-    #     for j in range(len(img[i])):                            # Each pixel
-    #         for k in range(3):                                  # Each channel (h/s/v)
-    #             img[i][j][k] = img[i][j][k]*1.0/ranges[k]
+    ranges = [179.0,255.0,255.0]
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    img = img.tolist()
+    for i in range(len(img)):                                   # Each row
+        for j in range(len(img[i])):                            # Each pixel
+            for k in range(3):                                  # Each channel (h/s/v)
+                img[i][j][k] = img[i][j][k]*1.0/ranges[k]
 
     total_pixels = len(img)*len(img[0])
     print('Image size = '+str(len(img))+'x'+str(len(img[0]))+' = '+str(total_pixels)+' pixels\n')
@@ -134,8 +134,8 @@ def predict_skin_pixels(img_file, return_flag=False):
     print('Time required for actual segmentation -> '+str(t2-t1)+' seconds')
 
     mask = cv2.resize(array(mask), (w, h))
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11))
-    mask = cv2.dilate(mask, kernel)
+    ''' kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11))
+    mask = cv2.dilate(mask, kernel) '''
     cv2.imshow('Mask',cv2.cvtColor(array(mask, uint8), cv2.COLOR_HSV2BGR))
 
     mask, segmented_img = mask.tolist(), cv2.cvtColor(original, cv2.COLOR_BGR2HSV)

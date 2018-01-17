@@ -74,18 +74,23 @@ def deep(data,d):
     input_file=open("skin-detection-training.txt","r")
     for line in input_file:
         attrs=line.split(",")
-        Y_train.append(int(attrs[-1].strip()))
-        X_train.append(list(map(float,attrs[0:3])))
+        pixel=list(map(float,attrs[0:3]))
+        for i in range(3):pixel[i] /= ranges[i]
+        Y_train.append(int(attrs[-1].strip())-1)
+        X_train.append(pixel)
     print("Number of training samples loaded:"+str(len(X_train)))
     X_test=[]
     Y_test=[]
     input_file=open("skin-detection-testing.txt","r")
     for line in input_file:
         attrs=line.split(",")
-        Y_test.append(int(attrs[-1].strip()))
-        X_test.append(list(map(float,attrs[0:3])))
+        pixel=list(map(float,attrs[0:3]))
+        for i in range(3):pixel[i] /= ranges[i]
+        Y_test.append(int(attrs[-1].strip())-1)
+        X_test.append(pixel)
     print("Number of test samples loaded:"+str(len(X_test)))
 
+    np.random.seed = 101
     # encode class values as integers
     encoder = LabelEncoder()
     encoder.fit(Y_train)
@@ -107,7 +112,7 @@ def deep(data,d):
 
     # Compile model & fit data to model.
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    model.fit(X_train,dummy_train_labels,batch_size=53,epochs=12,verbose=1,validation_split=0.1)
+    model.fit(X_train,dummy_train_labels,batch_size=32,epochs=14,verbose=1,validation_split=0.1)
 
     # Evaluate against test data
     score = model.evaluate(X_test,dummy_test_labels)
@@ -127,6 +132,7 @@ if __name__ == "__main__":
     print('\n----- Silatra Deep Learning -----\n')
 
     data, d = [], []
+    ranges=[179.0,255.0,255.0]
     # read_uci_data(data,d)
     # read_silatra_data(data,d)
     #
