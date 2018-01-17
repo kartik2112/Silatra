@@ -153,7 +153,7 @@ pixels_processed = 0
 time_for_image = time.time()
 time_per_pixel = 0
 
-''' for row in image:
+for row in image:
 	binary_row = []
 	for pixel in row:
 		probability_skin, probability_non_skin = classes[0] ,classes[1]
@@ -171,10 +171,10 @@ time_per_pixel = 0
 print('Pixels processed: '+str(total_pixels/1000)+'k / '+str(total_pixels/1000)+'k\r',end='')
 for i in range(len(image)):
 	for j in range(len(image[i])):
-		for k in range(3): image[i][j][k] = float(binary_image[i][j][k]) '''
+		for k in range(3): image[i][j][k] = float(binary_image[i][j][k])
 
 
-def predict(row):
+''' def predict(row):
 	prediction = []
 	for pixel in row:
 		probability_skin, probability_non_skin = classes[0] ,classes[1]
@@ -224,7 +224,7 @@ for i in range(len(image)):
 		if pixels_processed%10000 == 0: print('Pixels processed: '+str(pixels_processed/1000)+'k / '+str(total_pixels/1000)+'k\r',end='')
 	upper_row_predictions = curr_row_predictions
 	curr_row_predictions = lower_row_predictions
-	if i < len(image)-2: lower_row_predictions = predict(image[i+2])
+	if i < len(image)-2: lower_row_predictions = predict(image[i+2]) '''
 
 time_for_image = time.time() - time_for_image
 #print('\n\nTime required per pixel = '+str(time_per_pixel)+' seconds')
