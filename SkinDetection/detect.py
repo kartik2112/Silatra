@@ -14,7 +14,7 @@ Segments skin from an image. Input image is taken from Test_Images folder as of 
     Thus, we can decide probability of a pixel being skin by using following equation:
     P(pixel: skin) = P(pixel: skin_colour) x L(pixel: skin)
 
-    where L(pixel: skin) represents the likelihood of pixel being skin. 
+    where L(pixel: skin) represents the likelihood of pixel being skin.
     More the chance of neighbouring pixels being of skin colour, more the chance of current pixel being skin.abs
     Thus, we calculate L(pixel: skin) by taking average of the probabilities of being skin colour of the 8 neighbouring pixels.
     L(pixel: skin) = Avg(P(pixel-i: skin_colour)) where pixel-i is one of the 8 neighbouring pixel.
@@ -39,12 +39,12 @@ print('\n--------------- Silatra skin detector ---------------')
 
 # Read model architecture
 model_data = ''
-with open('deep_model.json') as model_file: model_data = model_file.read()
+with open('model1.json') as model_file: model_data = model_file.read()
 model = model_from_json(model_data)
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Load saved weights
-model.load_weights('deep_weights.h5')
+model.load_weights('weights1.h5')
 print('\nModel ready for testing. ',end='')
 
 def predict_skin_pixels(img_file, return_flag=False):
@@ -70,13 +70,13 @@ def predict_skin_pixels(img_file, return_flag=False):
     img = cv2.resize(img, (ceil(w/3), ceil(h/3)))
 
     # Conversion to HSV & Normalization of image pixels
-    ranges = [179.0,255.0,255.0]
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    img = img.tolist()
-    for i in range(len(img)):                                   # Each row
-        for j in range(len(img[i])):                            # Each pixel
-            for k in range(3):                                  # Each channel (h/s/v)
-                img[i][j][k] = img[i][j][k]*1.0/ranges[k]
+    # ranges = [179.0,255.0,255.0]
+    # img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    # img = img.tolist()
+    # for i in range(len(img)):                                   # Each row
+    #     for j in range(len(img[i])):                            # Each pixel
+    #         for k in range(3):                                  # Each channel (h/s/v)
+    #             img[i][j][k] = img[i][j][k]*1.0/ranges[k]
 
     total_pixels = len(img)*len(img[0])
     print('Image size = '+str(len(img))+'x'+str(len(img[0]))+' = '+str(total_pixels)+' pixels\n')

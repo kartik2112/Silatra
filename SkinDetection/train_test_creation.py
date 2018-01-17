@@ -8,7 +8,7 @@ input_file_name="silatra_dataset_complete.txt"
 training_file_name="skin-detection-training.txt"
 testing_file_name="skin-detection-testing.txt"
 ranges=[179.0,255.0,255.0]
-train_ratio=0.85
+train_ratio=0.75
 
 '''
     The following is the actual program:
@@ -21,9 +21,15 @@ for line in input_file:
     Y.append(int(attrs[-1].strip())-1)
     X.append(list(map(int,attrs[0:3])))
 print("Number of samples loaded:"+str(len(X)))
-for sample in X:
-    for i in range(len(sample)):
-        sample[i]=sample[i]/ranges[i]
+skin_samples=0
+non_skin_samples=0
+for label in Y:
+    if label==0:
+        skin_samples+=1
+    else:
+        non_skin_samples+=1
+print("Skin samples in entire set:"+str(skin_samples))
+print("Non-skin samples in entire set:"+str(non_skin_samples))
 from random import randint
 train_samples=int(train_ratio*len(X))
 X_train=[]
@@ -36,6 +42,15 @@ while len(X_train)<train_samples:
     del Y[index]
 X_test=X
 Y_test=Y
+skin_samples=0
+non_skin_samples=0
+for label in Y_test:
+    if label==0:
+        skin_samples+=1
+    else:
+        non_skin_samples+=1
+print("Skin samples in test set:"+str(skin_samples))
+print("Non-skin samples in test set:"+str(non_skin_samples))
 
 '''
     Writing the final sets onto files.
