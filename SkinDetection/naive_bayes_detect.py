@@ -14,7 +14,7 @@ test_skin_samples, test_non_skin_samples = 0, 0
 MODULUS = 1
 data, attributes_info, classes, desired_values = [], [{}, {}, {}], [0,0], []
 train_data, test_data, train_labels, test_labels=[],[],[],[]
-ranges=[179,255,255]
+ranges=[179.0,255.0,255.0]
 with open('skin-detection-training.txt') as f:
 	row_count=1
 	print('Reading the Silatra training dataset...\r',end='')
@@ -24,7 +24,7 @@ with open('skin-detection-training.txt') as f:
 		if line == '': break                    # End of file
 		line = line.split(',')
 		pixel = line[0:len(line)-1]             # attributes_info comes as: [h,s,v,class].
-		for i in range(len(pixel)): pixel[i] = int(pixel[i])
+		for i in range(len(pixel)): pixel[i] = float(pixel[i])*1.0/ranges[i]
 		train_data.append(pixel)
 		desired_value = int(line[len(line)-1]) #- 1
 		train_labels.append(desired_value)
@@ -38,7 +38,7 @@ with open('skin-detection-testing.txt') as f:
 		if line == '': break                    # End of file
 		line = line.split(',')
 		pixel = line[0:len(line)-1]             # attributes_info comes as: [h,s,v,class].
-		for i in range(len(pixel)): pixel[i] = int(pixel[i])
+		for i in range(len(pixel)): pixel[i] = float(pixel[i])*1.0/ranges[i]
 		test_data.append(pixel)
 		desired_value = int(line[len(line)-1]) #- 1
 		test_labels.append(desired_value)
@@ -55,7 +55,7 @@ for i in range(len(train_data)):
 	classes[desired_value] += 1
 	n += 1
 	for i in range(len(pixel)):
-		near_val = pixel[i] - pixel[i]%MODULUS
+		near_val = pixel[i]
 		try: attributes_info[i][near_val][desired_value] += 1
 		except: attributes_info[i][near_val] = [0,0]
 
@@ -76,7 +76,7 @@ for i in range(len(test_data)):
 
 	probability_skin, probability_non_skin, prediction = classes[0], classes[1], 0
 	for channel in range(len(pixel)):
-		value = pixel[channel] - pixel[channel]%MODULUS
+		value = pixel[channel]
 		probability_skin *= attributes_info[channel][value][0]
 		probability_non_skin *= attributes_info[channel][value][1]
 
@@ -146,6 +146,10 @@ print('\n'+str(len(image))+'x'+str(len(image[0]))+'='+str(total_pixels)+' pixels
 original = image.copy()
 image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 image = image.tolist()
+for i in range(len(image)):                                   # Each row
+	for j in range(len(image[i])):                            # Each pixel
+		for k in range(3):                                  # Each channel (h/s/v)
+			image[i][j][k] = image[i][j][k]*1.0/ranges[k]
 
 print('Segmentation is starting...\r',end='')
 binary_image = []
@@ -160,7 +164,7 @@ for row in image:
 		pixels_processed += 1
 		time_per_pixel = time.time()
 		for channel in range(3):
-			value = pixel[channel] - pixel[channel]%MODULUS
+			value = pixel[channel]
 			probability_skin *= attributes_info[channel][value][0]
 			probability_non_skin *= attributes_info[channel][value][1]
 		time_per_pixel = time.time() - time_per_pixel
