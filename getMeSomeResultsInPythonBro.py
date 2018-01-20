@@ -188,7 +188,6 @@ def KerasDeepLearning():
 	with open("Classification Models/DigitClassifierModel.json", "w") as json_file:
 		json_file.write(model_json)
 	model.save_weights("Classification Models/DigitClassifierModel.h5")
-
 	print("Saved model to disk")
 
 ############# Main flow starts here #################

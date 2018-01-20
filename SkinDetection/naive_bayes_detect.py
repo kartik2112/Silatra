@@ -13,23 +13,38 @@ test_skin_samples, test_non_skin_samples = 0, 0
 
 MODULUS = 1
 data, attributes_info, classes, desired_values = [], [{}, {}, {}], [0,0], []
-
-with open('silatra_dataset_complete.txt') as f:
+train_data, test_data, train_labels, test_labels=[],[],[],[]
+ranges=[179.0,255.0,255.0]
+with open('skin-detection-training.txt') as f:
 	row_count=1
-	print('Reading the Silatra dataset...\r',end='')
+	print('Reading the Silatra training dataset...\r',end='')
 	while True:
 		# Read attributes_info row by row
 		line = f.readline()
 		if line == '': break                    # End of file
-		line = line.split('\t')
+		line = line.split(',')
 		pixel = line[0:len(line)-1]             # attributes_info comes as: [h,s,v,class].
-		for i in range(len(pixel)): pixel[i] = int(pixel[i])
-		data.append(pixel)
-		desired_value = int(line[len(line)-1]) - 1
-		desired_values.append(desired_value)
+		for i in range(len(pixel)): pixel[i] = float(pixel[i])*1.0/ranges[i]
+		train_data.append(pixel)
+		desired_value = int(line[len(line)-1]) #- 1
+		train_labels.append(desired_value)
+
+with open('skin-detection-testing.txt') as f:
+	row_count=1
+	print('Reading the Silatra testing dataset...\r',end='')
+	while True:
+		# Read attributes_info row by row
+		line = f.readline()
+		if line == '': break                    # End of file
+		line = line.split(',')
+		pixel = line[0:len(line)-1]             # attributes_info comes as: [h,s,v,class].
+		for i in range(len(pixel)): pixel[i] = float(pixel[i])*1.0/ranges[i]
+		test_data.append(pixel)
+		desired_value = int(line[len(line)-1]) #- 1
+		test_labels.append(desired_value)
 
 #%%
-train_data, test_data, train_labels, test_labels = train_test_split(data, desired_values, test_size=0.3, random_state=31)
+# train_data, test_data, train_labels, test_labels = train_test_split(data, desired_values, test_size=0.3, random_state=31)
 print('                                                             \r',end='')
 print('Just a minute...\r',end='')
 for i in range(len(train_data)):
@@ -40,7 +55,7 @@ for i in range(len(train_data)):
 	classes[desired_value] += 1
 	n += 1
 	for i in range(len(pixel)):
-		near_val = pixel[i] - pixel[i]%MODULUS
+		near_val = pixel[i]
 		try: attributes_info[i][near_val][desired_value] += 1
 		except: attributes_info[i][near_val] = [0,0]
 
@@ -61,29 +76,29 @@ for i in range(len(test_data)):
 
 	probability_skin, probability_non_skin, prediction = classes[0], classes[1], 0
 	for channel in range(len(pixel)):
-		value = pixel[channel] - pixel[channel]%MODULUS
+		value = pixel[channel]
 		probability_skin *= attributes_info[channel][value][0]
 		probability_non_skin *= attributes_info[channel][value][1]
-	
+
 	if probability_skin <= probability_non_skin: prediction = 1
 
 	if desired_value is 0: test_skin_samples += 1
 	else: test_non_skin_samples += 1
 
 	if desired_value is 0 and prediction is 0: true_positives += 1
-	elif desired_value is 0 and prediction is 1: true_negatives += 1
-	elif desired_value is 1 and prediction is 0: false_positives += 1
-	elif desired_value is 1 and prediction is 1: false_negatives += 1
+	elif desired_value is 0 and prediction is 1: false_positives += 1
+	elif desired_value is 1 and prediction is 0: false_negatives += 1
+	elif desired_value is 1 and prediction is 1: true_negatives += 1
 	model_predictions.append(prediction)
 print('Testing complete\r',end='')
 
 #%%
 print('Model characterisitics: \n')
 print('Confusion matrix:    \n\n---------------------------------\n|  C  |\tS\t|\tNS\t|\n---------------------------------')
-print('|  S  |\t'+str(true_positives)+'\t|\t'+str(true_negatives)+'\t|')
-print('|  NS |\t'+str(false_positives)+'\t|\t'+str(false_negatives)+'\t|',end='\n')
+print('|  S  |\t'+str(true_positives)+'\t|\t'+str(false_positives)+'\t|')
+print('|  NS |\t'+str(false_negatives)+'\t|\t'+str(true_negatives)+'\t|',end='\n')
 print('---------------------------------')
-correct_predictions = true_positives + false_negatives
+correct_predictions = true_positives + true_negatives
 print('Accuracy: '+str(correct_predictions)+' / '+str(len(test_data))+' = '+str(round(float(correct_predictions/len(test_data)), 4)*100)+'%')
 
 sensitivity = true_positives*1.0/test_skin_samples
@@ -131,6 +146,10 @@ print('\n'+str(len(image))+'x'+str(len(image[0]))+'='+str(total_pixels)+' pixels
 original = image.copy()
 image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 image = image.tolist()
+for i in range(len(image)):                                   # Each row
+	for j in range(len(image[i])):                            # Each pixel
+		for k in range(3):                                  # Each channel (h/s/v)
+			image[i][j][k] = image[i][j][k]*1.0/ranges[k]
 
 print('Segmentation is starting...\r',end='')
 binary_image = []
@@ -138,30 +157,28 @@ pixels_processed = 0
 time_for_image = time.time()
 time_per_pixel = 0
 
-''' for row in image:
+for row in image:
 	binary_row = []
 	for pixel in row:
 		probability_skin, probability_non_skin = classes[0] ,classes[1]
 		pixels_processed += 1
 		time_per_pixel = time.time()
 		for channel in range(3):
-			value = pixel[channel] - pixel[channel]%MODULUS
+			value = pixel[channel]
 			probability_skin *= attributes_info[channel][value][0]
 			probability_non_skin *= attributes_info[channel][value][1]
 		time_per_pixel = time.time() - time_per_pixel
 		if probability_skin > probability_non_skin: binary_row.append([0,0,255])
 		else: binary_row.append([0,0,0])
-
 		if pixels_processed%10000 == 0: print('Pixels processed: '+str(pixels_processed/1000)+'k / '+str(total_pixels/1000)+'k\r',end='')
 	binary_image.append(binary_row)
-
 print('Pixels processed: '+str(total_pixels/1000)+'k / '+str(total_pixels/1000)+'k\r',end='')
 for i in range(len(image)):
 	for j in range(len(image[i])):
-		for k in range(3): image[i][j][k] = float(binary_image[i][j][k]) '''
+		for k in range(3): image[i][j][k] = float(binary_image[i][j][k])
 
 
-def predict(row):
+''' def predict(row):
 	prediction = []
 	for pixel in row:
 		probability_skin, probability_non_skin = classes[0] ,classes[1]
@@ -211,7 +228,7 @@ for i in range(len(image)):
 		if pixels_processed%10000 == 0: print('Pixels processed: '+str(pixels_processed/1000)+'k / '+str(total_pixels/1000)+'k\r',end='')
 	upper_row_predictions = curr_row_predictions
 	curr_row_predictions = lower_row_predictions
-	if i < len(image)-2: lower_row_predictions = predict(image[i+2])
+	if i < len(image)-2: lower_row_predictions = predict(image[i+2]) '''
 
 time_for_image = time.time() - time_for_image
 #print('\n\nTime required per pixel = '+str(time_per_pixel)+' seconds')

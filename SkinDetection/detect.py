@@ -14,7 +14,7 @@ Segments skin from an image. Input image is taken from Test_Images folder as of 
     Thus, we can decide probability of a pixel being skin by using following equation:
     P(pixel: skin) = P(pixel: skin_colour) x L(pixel: skin)
 
-    where L(pixel: skin) represents the likelihood of pixel being skin. 
+    where L(pixel: skin) represents the likelihood of pixel being skin.
     More the chance of neighbouring pixels being of skin colour, more the chance of current pixel being skin.abs
     Thus, we calculate L(pixel: skin) by taking average of the probabilities of being skin colour of the 8 neighbouring pixels.
     L(pixel: skin) = Avg(P(pixel-i: skin_colour)) where pixel-i is one of the 8 neighbouring pixel.
@@ -39,12 +39,12 @@ print('\n--------------- Silatra skin detector ---------------')
 
 # Read model architecture
 model_data = ''
-with open('deep_model.json') as model_file: model_data = model_file.read()
+with open('model1.json') as model_file: model_data = model_file.read()
 model = model_from_json(model_data)
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Load saved weights
-model.load_weights('deep_weights.h5')
+model.load_weights('weights1.h5')
 print('\nModel ready for testing. ',end='')
 
 def predict_skin_pixels(img_file, return_flag=False):
@@ -134,8 +134,8 @@ def predict_skin_pixels(img_file, return_flag=False):
     print('Time required for actual segmentation -> '+str(t2-t1)+' seconds')
 
     mask = cv2.resize(array(mask), (w, h))
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11))
-    mask = cv2.dilate(mask, kernel)
+    ''' kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11))
+    mask = cv2.dilate(mask, kernel) '''
     cv2.imshow('Mask',cv2.cvtColor(array(mask, uint8), cv2.COLOR_HSV2BGR))
 
     mask, segmented_img = mask.tolist(), cv2.cvtColor(original, cv2.COLOR_BGR2HSV)

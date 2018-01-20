@@ -33,7 +33,7 @@ def read_uci_data(data,d):
             # Normalize & Append data
             ranges = [179.0,255.0,255.0]
             for i in range(len(pixel)): pixel[i] = float(pixel[i])/ranges[i]
-            
+
             data.append(pixel)
             d.append(line[len(line)-1])
 
@@ -69,45 +69,53 @@ def deep(data,d):
     from sklearn.pipeline import Pipeline
     from keras.utils import np_utils
 
+    X_train=[]
+    Y_train=[]
+    input_file=open("skin-detection-training.txt","r")
+    for line in input_file:
+        attrs=line.split(",")
+        pixel=list(map(float,attrs[0:3]))
+        for i in range(3):pixel[i] /= ranges[i]
+        Y_train.append(int(attrs[-1].strip())-1)
+        X_train.append(pixel)
+    print("Number of training samples loaded:"+str(len(X_train)))
+    X_test=[]
+    Y_test=[]
+    input_file=open("skin-detection-testing.txt","r")
+    for line in input_file:
+        attrs=line.split(",")
+        pixel=list(map(float,attrs[0:3]))
+        for i in range(3):pixel[i] /= ranges[i]
+        Y_test.append(int(attrs[-1].strip())-1)
+        X_test.append(pixel)
+    print("Number of test samples loaded:"+str(len(X_test)))
+
+    np.random.seed = 101
     # encode class values as integers
     encoder = LabelEncoder()
-    encoder.fit(train_labels)
-    encoded_Y = encoder.transform(train_labels)
-
-    # convert integers to dummy variables (i.e. one hot encoded)
-    dummy_labels = np_utils.to_categorical(encoded_Y)
+    encoder.fit(Y_train)
+    enc_Y_train = encoder.transform(Y_train)
+    dummy_train_labels = np_utils.to_categorical(enc_Y_train)
 
     encoder = LabelEncoder()
-    encoder.fit(test_labels)
-    encoded_Y = encoder.transform(test_labels)
-
-    # convert integers to dummy variables (i.e. one hot encoded)
-    dummy_test_labels = np_utils.to_categorical(encoded_Y)
-
-    # This is the best random seed!
-    np.random.seed(101)
-
-    '''
-    This is a sequential model.
-    Contains 3 inputs,
-    1 hidden layer with 8 neurons & activation as ReLU
-    & 1 output layer with 2 neurons and activation Softmax
-    '''
+    encoder.fit(Y_test)
+    enc_Y_test = encoder.transform(Y_test)
+    dummy_test_labels = np_utils.to_categorical(enc_Y_test)
 
     model = Sequential()
-    model.add(Dense(40,input_dim=3,activation='relu', name='hidden_layer_1'))
-    model.add(Dropout(0.2))
+    model.add(Dense(3,input_dim=3,activation='relu', name='input_layer'))
+    model.add(Dense(120,activation='relu', name='hidden_layer_1'))
     model.add(Dense(80,activation='relu', name='hidden_layer_2'))
-    model.add(Dropout(0.2))
-    model.add(Dense(120,activation='relu', name='hidden_layer_3'))
+    model.add(Dense(40,activation='relu', name='hidden_layer_3'))
+    model.add(Dense(20,activation='relu', name='hidden_layer_4'))
     model.add(Dense(2, activation='softmax', name='output_layer'))
 
     # Compile model & fit data to model.
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    model.fit(train_data,dummy_labels,batch_size=8,epochs=12,verbose=1,validation_split=0.1)
+    model.fit(X_train,dummy_train_labels,batch_size=32,epochs=14,verbose=1,validation_split=0.1)
 
     # Evaluate against test data
-    score = model.evaluate(test_data,dummy_test_labels)
+    score = model.evaluate(X_test,dummy_test_labels)
     print("\n%s: %.2f%%" % (model.metrics_names[1], score[1]*100))
 
     # Save model architecture in json file & save weights in another file.
@@ -124,10 +132,11 @@ if __name__ == "__main__":
     print('\n----- Silatra Deep Learning -----\n')
 
     data, d = [], []
-    read_uci_data(data,d)
-    read_silatra_data(data,d)
-
-    # Split data for training & testing. Ratio = 33%
-    train_data,test_data,train_labels,test_labels = train_test_split(data,d,test_size=0.3,random_state=31)
+    ranges=[179.0,255.0,255.0]
+    # read_uci_data(data,d)
+    # read_silatra_data(data,d)
+    #
+    # # Split data for training & testing. Ratio = 33%
+    # train_data,test_data,train_labels,test_labels = train_test_split(data,d,test_size=0.3,random_state=31)
     print('Data is ready for training! Training starts... Hello Keras? You may have the control now..\nKeras: Sure.\n\n')
     deep(data,d)
