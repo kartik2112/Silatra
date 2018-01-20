@@ -33,13 +33,13 @@ def predictSignByDeepNet(line):
     noOfDescriptors = 15
     fftData=[]
 
-    # print("Received from C++",line)
+    print("Received from C++",line)
 
     data = np.fromstring(line,dtype = float, sep = ',')
     fftData.append(fft(data)[0:noOfDescriptors])  # FFT
 
-    # print("Computed FFT")
-    # print(fftData)
+    print("Computed FFT")
+    print(fftData)
     
     fftData = np.absolute(fftData) 
     json_file = open('Classification Models/DigitClassifierModel.json', 'r')
@@ -55,5 +55,6 @@ def predictSignByDeepNet(line):
     # evaluate loaded model on test data
     loaded_model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     predicted_digit=loaded_model.predict(fftData)
+    print(predicted_digit)
     for x in predicted_digit:
         print("The predicted digit is:"+str(np.argmax(x)))
