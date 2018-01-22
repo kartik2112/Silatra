@@ -8,7 +8,7 @@ input_file_name="silatra_dataset_complete.txt"
 training_file_name="skin-detection-training.txt"
 testing_file_name="skin-detection-testing.txt"
 ranges=[179.0,255.0,255.0]
-train_ratio=0.75
+train_ratio=0.7
 
 '''
     The following is the actual program:
@@ -30,6 +30,9 @@ for label in Y:
         non_skin_samples+=1
 print("Skin samples in entire set:"+str(skin_samples))
 print("Non-skin samples in entire set:"+str(non_skin_samples))
+for sample in X:
+    for i in range(len(sample)):
+        sample[i]=sample[i]/ranges[i]
 from random import randint
 train_samples=int(train_ratio*len(X))
 X_train=[]
