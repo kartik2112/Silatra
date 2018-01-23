@@ -89,7 +89,16 @@ while True:
                 #h1+=20;w1+=20
                 track_window = (x,y,w1,h1)
 
-            delta_x, delta_y, slope, direction = prev_x-x, prev_y-y, 0, 'No movement'
+
+            contoured_thresh = np.zeros(roi.shape, np.uint8)
+            cv2.drawContours(contoured_thresh, [res], 0, (0, 255, 0), 2)
+            cv2.drawContours(contoured_thresh, [hull], 0, (0, 255, 0), 2)
+            cv2.imshow('ROI with contours',contoured_thresh)
+
+            (cx,cy),(major_axis,minor_axis),angle = cv2.fitEllipse(res)
+            cv2.ellipse(frame,(int(x+cx),int(y+cy)),(int(major_axis/2),int(minor_axis/2)),int(angle),0,360,(0,255,0),thickness=2)
+
+            delta_x, delta_y, slope, direction = prev_x-cx, prev_y-cy, 0, 'No movement'
 
             if delta_x**2+delta_y**2 > THRESHOLD**2:
                 if delta_x is 0 and delta_y > 0: slope = 999 # inf
@@ -101,16 +110,8 @@ while True:
                 elif slope > 1.0 and delta_y > 0.0: direction = 'Up'
                 elif slope > 1.0: direction = 'Down'
             else: direction = 'No movement'
-
-            contoured_thresh = np.zeros(roi.shape, np.uint8)
-            cv2.drawContours(contoured_thresh, [res], 0, (0, 255, 0), 2)
-            cv2.drawContours(contoured_thresh, [hull], 0, (0, 255, 0), 2)
-            cv2.imshow('ROI with contours',contoured_thresh)
-
-            (cx,cy),(major_axis,minor_axis),angle = cv2.fitEllipse(res)
-            cv2.ellipse(frame,(int(x+cx),int(y+cy)),(int(major_axis/2),int(minor_axis/2)),int(angle),0,360,(0,255,0),thickness=2)
-
-            prev_x, prev_y = x, y
+            
+            prev_x, prev_y = cx, cy
             cv2.imshow('Hand tracking',frame)
             cv2.imshow('Segmented',skin)
             print('Slope = '+str(round(slope,3))+'\tDirection = '+str(direction)+'\r', end='')
