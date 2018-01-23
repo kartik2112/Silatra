@@ -2,9 +2,11 @@ import cv2, numpy as np, time, math
 
 #Open Camera object
 cap = cv2.VideoCapture(0)
+cap.set(3,640); cap.set(4,480)
+cap.set(cv2.CAP_PROP_FPS, 20)
 
 contour_start=False
-lower = np.array([0,143,60],np.uint8)
+lower = np.array([0,145,60],np.uint8)
 upper = np.array([255,180,127],np.uint8)
 while(1):
     start_time = time.time()
