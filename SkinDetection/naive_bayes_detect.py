@@ -20,7 +20,7 @@ with open('skin-detection-training.txt') as f:
 		if line == '': break                    # End of file
 		line = line.split(',')
 		pixel = line[0:len(line)-1]             # attributes_info comes as: [h,s,v,class].
-		for i in range(len(pixel)): pixel[i] = float(pixel[i])*1.0/ranges[i]
+		for i in range(len(pixel)): pixel[i] = float(pixel[i])
 		train_data.append(pixel)
 		desired_value = int(line[len(line)-1]) #- 1
 		train_labels.append(desired_value)
@@ -34,7 +34,7 @@ with open('skin-detection-testing.txt') as f:
 		if line == '': break                    # End of file
 		line = line.split(',')
 		pixel = line[0:len(line)-1]             # attributes_info comes as: [h,s,v,class].
-		for i in range(len(pixel)): pixel[i] = float(pixel[i])*1.0/ranges[i]
+		for i in range(len(pixel)): pixel[i] = float(pixel[i])
 		test_data.append(pixel)
 		desired_value = int(line[len(line)-1]) #- 1
 		test_labels.append(desired_value)
