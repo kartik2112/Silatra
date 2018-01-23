@@ -56,27 +56,27 @@ def predict_skin_pixels(img_file, return_flag=False):
 
     # Load image
     if img_file is '': img_file = 'Test_Images/test_img.jpg'
-    img, segmented_img, completed = cv2.imread(img_file), [], 0
+    img, segmented_img, completed = cv2.imread('Test_Images/good hand.jpg'), [], 0
 
     # Decide aspect ratio and resize the image.
-    if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (180,320))
-    elif float(len(img)/len(img[0])) == float(9/16): img = cv2.resize(img, (320,180))
-    elif float(len(img)/len(img[0])) == float(4/3): img = cv2.resize(img, (320,240))
-    elif float(len(img)/len(img[0])) == float(3/4): img = cv2.resize(img, (240,320))
-    elif float(len(img)/len(img[0])) == 1: img = cv2.resize(img, (300,300))
-    else: img = cv2.resize(img, (250,250))
+    # if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (180,320))
+    # elif float(len(img)/len(img[0])) == float(9/16): img = cv2.resize(img, (320,180))
+    # elif float(len(img)/len(img[0])) == float(4/3): img = cv2.resize(img, (320,240))
+    # elif float(len(img)/len(img[0])) == float(3/4): img = cv2.resize(img, (240,320))
+    # elif float(len(img)/len(img[0])) == 1: img = cv2.resize(img, (300,300))
+    # else: img = cv2.resize(img, (250,250))
     original = img.copy()
     h,w,_ = img.shape
     img = cv2.resize(img, (ceil(w/3), ceil(h/3)))
 
     # Conversion to HSV & Normalization of image pixels
-    # ranges = [179.0,255.0,255.0]
-    # img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    # img = img.tolist()
-    # for i in range(len(img)):                                   # Each row
-    #     for j in range(len(img[i])):                            # Each pixel
-    #         for k in range(3):                                  # Each channel (h/s/v)
-    #             img[i][j][k] = img[i][j][k]*1.0/ranges[k]
+    ranges = [179.0,255.0,255.0]
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    img = img.tolist()
+    for i in range(len(img)):                                   # Each row
+        for j in range(len(img[i])):                            # Each pixel
+            for k in range(3):                                  # Each channel (h/s/v)
+                img[i][j][k] = img[i][j][k]*1.0/ranges[k]
 
     total_pixels = len(img)*len(img[0])
     print('Image size = '+str(len(img))+'x'+str(len(img[0]))+' = '+str(total_pixels)+' pixels\n')
