@@ -57,15 +57,15 @@ def predict_skin_pixels(img_file, return_flag=False):
 
     # Load image
     if img_file is '': img_file = 'Test_Images/test_img.jpg'
-    img, segmented_img, completed = cv2.imread(img_file), [], 0
+    img, segmented_img, completed = cv2.imread('Test_Images/good hand.jpg'), [], 0
 
     # Decide aspect ratio and resize the image.
-    if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (180,320))
-    elif float(len(img)/len(img[0])) == float(9/16): img = cv2.resize(img, (320,180))
-    elif float(len(img)/len(img[0])) == float(4/3): img = cv2.resize(img, (320,240))
-    elif float(len(img)/len(img[0])) == float(3/4): img = cv2.resize(img, (240,320))
-    elif float(len(img)/len(img[0])) == 1: img = cv2.resize(img, (300,300))
-    else: img = cv2.resize(img, (250,250))
+    # if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (180,320))
+    # elif float(len(img)/len(img[0])) == float(9/16): img = cv2.resize(img, (320,180))
+    # elif float(len(img)/len(img[0])) == float(4/3): img = cv2.resize(img, (320,240))
+    # elif float(len(img)/len(img[0])) == float(3/4): img = cv2.resize(img, (240,320))
+    # elif float(len(img)/len(img[0])) == 1: img = cv2.resize(img, (300,300))
+    # else: img = cv2.resize(img, (250,250))
     original = img.copy()
     h,w,_ = img.shape
     if not args.get('no_resize'): img = cv2.resize(img, (ceil(w/3), ceil(h/3)))
