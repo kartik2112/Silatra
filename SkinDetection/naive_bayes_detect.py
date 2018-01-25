@@ -180,3 +180,4 @@ cv2.imshow('Segmentation results',hstack([original, cv2.cvtColor(array(image, ui
 print()
 cv2.waitKey(100000)
 cv2.destroyAllWindows()
+# good hand.jpg: 0.73165 seconds
