@@ -1,15 +1,7 @@
-'''
-Kalman filter:
-
-State: (co-ordinates of center of rect, height, width) => (cx,cy,h,w,vx,vy,rh,rw)
-Measurement: (cx,cy,h,w)
-
-'''
-
 import numpy as np
 import cv2
 
-lower = np.array([0,145,60],np.uint8)
+lower = np.array([0,143,60],np.uint8)
 upper = np.array([255,180,127],np.uint8)
 start_tracking = False
 x,h,y,w=300,200,100,150
@@ -27,14 +19,14 @@ mask = cv2.inRange(hsv_roi, np.array((0., 60.,32.)), np.array((180.,255.,255.)))
 roi_hist = cv2.calcHist([hsv_roi],[0],mask,[180],[0,180])
 cv2.normalize(roi_hist,roi_hist,0,255,cv2.NORM_MINMAX)
 
-prev_x, prev_y, THRESHOLD = 0, 0, 12
+prev_x, prev_y, THRESHOLD = 0, 0, 10
 
 while True:
     _,frame = cap.read()
 
     if not start_tracking:
         display = cv2.rectangle(frame, (x,y),(x+w,y+h),(0,255,0),2)
-        display = cv2.putText(display, 'Place your hand here', (x,y-10), cv2.FONT_HERSHEY_PLAIN,1,(0,0,0),thickness=2)
+        display = cv2.putText(display, "Place your hand here. Then Press 's'", (x-30,y-10), cv2.FONT_HERSHEY_PLAIN,1,(0,0,0),thickness=1)
         cv2.imshow('Place your hand into the window',display)
 
         # set up the ROI for tracking
@@ -96,7 +88,8 @@ while True:
             cv2.imshow('ROI with contours',contoured_thresh)
 
             (cx,cy),(major_axis,minor_axis),angle = cv2.fitEllipse(res)
-            cv2.ellipse(frame,(int(x+cx),int(y+cy)),(int(major_axis/2),int(minor_axis/2)),int(angle),0,360,(0,255,0),thickness=2)
+            cx += x; cy += y
+            cv2.ellipse(frame,(int(cx),int(cy)),(int(major_axis/2),int(minor_axis/2)),int(angle),0,360,(0,255,0),thickness=2)
 
             delta_x, delta_y, slope, direction = prev_x-cx, prev_y-cy, 0, 'No movement'
 
@@ -109,9 +102,13 @@ while True:
                 elif slope < 1.0 and slope > 0.0: direction = 'Right'
                 elif slope > 1.0 and delta_y > 0.0: direction = 'Up'
                 elif slope > 1.0: direction = 'Down'
-            else: direction = 'No movement'
+
+                THRESHOLD = 7
+                prev_x, prev_y = cx, cy
+            else:
+                direction = 'No movement'
+                THRESHOLD = 15
             
-            prev_x, prev_y = cx, cy
             cv2.imshow('Hand tracking',frame)
             cv2.imshow('Segmented',skin)
             print('Slope = '+str(round(slope,3))+'\tDirection = '+str(direction)+'\r', end='')

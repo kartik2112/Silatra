@@ -75,7 +75,6 @@ def deep(data,d):
     for line in input_file:
         attrs=line.split(",")
         pixel=list(map(float,attrs[0:3]))
-        for i in range(3):pixel[i] /= ranges[i]
         Y_train.append(int(attrs[-1].strip())-1)
         X_train.append(pixel)
     print("Number of training samples loaded:"+str(len(X_train)))
@@ -85,7 +84,6 @@ def deep(data,d):
     for line in input_file:
         attrs=line.split(",")
         pixel=list(map(float,attrs[0:3]))
-        for i in range(3):pixel[i] /= ranges[i]
         Y_test.append(int(attrs[-1].strip())-1)
         X_test.append(pixel)
     print("Number of test samples loaded:"+str(len(X_test)))
