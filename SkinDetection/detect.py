@@ -40,12 +40,12 @@ print('\n--------------- Silatra skin detector ---------------')
 
 # Read model architecture
 model_data = ''
-with open('model2.json') as model_file: model_data = model_file.read()
+with open('model1.json') as model_file: model_data = model_file.read()
 model = model_from_json(model_data)
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Load saved weights
-model.load_weights('weights2.h5')
+model.load_weights('weights1.h5')
 print('\nModel ready for testing. ',end='')
 
 def predict_skin_pixels(img_file, return_flag=False):
@@ -57,7 +57,7 @@ def predict_skin_pixels(img_file, return_flag=False):
 
     # Load image
     if img_file is '': img_file = 'Test_Images/test_img.jpg'
-    img, segmented_img, completed = cv2.imread('Test_Images/good hand.jpg'), [], 0
+    img, segmented_img, completed = cv2.imread(img_file), [], 0
 
     # Decide aspect ratio and resize the image.
     # if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (180,320))
@@ -176,3 +176,4 @@ else:
     print('Using: '+image_file)
     predict_skin_pixels(image_file)
     cv2.waitKey(100000)
+# good hand.jpg: 11.9843 seconds
