@@ -33,6 +33,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("-i","--image", help='Use this flag followed by image file to do segmentation on an image from any folder (use absolute path)')
 ap.add_argument("-ts","--test_image", help='Use this flag followed by image file to do segmentation on an image from Test_Images folder')
 ap.add_argument("-tr","--train_image", help='Use this flag followed by image file to do segmentation on an image from training-images folder')
+ap.add_argument("-nr","--no_resize",help="Use this flag if you don't want the resize feature to speed up processing.")
 args = vars(ap.parse_args())
 
 print('\n--------------- Silatra skin detector ---------------')
@@ -59,15 +60,15 @@ def predict_skin_pixels(img_file, return_flag=False):
     img, segmented_img, completed = cv2.imread(img_file), [], 0
 
     # Decide aspect ratio and resize the image.
-    if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (180,320))
-    elif float(len(img)/len(img[0])) == float(9/16): img = cv2.resize(img, (320,180))
-    elif float(len(img)/len(img[0])) == float(4/3): img = cv2.resize(img, (320,240))
-    elif float(len(img)/len(img[0])) == float(3/4): img = cv2.resize(img, (240,320))
-    elif float(len(img)/len(img[0])) == 1: img = cv2.resize(img, (300,300))
-    else: img = cv2.resize(img, (250,250))
+    # if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (180,320))
+    # elif float(len(img)/len(img[0])) == float(9/16): img = cv2.resize(img, (320,180))
+    # elif float(len(img)/len(img[0])) == float(4/3): img = cv2.resize(img, (320,240))
+    # elif float(len(img)/len(img[0])) == float(3/4): img = cv2.resize(img, (240,320))
+    # elif float(len(img)/len(img[0])) == 1: img = cv2.resize(img, (300,300))
+    # else: img = cv2.resize(img, (250,250))
     original = img.copy()
     h,w,_ = img.shape
-    img = cv2.resize(img, (ceil(w/3), ceil(h/3)))
+    if not args.get('no_resize'): img = cv2.resize(img, (ceil(w/3), ceil(h/3)))
 
     # Conversion to HSV & Normalization of image pixels
     ranges = [179.0,255.0,255.0]
@@ -133,7 +134,8 @@ def predict_skin_pixels(img_file, return_flag=False):
     t2 = time.time()
     print('Time required for actual segmentation -> '+str(t2-t1)+' seconds')
 
-    mask = cv2.resize(array(mask), (w, h))
+    mask = array(mask)
+    if not args.get('no_resize'): mask = cv2.resize(mask, (w, h))
     ''' kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11))
     mask = cv2.dilate(mask, kernel) '''
     cv2.imshow('Mask',cv2.cvtColor(array(mask, uint8), cv2.COLOR_HSV2BGR))
@@ -174,3 +176,4 @@ else:
     print('Using: '+image_file)
     predict_skin_pixels(image_file)
     cv2.waitKey(100000)
+# good hand.jpg: 11.9843 seconds

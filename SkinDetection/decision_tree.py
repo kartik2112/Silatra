@@ -1,5 +1,6 @@
 # from __future__ import division  ---in case of using Python 2.x
 import numpy
+ranges=[179.0,255.0,255.0]
 # Function for evaluating score of the tree
 def evaluate_score(clf,X,Y):
     Y_predicted=list(map(int,(clf.predict(X)).tolist()))
@@ -38,7 +39,7 @@ print("Accuracy on test set:"+str(test_score))
 # Trying the classifier on an image
 import cv2,numpy as np,time
 start = time.clock()
-img=cv2.imread('Test_Images/93.jpg')
+img=cv2.imread('Test_Images/good hand.jpg')
 # if float(len(img)/len(img[0])) == float(16/9): img = cv2.resize(img, (180,320))
 # elif float(len(img)/len(img[0])) == float(9/16): img = cv2.resize(img, (320,180))
 # elif float(len(img)/len(img[0])) == float(4/3): img = cv2.resize(img, (320,240))
@@ -49,6 +50,9 @@ img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 img = img.tolist()
 seg_img=[]
 for row in img:
+    for i in range(len(row)):
+        for j in range(len(row[i])):
+            row[i][j]=row[i][j]/ranges[j]
     output=list(map(int,(classifier.predict(row)).tolist()))
     pixel_vals=[]
     for prediction in output:
@@ -64,3 +68,5 @@ cv2.imshow('Segmentated image',seg_img)
 cv2.imwrite("../Results and ROC/Decision Tree-BW.jpg",seg_img)
 cv2.waitKey(100000)
 cv2.destroyAllWindows()
+
+# good hand.jpg: 1.367 s
