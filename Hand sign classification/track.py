@@ -1,7 +1,19 @@
 import numpy as np
 import cv2
+from keras.models import model_from_json
 
-f = open('bounds.txt')
+label, total_captured = 2, 0
+
+# Read model architecture
+model_data = ''
+with open('model.json') as model_file: model_data = model_file.read()
+model = model_from_json(model_data)
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+# Load saved weights
+model.load_weights('weights.h5')
+
+f, writer = open('bounds.txt'), open('chan.csv','a')
 param = int(f.read().strip())
 f.close()
 lower = np.array([0,param,60],np.uint8)
@@ -83,7 +95,7 @@ while True:
             cv2.drawContours(contoured_thresh, [hull], 0, (0, 255, 0), 2)
             cv2.imshow('ROI with contours',contoured_thresh)
 
-            (cx,cy),(major_axis,minor_axis),angle = cv2.fitEllipse(hull)
+            (cx,cy),(major_axis,minor_axis),angle = cv2.fitEllipse(largest_contour)
             center = (cx,cy)
             eccentricity = (1 - (major_axis/minor_axis) ** 2 ) ** 0.5
             cx += x; cy += y
@@ -110,7 +122,14 @@ while True:
             cv2.putText(frame, direction, (25,25), cv2.FONT_HERSHEY_PLAIN, 2, (0,0,0), thickness=2)
             cv2.imshow('Hand tracking',frame)
             cv2.imshow('Segmented',skin)
-            print('Angle: %d\tEccentricity: %f\tCenter: (%d,%d)\r' % (angle, round(eccentricity, 3), center[0], center[1]), end='')
+            cx = float((center[0]-45)/(64-45))
+            cy = float((center[0]-58)/(110-58))
+            data = np.array([[angle/180,round(eccentricity,3),cx,cy]])
+            output = model.predict(data)[0].tolist()
+            prediction = 1
+            #if output[0]<output[1]: prediction=2
+            str_to_print = 'Angle: %d\tEccentricity: %f\tCenter: (%d,%d): ' % (angle, round(eccentricity, 3), center[0], center[1])
+            print(str_to_print+'\r', end='')
         except Exception as e:
             print(e)
             frame = cv2.putText(frame,'Check terminal for error',(25,25),cv2.FONT_HERSHEY_PLAIN,2,(0,0,0),thickness=2)
@@ -121,6 +140,12 @@ while True:
     elif k==ord('s'):
         start_tracking = not start_tracking
         cv2.destroyAllWindows()
-
+    elif k==ord('c'):
+        r = (center[0]**2+center[1]**2)**0.5
+        line = '%d,%.3f,%d,%d,%.3f,%d\n'%(angle,eccentricity,center[0],center[1],r,label)
+        writer.write(line)
+        total_captured += 1
+        
+writer.close()
 cv2.destroyAllWindows()
 cap.release()

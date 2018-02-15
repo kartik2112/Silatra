@@ -6,7 +6,10 @@ cap.set(3,640); cap.set(4,480)
 cap.set(cv2.CAP_PROP_FPS, 20)
 
 contour_start=False
-lower = np.array([0,145,60],np.uint8)
+f = open('bounds.txt')
+param = int(f.read().strip())
+f.close()
+lower = np.array([0,param,60],np.uint8)
 upper = np.array([255,180,127],np.uint8)
 while(1):
     start_time = time.time()
@@ -71,11 +74,13 @@ while(1):
     print('Time per frame: '+str((time.time()-start_time)*1000)+'ms\r',end='')
 
     #close the output video by pressing 'ESC'
-    k = cv2.waitKey(5) & 0xFF
+    k = cv2.waitKey(50) & 0xFF
     if k == ord('q'):
         break
-    elif k==ord('c'):
+    elif k==ord('s'):
         contour_start=not contour_start
+    elif k==ord('c'):
+        cv2.imwrite('capture.jpg',frame)
 
 
 cap.release()
