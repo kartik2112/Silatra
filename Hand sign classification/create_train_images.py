@@ -1,6 +1,6 @@
 import cv2, numpy as np
 
-lower = np.array([0,140,60],np.uint8)
+lower = np.array([0,143,60],np.uint8)
 upper = np.array([255,180,127],np.uint8)
 
 cap = cv2.VideoCapture(0)
@@ -8,10 +8,10 @@ cap.set(3,640); cap.set(4,480)
 cap.set(cv2.CAP_PROP_FPS, 5)
 
 total_captured = 0
-sign = 'c'
+sign = input('Ab konsa letter: ')
 while True:
     _, frame = cap.read()
-    x,y,w,h = 300,150,300,300
+    x,y,w,h = 100,150,300,300
 
     cv2.rectangle(frame, (x,y), (x+w,y+h), (255,0,0), thickness=2)
     cv2.putText(frame, '%d'%(total_captured), (50,150), cv2.FONT_HERSHEY_PLAIN, 3, (0,0,255), thickness=3)
@@ -20,6 +20,9 @@ while True:
     mask = cv2.inRange(ycrcb,lower,upper)
     skin = cv2.bitwise_and(roi, roi, mask = mask)
     _,thresh = cv2.threshold(mask,127,255,0)
+    ''' kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (7,7))
+    thresh = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
+    thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel) '''
     
     cv2.imshow('You',frame)
     cv2.imshow('Hand',thresh)
@@ -28,6 +31,7 @@ while True:
     if k==ord('q'): break
     elif k==ord('c'):
         if total_captured < 300:
-            cv2.imwrite('training-images-varun/Letters/%c/%d.png' % (sign,total_captured+1),roi)
+            cv2.imwrite('training-images-kartik/Letters/%c/%d.png' % (sign,total_captured+1),roi)
             total_captured += 1
+        else: break
 cv2.destroyAllWindows()
