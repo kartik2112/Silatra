@@ -65,6 +65,10 @@ extern vector<double> frameStepsTimes;
 extern char** args_v;
 extern int args_c;
 
+extern bool wrapperModeOn;
+
+extern long long predictedSign;
+
 
 /*
 This is the main entry point function of this file
@@ -523,12 +527,12 @@ void findClassUsingPythonModels( vector<float> &distVector ){
 	std::copy(CCDC_Data.begin(), CCDC_Data.end(), CCDC_Data_char);
 	CCDC_Data_char[CCDC_Data.size()] = '\0'; // don't forget the terminating \0
 	
-	long long predictedSign = predictSignByKNN_Py_Interface(CCDC_Data_char);	
+	predictedSign = predictSignByKNN_Py_Interface(CCDC_Data_char);	
 	// long long predictedSign = 2;
 
 	cout<<"Current Predicted Sign is "<<predictedSign<<endl;
 
-	if( args_c==3 && ( strcmp(args_v[1],"-img")==0 ) ){
+	if( wrapperModeOn || ( args_c==3 && ( strcmp(args_v[1],"-img")==0 ) ) ){
 		displaySignOnImage(predictedSign);		
 	}
 	else{
