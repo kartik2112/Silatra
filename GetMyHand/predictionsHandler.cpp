@@ -14,7 +14,7 @@ void displaySignOnImage(long long predictSign);
 
 deque<long long> predictions;
 int maxQueueSize = 15;
-int noOfSigns = 10;
+int noOfSigns = 256;
 int minModality = maxQueueSize/2;
 
 void addPredictionToQueue(long long predictedSign){
@@ -56,12 +56,15 @@ long long predictSign(){
 
 void displaySignOnImage(long long predictSign){
     Mat signImage = Mat::zeros(200,200,CV_8UC3);
-    cout<<predictSign<<endl;
+    // cout<<predictSign<<endl;
     string dispSign = "--";
     if(predictSign!=-1){
-        dispSign = to_string(predictSign);
+        char c12 = (char)predictSign;
+        dispSign = string(1,c12);
+        // dispSign = to_string(predictSign);
+        // cout<<(char)predictSign<<endl;
     }
-    putText(signImage,dispSign,Point(75,100),FONT_HERSHEY_SCRIPT_SIMPLEX,2,Scalar::all(255),3,8);
+    putText(signImage,dispSign,Point(75,100),FONT_HERSHEY_SIMPLEX,2,Scalar::all(255),3,8);
 
     imshow("Prediction",signImage);
 }

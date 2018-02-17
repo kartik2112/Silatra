@@ -21,3 +21,8 @@ __pycache__/*
 training-images/*
 Hand sign classification/training-images-tejas
 Hand sign classification/training-images-varun
+KartikPythonCVTrials/TrainHaar/neg/*
+KartikPythonCVTrials/TrainHaar/info/*
+KartikPythonCVTrials/TrainHaar/uglies/*
+*/Letters/*
+*/Digits/*
