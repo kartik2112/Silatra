@@ -21,6 +21,18 @@
 #include "pycompat.hpp"
 
 
+// -----------Custom part added because of bug ---------------------------------------------------
+// Reference: https://stackoverflow.com/a/47027598/5370202
+int init_numpy(){
+     import_array();// PyError if not successful
+     return 0;
+}
+const static int numpy_initialized =  init_numpy();
+
+
+
+
+
 static PyObject* opencv_error = 0;
 
 static int failmsg(const char *fmt, ...)

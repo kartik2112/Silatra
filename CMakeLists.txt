@@ -5,3 +5,6 @@ add_compile_options(-std=c++14)
 include_directories( ${OpenCV_INCLUDE_DIRS} /usr/local/include/python3.5)
 add_executable( SiLaTra SiLaTra.cpp ./GetMyHand/handDetection.cpp ./GetMyHand/skinColorSegmentation.cpp ./GetMyHand/trackBarHandling.cpp ./GetMyHand/predictionsHandler.cpp ./GetMyHand/Classification/classifyPythonAPI.cpp)
 target_link_libraries( SiLaTra ${OpenCV_LIBS} stdc++fs python3.5m)
+
+message(STATUS "Opencv include directories: " ${OpenCV_INCLUDE_DIRS})
+message(STATUS "Opencv include libraries: " ${OpenCV_LIBS})

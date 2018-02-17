@@ -58,6 +58,10 @@ double noOfFramesCollected = 0;
 char** args_v;
 int args_c;
 
+bool wrapperModeOn = false;
+
+long long predictedSign;
+
 
 int main(int argc, char** argv){
 
