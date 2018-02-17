@@ -30,6 +30,8 @@ using namespace std;
 using namespace cv;
 namespace fs = std::experimental::filesystem;
 
+int maxNoOfSamples = 300;
+
 void processFrame(Mat& image);
 void maintainTrackOfTimings();
 
@@ -109,7 +111,9 @@ int main(int argc, char** argv){
 		
 			frameStepsTimes[ OVERALL ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
 			maintainTrackOfTimings();
+			// if(waitKey(50)=='q') break;      ////
 		}
+
 	}
 	else if(argc>=3 && strcmp(argv[1],"-fullRefresh")==0){
 		for( int digitNo = 2 ; digitNo < argc ; digitNo++ ){
@@ -185,6 +189,9 @@ int main(int argc, char** argv){
 				imwrite(trainingImagesFolderPath+"/"+to_string(imgNo)+".png",image);
 				imgNo++;
 				cout<<endl<<"Captured image No. "<<imgNo<<endl;
+			}
+			if(imgNo > maxNoOfSamples){
+				break;
 			}
 
 		}
