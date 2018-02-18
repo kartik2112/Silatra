@@ -1,0 +1,2 @@
+/home/kartik/.virtualenvs/cvAcc/lib/python3.5/site-packages/silatra.cpython-35m-x86_64-linux-gnu.so
+/home/kartik/.virtualenvs/cvAcc/lib/python3.5/site-packages/SiLaTra-1.0.egg-info
