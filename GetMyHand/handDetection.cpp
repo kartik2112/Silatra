@@ -75,11 +75,11 @@ This is the main entry point function of this file
 */
 Mat getMyHand(Mat& imageOG){
 
-	displayHandDetectionTrackbarsIfNeeded(imageOG);
+	// displayHandDetectionTrackbarsIfNeeded(imageOG);
 	
 	startTime=(double)getTickCount();  //---Timing related part
 	
-	imshow("Original Image",imageOG);
+	// imshow("Original Image",imageOG);
 
 	detectAndEliminateFace(imageOG);
 
@@ -211,8 +211,8 @@ Mat getMyHand(Mat& imageOG){
 	// imwrite("./ContourImages/img.png",contouredImg);
 	// imshow("Morphed Mask",dstEroded);
 	imshow("Masked Image",maskedImg);
-	imshow("Final Image",finImg);
-	imshow("HSV + BGR Mask",dst);
+	// imshow("Final Image",finImg);
+	// imshow("HSV + BGR Mask",dst);
 	// imshow("HSV Mask",dstHSV);
 
 

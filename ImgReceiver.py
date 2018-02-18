@@ -6,10 +6,67 @@ import struct
 import numpy as np
 import cv2
 
-import test
+# import test
+
+import atexit
 
 
 import silatra
+
+import numpy as np
+from scipy.fftpack import fft, ifft
+from sklearn.neighbors import KNeighborsClassifier
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.models import model_from_json
+import pickle
+
+
+preds = []
+maxQueueSize = 15
+noOfSigns = 256
+minModality = int(maxQueueSize/2)
+
+
+def addToQueue(pred):
+    global preds, maxQueueSize, minModality, noOfSigns
+    if len(preds) == maxQueueSize:
+        preds = preds[1:]
+    preds += [pred]
+    
+
+def predictSign():
+    global preds, maxQueueSize, minModality, noOfSigns
+    modePrediction = -1
+    countModality = minModality
+
+    if len(preds) == maxQueueSize:
+        countPredictions = [0]*noOfSigns
+
+        for pred in preds:
+            countPredictions[pred]+=1
+        
+        for i in range(noOfSigns):
+            if countPredictions[i]>countModality:
+                modePrediction = i
+                countModality = countPredictions[i]
+
+        displaySignOnImage(modePrediction)
+    
+    return modePrediction
+
+def displaySignOnImage(predictSign):
+    dispSign = "--"
+    if predictSign != -1:
+        dispSign = chr(predictSign)+"";
+
+    signImage = np.zeros((200,200,1),np.uint8)
+
+    cv2.putText(signImage,dispSign,(75,100),cv2.FONT_HERSHEY_SIMPLEX,2,(255,255,255),3,8);
+
+    cv2.imshow("Prediction",signImage);
+    
+
 
 
 
@@ -52,9 +109,9 @@ print('Got connection from', addr)
 #     buf += str(client.recv(1))
 #     ctr-=1
 
-ctr123 = 0
+# ctr123 = 0
 while True:
-    ctr123 += 1
+    # ctr123 += 1
     buf = client.recv(4)
     # print(buf)
     size = struct.unpack('!i', buf)[0]  
@@ -67,8 +124,8 @@ while True:
 
     data = client.recv(size,socket.MSG_WAITALL)  #Reference: https://www.binarytides.com/receive-full-data-with-the-recv-socket-function-in-python/
 
-    if ctr123 % 5 != 0:
-        continue
+    # if ctr123 % 5 != 0:
+    #     continue
 
 
     # with open('tst.jpeg', 'wb') as img:
@@ -82,12 +139,23 @@ while True:
     img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
     cv2.imshow("Img",img_np)
+
+    # cv2.resize(img_np,)
     
     pred = silatra.findMeTheSign(img_np)
 
     print("Received Sign:",pred)
-    op1 = chr(pred)+"\r\n"
+    addToQueue(pred)
+
+    pred = predictSign()
+
+    if pred == -1:
+        op1  = "--"+"\r\n"
+    else:
+        op1 = chr(pred)+"\r\n"
     client.send(op1.encode('ascii'))
+
+
     # test.testMe(img_np)
 
     if cv2.waitKey(10) == 'q':
@@ -99,3 +167,10 @@ print('received, yay!')
 
 client.close()
 cv2.closeAllWindows()
+
+
+def cleaners():
+    client.close()
+    cv2.closeAllWindows()
+
+atexit.register(cleaners)
