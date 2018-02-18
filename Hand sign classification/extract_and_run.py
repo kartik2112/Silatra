@@ -5,8 +5,6 @@ start = time.time()
 dump_file = open('data.csv','w')
 dump_file.write('angle_90,r,area_ellipse,area_contour,proportion,eccentricity,norm_r,norm_area_ellipse,norm_area_contour,label\n')
 
-print([str(i) for i in range(10)]+[chr(ord('a')+i) for i in range(26)])
-
 total_images_parsed = 0
 DATA_LOCS = ['training-images-tejas\\Digits\\', 'training-images-kartik\\Letters\\', 'training-images-tejas\\Backup\\Digits\\', 'training-images-kartik\\Digits\\', 'training-images-varun\\Digits\\']
 params = [145,145,145,135,137]
@@ -68,7 +66,7 @@ for loc in range(len(DATA_LOCS)):
                 total_images_parsed += 1
             except Exception as e:
                 #print(e)
-                break
+                continue
 total = (time.time() - start)
 print(' '*160+'\rTotal time required = %3.3fs' % (total))
 print('Total images parsed: %d'%(total_images_parsed))
