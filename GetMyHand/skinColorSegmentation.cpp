@@ -50,7 +50,7 @@ int Rlow=60,Glow=40,Blow=20,gap=9,Rhigh=220,Ghigh=210,Bhigh=170;
 
 
 Mat extractSkinColorRange(Mat& srcBGR,Mat& srcHSV,Mat& srcYCrCb){
-	displaySkinColorDetectionTrackbarsIfNeeded();
+	// displaySkinColorDetectionTrackbarsIfNeeded();
 	int nRows=srcBGR.rows;
 	int nCols=srcBGR.cols*3;
 	

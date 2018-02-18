@@ -17,6 +17,8 @@ int maxQueueSize = 15;
 int noOfSigns = 256;
 int minModality = maxQueueSize/2;
 
+extern bool wrapperModeOn;
+
 void addPredictionToQueue(long long predictedSign){
     if(predictions.size()==maxQueueSize){
         predictions.pop_front();
@@ -55,7 +57,6 @@ long long predictSign(){
 }
 
 void displaySignOnImage(long long predictSign){
-    Mat signImage = Mat::zeros(200,200,CV_8UC3);
     // cout<<predictSign<<endl;
     string dispSign = "--";
     if(predictSign!=-1){
@@ -64,6 +65,12 @@ void displaySignOnImage(long long predictSign){
         // dispSign = to_string(predictSign);
         // cout<<(char)predictSign<<endl;
     }
+
+    if(wrapperModeOn){
+        return;
+    }
+
+    Mat signImage = Mat::zeros(200,200,CV_8UC3);
     putText(signImage,dispSign,Point(75,100),FONT_HERSHEY_SIMPLEX,2,Scalar::all(255),3,8);
 
     imshow("Prediction",signImage);
