@@ -40,7 +40,8 @@ bool isInSkinRangeYCrCb(const u_char& Y, const u_char& Cr, const u_char& Cb);
 
 
 // int YMax=0,YMin=255,CrMax=0,CrMin=255,CbMax=0,CbMin=255;
-int YMax=255,YMin=0,CrMax=180,CrMin=135,CbMax=130,CbMin=60;
+// int YMax=255,YMin=0,CrMax=180,CrMin=135,CbMax=130,CbMin=60;
+int YMax=255,YMin=0,CrMax=200,CrMin=137,CbMax=150,CbMin=100;
 // int lH=0,hH=20,lS=20,hS=154,lV=50,hV=255;
 // int Rlow=60,Glow=40,Blow=20,gap=15,Rhigh=220,Ghigh=210,Bhigh=170;
 int lH=0,hH=20,lS=8,hS=154,lV=50,hV=255;

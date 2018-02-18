@@ -44,6 +44,7 @@ void prepareWindows();
 void connectContours(vector<vector<Point> > &contours);
 void reduceClusterPoints(vector< vector< Point > > &contours, vector<vector<Point> > &hull);
 void findClassUsingPythonModels( vector<float> &distVector );
+void detectAndEliminateFace(Mat frame);
 
 
 
@@ -64,6 +65,10 @@ extern vector<double> frameStepsTimes;
 extern char** args_v;
 extern int args_c;
 
+extern bool wrapperModeOn;
+
+extern long long predictedSign;
+
 
 /*
 This is the main entry point function of this file
@@ -75,6 +80,9 @@ Mat getMyHand(Mat& imageOG){
 	startTime=(double)getTickCount();  //---Timing related part
 	
 	imshow("Original Image",imageOG);
+
+	detectAndEliminateFace(imageOG);
+
 	Mat image,imageHSV,imageYCrCb;
 	
 	/*
@@ -175,9 +183,9 @@ Mat getMyHand(Mat& imageOG){
 	
 	// morphologyEx(dstEroded,dstEroded,MORPH_CLOSE,morphCloseElement1);
 	
-	Mat dilateElement = getStructuringElement(MORPH_ELLIPSE,Size(5,5),Point(2,2));
+	Mat dilateElement = getStructuringElement(MORPH_ELLIPSE,Size(3,3),Point(1,1));
 	/* This will enlarge white areas */
-	dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),morphCloseNoOfIterations);
+	dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),2);
 	// imshow("Round 4,5 - After morphologyEx(MORPH_CLOSE) and dilate segment",dstEroded);
 
 	frameStepsTimes[ MORPHOLOGY_OPERATIONS ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
@@ -300,7 +308,7 @@ Mat findHandContours(Mat& src){
 	
 	for( size_t i = 0; i< contours1.size(); i++ )
 	{		
-		approxPolyDP(Mat(contours1[i]),contours[i],1.5,true);
+		approxPolyDP(Mat(contours1[i]),contours[i],1,true);
 	}
 
 
@@ -339,20 +347,20 @@ Mat findHandContours(Mat& src){
 	 
 	 
 	Mat drawing = Mat::zeros( canny_output.size(), CV_8UC3 );
-	for( size_t i = 0; i< contours.size(); i++ )
-	{
-		Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-		drawContours( drawing, contours, (int)i, color, 1, 8, vector<Vec4i>(), 0, Point() );
-		drawContours( drawing, hull, (int)i, color, 1, 8, vector<Vec4i>(), 0, Point() );
-		circle( drawing, mc[i], 4, color, -1, 8, 0 );
-		// cout<<"Contour "<<(i+1)<<" size: "<<contours[i].size()<<":"<<endl;
-		circle( drawing, contours[i][0], 4, Scalar(255,0,0), -1, 8, 0 );
-		circle( drawing, contours[i][10], 4, Scalar(255,0,0), -1, 8, 0 );
-		// for(auto p:contours[i]){
-		// 	cout<<"("<<p.x<<","<<p.y<<")"<<", ";
-		// }
-		// cout<<endl<<endl;
-	}
+	// for( size_t i = 0; i< contours.size(); i++ )
+	// {
+	// 	Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
+	// 	drawContours( drawing, contours, (int)i, color, 1, 8, vector<Vec4i>(), 0, Point() );
+	// 	drawContours( drawing, hull, (int)i, color, 1, 8, vector<Vec4i>(), 0, Point() );
+	// 	circle( drawing, mc[i], 4, color, -1, 8, 0 );
+	// 	// cout<<"Contour "<<(i+1)<<" size: "<<contours[i].size()<<":"<<endl;
+	// 	circle( drawing, contours[i][0], 4, Scalar(255,0,0), -1, 8, 0 );
+	// 	circle( drawing, contours[i][10], 4, Scalar(255,0,0), -1, 8, 0 );
+	// 	// for(auto p:contours[i]){
+	// 	// 	cout<<"("<<p.x<<","<<p.y<<")"<<", ";
+	// 	// }
+	// 	// cout<<endl<<endl;
+	// }
 	
 	double maxArea = 0;
 	int indMaxArea=-1;
@@ -365,7 +373,10 @@ Mat findHandContours(Mat& src){
 		}
 	}
 	
-	// if()
+	if(indMaxArea == -1){
+		displaySignOnImage(-1);
+		return drawing;
+	}
 	vector<int> convHull;
 	convexHull( Mat(contours[indMaxArea]), convHull, false );   // Reason to keep int instead of Point for convexHull vector:
 																//   https://stackoverflow.com/a/20552514/5370202
@@ -509,17 +520,19 @@ void findClassUsingPythonModels( vector<float> &distVector ){
 	// FILE* file = fopen("LoadSavedModel.py","r");
 	// PyRun_SimpleFile(file,"LoadSavedModel.py");
 	// fclose(file);
+	
 
 	// Snippet reference: https://stackoverflow.com/a/347959/5370202
 	char * CCDC_Data_char = new char[CCDC_Data.size() + 1];
 	std::copy(CCDC_Data.begin(), CCDC_Data.end(), CCDC_Data_char);
-	CCDC_Data_char[CCDC_Data.size()] = '\0'; // don't forget the terminating 0
+	CCDC_Data_char[CCDC_Data.size()] = '\0'; // don't forget the terminating \0
 	
-	long long predictedSign = predictSignByKNN_Py_Interface(CCDC_Data_char);	
+	predictedSign = predictSignByKNN_Py_Interface(CCDC_Data_char);	
+	// long long predictedSign = 2;
 
 	cout<<"Current Predicted Sign is "<<predictedSign<<endl;
 
-	if( args_c==3 && ( strcmp(args_v[1],"-img")==0 ) ){
+	if( wrapperModeOn || ( args_c==3 && ( strcmp(args_v[1],"-img")==0 ) ) ){
 		displaySignOnImage(predictedSign);		
 	}
 	else{
@@ -529,7 +542,7 @@ void findClassUsingPythonModels( vector<float> &distVector ){
 			cout<<"Unable to predict anything!"<<endl;
 		}
 		else{
-			cout<<"Stable Predicted Sign is "<<stablePrediction<<endl;
+			cout<<"Stable Predicted Sign is "<<((char)stablePrediction)<<endl;
 		}
 	}
 
@@ -702,4 +715,49 @@ void reduceClusterPoints(vector< vector< Point > > &contours, vector<vector<Poin
 	}
 	
 	
+}
+
+void detectAndEliminateFace(Mat frame){
+	String face_cascade_name = "./HaarCascades/haarcascade_frontalface_default.xml";
+	CascadeClassifier face_cascade;
+	if( !face_cascade.load( face_cascade_name ) ){ printf("--(!)Error loading\n"); };
+	std::vector<Rect> faces;
+	Mat frame_gray;
+
+	cvtColor( frame, frame_gray, CV_BGR2GRAY );
+	equalizeHist( frame_gray, frame_gray );
+
+	//-- Detect faces
+	face_cascade.detectMultiScale( frame_gray, faces, 1.1, 2, 0|CV_HAAR_SCALE_IMAGE, Size(30, 30) );
+
+	long long maxArea = 0;
+	int maxAreaRectInd = -1;
+
+	for( size_t i = 0; i < faces.size(); i++ )
+	{
+		long long area1 = (faces[i].width * faces[i].height);
+		if( area1 > maxArea){
+			maxArea = area1;
+			maxAreaRectInd = i;
+		}
+		// Point center( faces[i].x + faces[i].width*0.5, faces[i].y + faces[i].height*0.5 );
+		// ellipse( frame, center, Size( faces[i].width*0.5, faces[i].height*0.5), 0, 0, 360, Scalar( 255, 0, 255 ), 4, 8, 0 );
+		// rectangle(frame,faces[i],Scalar(0,0,0),-1);
+
+		// Mat faceROI = frame_gray( faces[i] );
+	}
+
+	if(maxAreaRectInd==-1){
+		return;
+	}
+
+	//Modify face rectangle to eliminate neck and cover bigger part of face so as to eliminate possibility of leaving out some skin area
+	faces[maxAreaRectInd].x -= 10;
+	faces[maxAreaRectInd].y -= 10;
+	faces[maxAreaRectInd].width += 20;
+	faces[maxAreaRectInd].height += 45;
+	rectangle(frame,faces[maxAreaRectInd],Scalar(0,0,0),-1);
+
+	//-- Show what you got
+	// imshow( "Framed", frame );
 }

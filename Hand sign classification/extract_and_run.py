@@ -1,16 +1,9 @@
 # =(b2-min(b:b))/(max(b:b)-min(b:b))
 import cv2, numpy as np, time, math,winsound
-import pandas as pd
-from sklearn.model_selection import train_test_split as tts
-from sklearn.metrics import confusion_matrix
-from sklearn.neighbors import KNeighborsClassifier
-
-lower = np.array([0,137,60],np.uint8)
-upper = np.array([255,180,127],np.uint8)
 
 start = time.time()
 dump_file = open('data.csv','w')
-dump_file.write('angle_90,r,area_ellipse,area_contour,scale,eccentricity,norm_r,norm_area_ellipse,norm_area_contour,label\n')
+dump_file.write('angle_90,r,area_ellipse,area_contour,proportion,eccentricity,norm_r,norm_area_ellipse,norm_area_contour,label\n')
 
 print([str(i) for i in range(10)]+[chr(ord('a')+i) for i in range(26)])
 
@@ -68,10 +61,10 @@ for loc in range(len(DATA_LOCS)):
                 center = (x-x1,y-y1)
                 eccentricity = (1 - (major_axis/minor_axis) ** 2 ) ** 0.5
                 contour_area = cv2.contourArea(res)
-                scale = contour_area/(w1*h1)
+                proportion = contour_area/(w1*h1)
                 act_r = ((center[0])**2+(center[1])**2)**0.5
                 angle = 180-angle if angle > 90 else angle
-                dump_file.write('%.3f,%1.3f,%1.3f,%1.3f,%1.3f,%1.3f,,,,%c\n' % (angle/90, act_r, 3.142*major_axis*minor_axis*0.25, contour_area, scale, eccentricity, label))
+                dump_file.write('%.3f,%1.3f,%1.3f,%1.3f,%1.3f,%1.3f,,,,%c\n' % (angle/90, act_r, 3.142*major_axis*minor_axis*0.25, contour_area, proportion, eccentricity, label))
                 total_images_parsed += 1
             except Exception as e:
                 #print(e)
@@ -79,6 +72,8 @@ for loc in range(len(DATA_LOCS)):
 total = (time.time() - start)
 print(' '*160+'\rTotal time required = %3.3fs' % (total))
 print('Total images parsed: %d'%(total_images_parsed))
+
+# Alert finished
 winsound.Beep(1000, 100)
 winsound.Beep(1200, 100)
 winsound.Beep(1500, 100)

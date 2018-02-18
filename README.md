@@ -43,6 +43,14 @@ But for simplicity the commands have been wrapped into a single file builder.sh
   To run the program on multiple sets of images and generate the corresponding csv files use the following. This is similar too the previous mode, but can operate on multiple folders that are specified on commandline:
 
   `./build/SiLaTra -fullRefresh ./training-images/Digits/1/Right_Hand/Normal/ ./training-images/Digits/2/Right_Hand/Normal/ ./training-images/Digits/3/Right_Hand/Normal/ ./training-images/Digits/4/Right_Hand/Normal/ ./training-images/Digits/5/Right_Hand/Normal/ ./training-images/Digits/6/Right_Hand/Normal/ ./training-images/Digits/7/Right_Hand/Normal/ ./training-images/Digits/8/Right_Hand/Normal/ ./training-images/Digits/9/Right_Hand/Normal/ ./training-images/Digits/0/Right_Hand/Normal/`
+
+  or
+
+  `./build/SiLaTra -fullRefresh ./training-images/Digits/1/ ./training-images/Digits/2/ ./training-images/Digits/3/ ./training-images/Digits/4/ ./training-images/Digits/5/ ./training-images/Digits/6/ ./training-images/Digits/7/ ./training-images/Digits/8/ ./training-images/Digits/9/ ./training-images/Digits/0/`
+
+  or
+
+  `./build/SiLaTra -fullRefresh ./training-images/Letters/a/ ./training-images/Letters/b/ ./training-images/Letters/c/ ./training-images/Letters/d/ ./training-images/Letters/e/ ./training-images/Letters/f/ ./training-images/Letters/g/ ./training-images/Letters/h/ ./training-images/Letters/i/ ./training-images/Letters/j/ ./training-images/Letters/k/ ./training-images/Letters/l/ ./training-images/Letters/m/ ./training-images/Letters/n/ ./training-images/Letters/o/ ./training-images/Letters/p/ ./training-images/Letters/q/ ./training-images/Letters/r/ ./training-images/Letters/s/ ./training-images/Letters/t/ ./training-images/Letters/u/ ./training-images/Letters/v/ ./training-images/Letters/w/ ./training-images/Letters/x/ ./training-images/Letters/y/ ./training-images/Letters/z/`
   
   To run the program and create the training data set while seeing the execution, use:
   
@@ -82,3 +90,5 @@ The *Files found Online* are those files that have been downloaded and might hav
 For more information, refer [Github LFS Reference](https://help.github.com/articles/working-with-large-files/)
 
 #### If this doesn't work out for you, follow [Installing Git Large File Storage](https://help.github.com/articles/installing-git-large-file-storage/)
+
+
