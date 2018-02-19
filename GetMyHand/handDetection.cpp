@@ -7,8 +7,8 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
 #include "opencv2/highgui.hpp"
-#include "opencv2/cudafilters.hpp"
-#include "opencv2/cudaimgproc.hpp"
+// #include "opencv2/cudafilters.hpp"
+// #include "opencv2/cudaimgproc.hpp"
 
 #include "skinColorSegmentation.hpp"
 #include "trackBarHandling.hpp"
@@ -75,13 +75,13 @@ This is the main entry point function of this file
 */
 Mat getMyHand(Mat& imageOG){
 
-	displayHandDetectionTrackbarsIfNeeded(imageOG);
+	// displayHandDetectionTrackbarsIfNeeded(imageOG);
 	
 	startTime=(double)getTickCount();  //---Timing related part
 	
 	imshow("Original Image",imageOG);
 
-	detectAndEliminateFace(imageOG);
+	// detectAndEliminateFace(imageOG);
 
 	Mat image,imageHSV,imageYCrCb;
 	
@@ -211,8 +211,8 @@ Mat getMyHand(Mat& imageOG){
 	// imwrite("./ContourImages/img.png",contouredImg);
 	// imshow("Morphed Mask",dstEroded);
 	imshow("Masked Image",maskedImg);
-	imshow("Final Image",finImg);
-	imshow("HSV + BGR Mask",dst);
+	// imshow("Final Image",finImg);
+	// imshow("HSV + BGR Mask",dst);
 	// imshow("HSV Mask",dstHSV);
 
 
@@ -464,7 +464,7 @@ void prepareWindows(){
 	//namedWindow("HSV + BGR Mask",WINDOW_NORMAL);
 	//namedWindow("HSV Mask",WINDOW_NORMAL);
 	namedWindow("Masked Image",WINDOW_NORMAL);
-	namedWindow("Final Image",WINDOW_NORMAL);
+	// namedWindow("Final Image",WINDOW_NORMAL);
 	namedWindow("Contours", WINDOW_NORMAL );
 }
 
