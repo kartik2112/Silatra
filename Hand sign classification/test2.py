@@ -15,7 +15,7 @@ grid = (20,20)   #(rows,columns)
 data_loc_changed = False
 #for label in [chr(ord('a')+i) for i in range(26)]:
 try:
-    image = cv2.imread('test2.png')
+    image = cv2.imread('../Gesture recognition\\training-images-tejas\\ThumbsUp\\199.png')
 
     blur = cv2.blur(image,(3,3))
     ycrcb = cv2.cvtColor(blur,cv2.COLOR_BGR2YCR_CB)

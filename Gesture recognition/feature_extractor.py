@@ -5,21 +5,21 @@ from sklearn.metrics import confusion_matrix
 from sklearn.neighbors import KNeighborsClassifier
 from utils import extract_features, get_my_hand, segment
 
-lower = np.array([0,137,60],np.uint8)
+lower = np.array([0,145,60],np.uint8)
 upper = np.array([255,180,127],np.uint8)
 
 start = time.time()
-dump_file = open('gesture_data.csv','w')
+dump_file = open('gesture_data.csv','a')
 grid = (20,20)
-for i in range(grid[0]*grid[1]): dump_file.write('f'+str(i)+',')
-dump_file.write('label\n')
+''' for i in range(grid[0]*grid[1]): dump_file.write('f'+str(i)+',')
+dump_file.write('label\n') '''
 
 total_images_parsed = 0
-DATA_LOCS = ['training-images-tejas\\Good Afternoon\\']
+DATA_LOCS = ['training-images-tejas\\']
 for loc in range(len(DATA_LOCS)):
     DATA_LOC = DATA_LOCS[loc]
-    for label in ['gaf'+str(i) for i in range(2)]:
-        for i in range(1,700):
+    for label in ['ThumbsUp','Sun_Up','Apple_Finger','Cup_Closed','Cup_Open','Sorry_Fist','That_is_Good_Circle','That_is_Good_Point']:
+        for i in range(1,500):
             try:
                 print(' '*160+'\rProcessing image: %3d, Label = %s, From Location: %s' % (i,label,DATA_LOC),end='\r')
                 
@@ -35,7 +35,7 @@ for loc in range(len(DATA_LOCS)):
                 
                 to_write_data = ''
                 for feature in features: to_write_data += str(feature) + ','
-                to_write_data += label[3] + '\n'
+                to_write_data += label + '\n'
                 
                 dump_file.write(to_write_data)
                 total_images_parsed += 1
