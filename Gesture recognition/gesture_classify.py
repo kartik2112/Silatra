@@ -1,4 +1,17 @@
 def ATBRecognizer(sequence):
+    state=0
+    finalStateReached=False
+    for part in sequence:
+        if state==0 and part[0]=="None":
+            state=0
+        elif state==0 and part[0]=="ThumbsUp":
+            state=1
+            finalStateReached=True
+        elif state==1:
+            if part[0]=="ThumbsUp" or part[0]=="None":
+                state=1
+    return finalStateReached
+
 
 
 def recognize(sequence):
