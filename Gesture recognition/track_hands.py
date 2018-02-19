@@ -4,7 +4,7 @@ import pickle, pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 
 #Open Camera object
-cap = cv2.VideoCapture('test.avi')
+cap = cv2.VideoCapture(0)
 cap.set(3,640); cap.set(4,480)
 cap.set(cv2.CAP_PROP_FPS, 20)
 
