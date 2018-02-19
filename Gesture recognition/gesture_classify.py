@@ -1,3 +1,13 @@
+'''
+* gesture_classify.py is the last stage of the gesture recognition mechanism. This file must be invoked by using the
+* function recognize(sequence).
+* This file holds all the automata required for various gestures.
+
+* Version: 1.0
+* Date: 20-2-2017
+* Author: Varun
+'''
+
 def ATBRecognizer(sequence):
     state = 0
     finalStateReached = False
@@ -96,6 +106,14 @@ def GARecognizer(sequence):
     return finalStateReached
 
 def recognize(sequence):
+    '''
+    * recognize(sequence)
+    * This function will pass the gesture sequence to various automata for classification.
+    * @param sequence: a list of tuples following the convention:
+    * For Sign: (Sign,'None')
+    * For Movement: ('None',Direction)
+    * @return String which is the gesture.
+    '''
     gesture=""
     gesture_recognized=False
     if ATBRecognizer(sequence):
