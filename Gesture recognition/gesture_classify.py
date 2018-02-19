@@ -12,14 +12,13 @@ def ATBRecognizer(sequence):
     state = 0
     finalStateReached = False
     for part in sequence:
-        if state==0 and part[0]=="None":
-            state = 0
-        elif state==0 and part[0]=="ThumbsUp":
-            state = 1
-            finalStateReached = True
-        elif state==1:
-            if part[0]=="ThumbsUp" or part[0]=="None":
+        if state==0:
+            if part[0]=="ThumbsUp":
                 state = 1
+                finalStateReached = True
+                break
+            else:
+                return False
     return finalStateReached
 
 def GMRecognizer(sequence):
@@ -29,6 +28,8 @@ def GMRecognizer(sequence):
         if state==0:
             if part[0]=="ThumbsUp":
                 state = 1
+            else:
+                return False
         if state == 1:
             if part[0]=="ThumbsUp":
                 state = 1
@@ -60,6 +61,8 @@ def GNRecognizer(sequence):
         if state==0:
             if part[0]=="ThumbsUp":
                 state = 1
+            else:
+                return False
         if state == 1:
             if part[0]=="ThumbsUp":
                 state = 1
@@ -91,6 +94,8 @@ def GARecognizer(sequence):
         if state == 0:
             if part[0]=="ThumbsUp":
                 state = 1
+            else:
+                return False
         if state == 1:
             if part[0]=="ThumbsUp":
                 state = 1
@@ -128,6 +133,24 @@ def recognize(sequence):
     if GNRecognizer(sequence):
         gesture_recognized=True
         return "Good Night"
-    if NOT gesture_recognized:
+    if not gesture_recognized:
         gesture="Wrong Gesture"
     return gesture
+
+def test_recognize_ATB():
+    assert recognize([("ThumbsUp","None")]) == "All the best"
+    assert recognize([("ThumbsUp","None"),("ThumbsUp","None"),("None","Up"),("ThumbsUp","None"),("None","Down")]) == "All the best"
+
+def test_recognize_GM():
+    assert recognize([("ThumbsUp","None"),("None","Down"),("None","Down"),("None","Down"),("Cup_Closed","None"),("None","Up"),("None","Up"),("Cup_Open","None"),("Cup_Open","None")]) == "Good Morning"
+    assert recognize([("ThumbsUp","None"),("None","Down"),("Cup_Closed","None"),("None","Up"),("None","Up"),("Cup_Open","None"),("Cup_Open","None")]) == "Good Morning"
+    assert recognize([("ThumbsUp","None"),("None","Down"),("None","Down"),("None","Down"),("Cup_Closed","None"),("None","Up"),("None","Up"),("Cup_Open","None"),("Cup_Open","None")]) == "Good Morning"
+
+def test_recognize_GA():
+    assert recognize([("ThumbsUp","None"),("None","Up"),("Sun_Up","None"),("Sun_Up","None"),("Sun_Up","None")]) == "Good Afternoon"
+    assert recognize([("ThumbsUp","None"),("None","Up"),("None","Up"),("None","Up"),("Sun_Up","None")]) == "Good Afternoon"
+    assert recognize([("ThumbsUp","None"),("ThumbsUp","None"),("ThumbsUp","None"),("None","Up"),("None","Up"),("None","Up"),("Sun_Up","None")]) == "Good Afternoon"
+
+def test_recognize_Error():
+    assert recognize([("None","Up"),("None","Up"),("None","Up"),("Sun_Up","None"),("ThumbsUp","None"),("Sun_Up","None"),("Sun_Up","None")]) == "Wrong Gesture"
+    assert recognize([("None","Down"),("None","Down"),("None","Down"),("None","Down"),("ThumbsUp","None"),("None","Down"),("None","Down"),("Cup_Closed","None"),("None","Up"),("None","Up")]) == "Wrong Gesture"
