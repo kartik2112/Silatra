@@ -30,7 +30,7 @@ using namespace std;
 using namespace cv;
 namespace fs = std::experimental::filesystem;
 
-int maxNoOfSamples = 300;
+int maxNoOfSamples = 600;
 
 void processFrame(Mat& image);
 void maintainTrackOfTimings();

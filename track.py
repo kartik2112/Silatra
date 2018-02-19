@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+from utils import segment,get_my_hand
 
 import silatra
 
@@ -50,42 +51,22 @@ while True:
             dst = cv2.calcBackProject([hsv],[0],roi_hist,[0,180],1)
 
             # apply meanshift to get the new location
-            ret, track_window = cv2.CamShift(dst, track_window, term_crit)
+            _, track_window = cv2.CamShift(dst, track_window, term_crit)
 
             # Draw it on image
             x,y,w,h = track_window
 
             roi = frame[y:y+h, x:x+w]
-            ycrcb = cv2.cvtColor(roi,cv2.COLOR_BGR2YCR_CB)
-
-            #Create a binary image with where white will be skin colors and rest is black
-            # mask = cv2.inRange(ycrcb,lower,upper)
-            mask = silatra.segment(roi)
-            skin = cv2.bitwise_and(roi, roi, mask = mask)
-            ret,thresh = cv2.threshold(mask,127,255,0)
-
             
-            #Find contours of the filtered frame
-            _,contours,_ = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+            mask = segment(roi, lower, upper)
+            skin = cv2.bitwise_and(roi, roi, mask = mask)
+            _,thresh = cv2.threshold(mask,127,255,0)
 
-            length = len(contours)
-            maxArea = -1
-            if length > 0:
-                for i in range(length):  # find the biggest contour (according to area)
-                    temp = contours[i]
-                    area = cv2.contourArea(temp)
-                    if area > maxArea:
-                        maxArea = area
-                        ci = i
-
-                largest_contour = contours[ci]
-                hull = cv2.convexHull(largest_contour)
-                x1,y1,w1,h1 = cv2.boundingRect(largest_contour)
-                cx = x+int(x1+w1/2); cy = y+int(y1+h1/2)
-                # x+=x1;y+=y1
-                # h1+=20;w1+=20
-                track_window = (x,y,w1,h1)
-
+            largest_contour = get_my_hand(thresh, return_only_contour=True)
+            hull = cv2.convexHull(largest_contour)
+            x1,y1,w1,h1 = cv2.boundingRect(largest_contour)
+            x+=x1;y+=y1;h1+=20;w1+=20
+            track_window = (x,y,w1,h1)
 
             contoured_thresh = np.zeros(roi.shape, np.uint8)
             cv2.drawContours(contoured_thresh, [largest_contour], 0, (0, 255, 0), 2)
@@ -124,7 +105,7 @@ while True:
         except Exception as e:
             print(e)
             frame = cv2.putText(frame,'Check terminal for error',(25,25),cv2.FONT_HERSHEY_PLAIN,2,(0,0,0),thickness=2)
-            cv2.imshow('Tracking',frame)
+            cv2.imshow('Hand tracking',frame)
     k = cv2.waitKey(50) & 0xff
     if k == ord('q'):
         break
