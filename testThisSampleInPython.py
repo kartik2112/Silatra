@@ -11,7 +11,7 @@ from keras.models import model_from_json
 import pickle
 
 def predictSignByKNN(line):
-    noOfDescriptors = 15
+    noOfDescriptors = 10
     fftData=[]
 
     # print("Received from C++",line)

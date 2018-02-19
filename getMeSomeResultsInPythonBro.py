@@ -21,9 +21,11 @@ from sklearn.pipeline import Pipeline
 # import pandas as pd
 
 # Initializers
-dataInds = [0,1,2,3,4,5,6,7,8,9]
+dataIndsDigs = [i for i in range(ord('0'),ord('9')+1)]
+dataInds =     [i for i in range(ord('a'),ord('z')+1)]
+# print(dataInds)
 subFolderNames = ['Normal'] #,'Rotated'
-noOfDescriptors = 15
+noOfDescriptors = 10
 noOfSamples = []
 fftData=[]
 # storeAsLabelledFeaturesFile = True
@@ -80,7 +82,7 @@ def dumpData():
 			toBeDumpedData.append(fftData[i].tolist() + [correctLabels[i]])      ##### Use this statement if you want to store the classes along with the descriptors data
 		else:
 			toBeDumpedData.append(fftData[i].tolist() + [correctLabels[i]])							 ##### Use this statement if you DO NOT want to store the classes along with the descriptors data
-
+	# print(toBeDumpedData)
 	if storeAsLabelledFeaturesFile==True:
 		header_line = (','.join( str(x) for x in range(1,noOfDescriptors+1) )+",Class")
 		np.savetxt("data.csv",toBeDumpedData, delimiter=",",header = header_line , comments = '' )
@@ -118,10 +120,11 @@ def KMeansClustering():
 def KNearestNeighbors():
 	global noOfSamples,fftData,dataInds,correctLabels
 	print("Applying K Nearest Neighbours Learning to data")
-	trainData_S,testData_S,trainData_L,testData_L = train_test_split(fftData,correctLabels,test_size = 0.33,random_state=42)
-
 	neigh = KNeighborsClassifier(n_neighbors = 70)
-	neigh.fit(trainData_S,trainData_L)
+	for i in range(10):
+		trainData_S,testData_S,trainData_L,testData_L = train_test_split(fftData,correctLabels,test_size = 0.33,random_state=42)
+
+		neigh.fit(trainData_S,trainData_L)
 
 	correctlyClassified = 0
 	for i in range(len(testData_S)):
@@ -130,6 +133,7 @@ def KNearestNeighbors():
 		if( testData_L[i] == neigh.predict([testData_S[i]])[0] ):
 			correctlyClassified += 1
 	print("Accuracy: ",correctlyClassified,"/",len(testData_S),"=",correctlyClassified/len(testData_S))
+	
 	pickle.dump(neigh, open('KNNModelDump.sav','wb'))
 	print("Model saved as 'KNNModelDump.sav'")
 
@@ -196,7 +200,8 @@ def KerasDeepLearning():
 for folderNo in dataInds:
 	ctr = 0
 	for subFolderNameI in subFolderNames:
-		path_to_csv = "./CCDC-Data/training-images/Digits/"+str(folderNo)+"/Right_Hand/"+subFolderNameI+"/data.csv"
+		# path_to_csv = "./CCDC-Data/training-images/Digits/"+str(folderNo)+"/Right_Hand/"+subFolderNameI+"/data.csv"
+		path_to_csv = "./CCDC-Data/training-images/Letters/"+str(chr(folderNo))+"/data.csv"
 
 		#data = np.genfromtxt(path_to_csv, delimiter=',' )
 		f1 = open(path_to_csv)
@@ -205,23 +210,55 @@ for folderNo in dataInds:
 		for line in f1:
 			data = np.fromstring(line,dtype = float, sep = ',')
 			fftData.append(fft(data)[0:noOfDescriptors])  # FFT
+			if len(fft(data)[0:noOfDescriptors])<noOfDescriptors:
+				print("Kay zhala at",folderNo)
+
 			ctr += 1
 	noOfSamples.append(ctr)
 	#print(fftData)
-fftData = np.absolute(fftData)  # Making this rotation invariant by finding out magnitude
+# fftData = np.absolute(fftData)  # Making this rotation invariant by finding out magnitude
 correctLabels = []
 for i in range(len(noOfSamples)):
 	correctLabels += [dataInds[i]]*noOfSamples[i]
-# print(noOfSamples)
+
+noOfSamples = []
+for folderNo in dataIndsDigs:
+	ctr = 0
+	for subFolderNameI in subFolderNames:
+		path_to_csv = "./CCDC-Data/training-images/Digits/"+str(chr(folderNo))+"/data.csv"
+		# path_to_csv = "./CCDC-Data/training-images/Letters/"+str(chr(folderNo))+"/data.csv"
+
+		#data = np.genfromtxt(path_to_csv, delimiter=',' )
+		f1 = open(path_to_csv)
+
+		#print(data)
+		for line in f1:
+			data = np.fromstring(line,dtype = float, sep = ',')
+			if len(fft(data)[0:noOfDescriptors])<noOfDescriptors:
+				print("Kay zhala at",folderNo)
+				continue
+			fftData.append(fft(data)[0:noOfDescriptors])  # FFT
+
+			ctr += 1
+	noOfSamples.append(ctr)
+	#print(fftData)
+
+
+fftData = np.absolute(fftData)  # Making this rotation invariant by finding out magnitude
+
+# correctLabels = []
+for i in range(len(noOfSamples)):
+	correctLabels += [dataIndsDigs[i]]*noOfSamples[i]
+print(noOfSamples)
 #
 # print(fftData)
 
 dumpData()
 
 # KMeansClustering()
-# KNearestNeighbors()
+KNearestNeighbors()
 # SVMLearning()
-KerasDeepLearning()
+# KerasDeepLearning()
 
 # plotFeatures()   # Keep this as the last statement if uncommented. Because this is a blocking operation
 # Until you close the corresponding window created, program wont proceed any further.
