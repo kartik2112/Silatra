@@ -45,6 +45,7 @@ while(1):
             final_image = np.zeros(frame.shape, np.uint8)
             cv2.drawContours(final_image, [res], 0, (0, 255, 0), 2)
             #cv2.drawContours(final_image, [hull], 0, (0, 0, 255), 3)
+            
 
             (x,y),(major_axis,minor_axis),angle = cv2.fitEllipse(res)
             cv2.ellipse(final_image,(int(x),int(y)),(int(major_axis/2),int(minor_axis/2)),angle,0.0,360.0,(0,255,0),2)

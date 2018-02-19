@@ -40,27 +40,6 @@ def findSign(frame):
         hand = np.zeros((frame.shape[1], frame.shape[0], 1), np.uint8)
         cv2.drawContours(hand, contours, ci, 255, cv2.FILLED)
         print("LG3")
-        cx = (x+w/2); cy = (y+h/2)
-
-        if prev_x is 0 and prev_y is 0: prev_x, prev_y = cx, cy
-
-        delta_x, delta_y, slope, direction = prev_x-cx, prev_y-cy, 0, 'No movement'
-
-        if delta_x**2+delta_y**2 > THRESHOLD**2:
-            if delta_x is 0 and delta_y > 0: slope = 999 # inf
-            elif delta_x is 0 and delta_y < 0: slope = -999 # -inf
-            else: slope = float(delta_y/delta_x)
-
-            if slope < 1.0 and slope >= 0.0 and delta_x > 0: direction = 'Right'
-            elif slope < 1.0 and slope >= 0.0: direction = 'Left'
-            elif slope >= 1.0 and delta_y > 0.0: direction = 'Up'
-            elif slope >= 1.0: direction = 'Down'
-
-            THRESHOLD = 15
-            prev_x, prev_y = cx, cy
-        else:
-            direction = 'No movement'
-            THRESHOLD = 20
         
         hand = hand[y:y+h,x:x+w]
         print(hand.shape)
