@@ -74,7 +74,26 @@ def GNRecognizer(sequence):
                 state = 4
     return finalStateReached
 
-
+def GARecognizer(sequence):
+    state = 0
+    finalStateReached = False
+    for part in sequence:
+        if state == 0:
+            if part[0]=="ThumbsUp":
+                state = 1
+        if state == 1:
+            if part[0]=="ThumbsUp":
+                state = 1
+            elif part[1]=="Up":
+                state = 2
+        if state == 2:
+            if part[1]=="Up":
+                state = 2
+            elif part[0]=="Sun_Up":
+                state = 3
+                finalStateReached = True
+                break
+    return finalStateReached
 
 def recognize(sequence):
     gesture=""
