@@ -7,7 +7,7 @@ upper = np.array([255,180,127],np.uint8)
 cap = cv2.VideoCapture(0)
 
 fourcc = cv2.VideoWriter_fourcc(*'DIVX')
-out = cv2.VideoWriter('good afternoon.avi',fourcc, 10, (300,300))
+out = cv2.VideoWriter('test2.avi',fourcc, 10, (300,300))
 
 start_rec = False
 while(1):

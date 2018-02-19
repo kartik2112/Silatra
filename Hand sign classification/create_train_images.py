@@ -4,7 +4,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument('-s','--sign',help='This is the label and the folder name where your images would be stored')
 args = vars(ap.parse_args())
 
-lower = np.array([0,143,60],np.uint8)
+lower = np.array([0,140,60],np.uint8)
 upper = np.array([255,180,127],np.uint8)
 
 cap = cv2.VideoCapture(0)
@@ -35,7 +35,7 @@ while True:
     if k==ord('q'): break
     elif k==ord('c'):
         if total_captured < 500:
-            cv2.imwrite('../Gesture Recongition/training-images-tejas/%s/%d.png'%(sign,total_captured+1),roi)
+            cv2.imwrite('../Gesture Recongition/training-images-kartik/Good morning/%s/%d.png'%(sign,total_captured+1),roi)
             #cv2.imwrite('test.png',roi)
             total_captured += 1
         else: break
