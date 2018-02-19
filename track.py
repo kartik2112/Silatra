@@ -1,6 +1,8 @@
 import numpy as np
 import cv2
 
+import silatra
+
 f = open('bounds.txt')
 param = int(f.read().strip())
 f.close()
@@ -13,7 +15,7 @@ cap = cv2.VideoCapture(0)
 cap.set(3,640); cap.set(4,480)
 cap.set(cv2.CAP_PROP_FPS, 5)
 
-prev_x, prev_y, THRESHOLD = 0, 0, 12
+prev_x, prev_y, THRESHOLD = 0, 0, 25
 
 while True:
     _,frame = cap.read()
@@ -30,7 +32,12 @@ while True:
         roi = frame[y:y+h, x:x+w]
         cv2.imshow('ROI',roi)
         hsv_roi =  cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
-        mask = cv2.inRange(hsv_roi, np.array((0., 60.,32.)), np.array((180.,255.,255.)))
+        mask = silatra.segment(roi)
+
+
+
+
+        # mask = cv2.inRange(hsv_roi, np.array((0., 60.,32.)), np.array((180.,255.,255.)))
         roi_hist = cv2.calcHist([hsv_roi],[0],mask,[180],[0,180])
         cv2.normalize(roi_hist,roi_hist,0,255,cv2.NORM_MINMAX)
 
@@ -52,7 +59,8 @@ while True:
             ycrcb = cv2.cvtColor(roi,cv2.COLOR_BGR2YCR_CB)
 
             #Create a binary image with where white will be skin colors and rest is black
-            mask = cv2.inRange(ycrcb,lower,upper)
+            # mask = cv2.inRange(ycrcb,lower,upper)
+            mask = silatra.segment(roi)
             skin = cv2.bitwise_and(roi, roi, mask = mask)
             ret,thresh = cv2.threshold(mask,127,255,0)
 
@@ -73,8 +81,9 @@ while True:
                 largest_contour = contours[ci]
                 hull = cv2.convexHull(largest_contour)
                 x1,y1,w1,h1 = cv2.boundingRect(largest_contour)
-                x+=x1;y+=y1
-                h1+=20;w1+=20
+                cx = x+int(x1+w1/2); cy = y+int(y1+h1/2)
+                # x+=x1;y+=y1
+                # h1+=20;w1+=20
                 track_window = (x,y,w1,h1)
 
 
@@ -83,11 +92,12 @@ while True:
             cv2.drawContours(contoured_thresh, [hull], 0, (0, 255, 0), 2)
             cv2.imshow('ROI with contours',contoured_thresh)
 
-            (cx,cy),(major_axis,minor_axis),angle = cv2.fitEllipse(hull)
-            center = (cx,cy)
-            eccentricity = (1 - (major_axis/minor_axis) ** 2 ) ** 0.5
-            cx += x; cy += y
-            cv2.ellipse(frame,(int(cx),int(cy)),(int(major_axis/2),int(minor_axis/2)),int(angle),0,360,(0,255,0),thickness=2)
+            # (cx,cy),(major_axis,minor_axis),angle = cv2.fitEllipse(hull)
+            # center = (cx,cy)
+            # eccentricity = (1 - (major_axis/minor_axis) ** 2 ) ** 0.5
+            # cx += x; cy += y
+            # cv2.ellipse(frame,(int(cx),int(cy)),(int(major_axis/2),int(minor_axis/2)),int(angle),0,360,(0,255,0),thickness=2)
+            cv2.rectangle(frame,(x1,y1),(x1+w1,y1+h1),(0,255,0),thickness=2)
 
             delta_x, delta_y, slope, direction = prev_x-cx, prev_y-cy, 0, 'No movement'
 
@@ -101,16 +111,16 @@ while True:
                 elif slope >= 1.0 and delta_y > 0.0: direction = 'Up'
                 elif slope >= 1.0: direction = 'Down'
 
-                THRESHOLD = 7
+                THRESHOLD = 15
                 prev_x, prev_y = cx, cy
             else:
                 direction = 'No movement'
-                THRESHOLD = 12
+                THRESHOLD = 20
             
             cv2.putText(frame, direction, (25,25), cv2.FONT_HERSHEY_PLAIN, 2, (0,0,0), thickness=2)
             cv2.imshow('Hand tracking',frame)
             cv2.imshow('Segmented',skin)
-            print('Angle: %d\tEccentricity: %f\tCenter: (%d,%d)\r' % (angle, round(eccentricity, 3), center[0], center[1]), end='')
+            # print('Angle: %d\tEccentricity: %f\tCenter: (%d,%d)\r' % (angle, round(eccentricity, 3), center[0], center[1]), end='')
         except Exception as e:
             print(e)
             frame = cv2.putText(frame,'Check terminal for error',(25,25),cv2.FONT_HERSHEY_PLAIN,2,(0,0,0),thickness=2)
