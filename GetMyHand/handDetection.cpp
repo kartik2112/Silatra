@@ -79,9 +79,9 @@ Mat getMyHand(Mat& imageOG){
 	
 	startTime=(double)getTickCount();  //---Timing related part
 	
-	// imshow("Original Image",imageOG);
+	imshow("Original Image",imageOG);
 
-	detectAndEliminateFace(imageOG);
+	// detectAndEliminateFace(imageOG);
 
 	Mat image,imageHSV,imageYCrCb;
 	
@@ -464,7 +464,7 @@ void prepareWindows(){
 	//namedWindow("HSV + BGR Mask",WINDOW_NORMAL);
 	//namedWindow("HSV Mask",WINDOW_NORMAL);
 	namedWindow("Masked Image",WINDOW_NORMAL);
-	namedWindow("Final Image",WINDOW_NORMAL);
+	// namedWindow("Final Image",WINDOW_NORMAL);
 	namedWindow("Contours", WINDOW_NORMAL );
 }
 
