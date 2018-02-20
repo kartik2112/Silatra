@@ -24,9 +24,9 @@ But for simplicity the commands have been wrapped into a single file builder.sh
 
 ### Usage for Python code
 
-* After going into [Sign recognition]() folder, you can see setup.py, SilatraWrapper.cpp, GetMyHand folder, HaarCascades folder. All of this constitutes the C++ module that is used for fast segmentation of hand. This module is built by executing `python3 setup.py install`. This will build this module without using cmake and copy the .so file into python's directory. Now, you can directly use this in python programs using `import silatra` `mask = silatra.segment(rgbImage)`
+* After going into [Sign recognition](https://github.com/kartik2112/Silatra/tree/master/Sign%20recognition) folder, you can see setup.py, SilatraWrapper.cpp, GetMyHand folder, HaarCascades folder. All of this constitutes the C++ module that is used for fast segmentation of hand. This module is built by executing `python3 setup.py install`. This will build this module without using cmake and copy the .so file into python's directory. Now, you can directly use this in python programs using `import silatra` `mask = silatra.segment(rgbImage)`
 * Now for hosting the server socket and letting it handle all frames for recognition, execute `python3 ImgReceiver.py`
-* Now for gesture recognition, you go into the [Gesture recognition]() folder and then execute `python3 ImgReceiver.py`
+* Now for gesture recognition, you go into the [Gesture recognition](https://github.com/kartik2112/Silatra/tree/master/Gesture%20recognition) folder and then execute `python3 ImgReceiver.py`
 
 ### Usage for C++ code
 * From terminal execute command
