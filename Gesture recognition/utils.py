@@ -1,5 +1,6 @@
 import cv2, numpy as np
 from math import ceil
+import silatra
 
 def segment(src_img, lower_bounds, upper_bounds):
     """
@@ -10,9 +11,10 @@ def segment(src_img, lower_bounds, upper_bounds):
 
     Returns: mask
     """
-    blur = cv2.blur(src_img,(3,3))
-    ycrcb = cv2.cvtColor(blur,cv2.COLOR_BGR2YCR_CB)
-    mask = cv2.inRange(ycrcb,lower_bounds,upper_bounds)
+    # blur = cv2.blur(src_img,(3,3))
+    # ycrcb = cv2.cvtColor(blur,cv2.COLOR_BGR2YCR_CB)
+    # mask = cv2.inRange(ycrcb,lower_bounds,upper_bounds)
+    mask = silatra.segment(src_img)
     return mask
 
 def get_my_hand(img_gray, return_only_contour=False):
