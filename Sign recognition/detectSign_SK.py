@@ -8,7 +8,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.neighbors import KNeighborsClassifier
 import pickle
 
-classifier = pickle.load(open('KNNModelDump.sav','rb'))
+classifier = pickle.load(open('KNN_Grid_ModelDump.sav','rb'))
 print("Loaded KNN Model")
 
 grid = (20,20)
@@ -67,7 +67,7 @@ def findSign(frame):
             for row in range(grid[0]):
                 features.append(data[column][row])
         cv2.imshow('Your hand',hand)
-        cv2.imshow('Original',frame)
+        # cv2.imshow('Original',frame)
 
         predictions = classifier.predict_proba([features]).tolist()[0]
         # print(classifier.predict_proba([features]).tolist())
@@ -78,8 +78,8 @@ def findSign(frame):
         return pred
     except Exception as e:
         print(e)
-        final_image = np.zeros(frame.shape, np.uint8)
-        cv2.putText(final_image, 'Cannot find hand', (100,100), cv2.FONT_HERSHEY_PLAIN, 2, (0,0,255), thickness=2)
-        cv2.imshow('Original', final_image)
+        # final_image = np.zeros(frame.shape, np.uint8)
+        # cv2.putText(final_image, 'Cannot find hand', (100,100), cv2.FONT_HERSHEY_PLAIN, 2, (0,0,255), thickness=2)
+        # cv2.imshow('Original', final_image)
         return -1
         #continue

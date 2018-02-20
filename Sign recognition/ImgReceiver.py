@@ -5,6 +5,7 @@ import struct
 
 import numpy as np
 import cv2
+import imutils
 
 # import test
 
@@ -79,7 +80,7 @@ print("Socket successfully created")
  
 # reserve a port on your computer in our
 # case it is 12345 but it can be anything
-port = 49164
+port = 49171
  
 # Next bind to the port
 # we have not typed any ip in the ip field
@@ -123,6 +124,8 @@ while True:
     print("receiving image of size: %s bytes" % size)
 
     if(size == 0):
+        op1 = "QUIT\r\n"
+        client.send(op1.encode('ascii'))
         break
 
     data = client.recv(size,socket.MSG_WAITALL)  #Reference: https://www.binarytides.com/receive-full-data-with-the-recv-socket-function-in-python/
@@ -141,13 +144,15 @@ while True:
     nparr = np.fromstring(data, np.uint8)
     img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
+    img_np = imutils.rotate_bound(img_np,90)
+
     cv2.imshow("Img",img_np)
 
     # cv2.resize(img_np,)
     
     # pred = silatra.findMeTheSign(img_np)
     img1 = silatra.segment(img_np)
-    cv2.imshow("asdf",img1)
+    cv2.imshow("Mask",img1)
 
     pred = dsk.findSign(img1)
 
@@ -173,12 +178,13 @@ while True:
 
 print('received, yay!')
 
-client.close()
-cv2.closeAllWindows()
+# client.close()
+s.close()
+cv2.destroyAllWindows()
 
 
 def cleaners():
-    client.close()
-    cv2.closeAllWindows()
+    s.close()
+    cv2.destroyAllWindows()
 
 atexit.register(cleaners)

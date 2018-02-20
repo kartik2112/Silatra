@@ -111,7 +111,7 @@ processFrame(PyObject *self, PyObject *args)
 
     PyObject *imgIn;
 
-    cout<<"H1"<<endl;
+    // cout<<"H1"<<endl;
 
     // cout<<PyTuple_Check(args)<<endl;
 
@@ -124,11 +124,11 @@ processFrame(PyObject *self, PyObject *args)
 
     pyopencv_to(imgIn,image,"Incoming image from Python");
 
-    cout<<"H2"<<endl;
+    // cout<<"H2"<<endl;
 
     Mat dst = getMyHand(image);
 
-    cout<<"HFin"<<endl;
+    // cout<<"HFin"<<endl;
 
     // Py_INCREF(Py_None);
     // return Py_None;  //Reference to none return type: https://docs.python.org/3.5/extending/extending.html#back-to-the-example
