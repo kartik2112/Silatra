@@ -10,6 +10,7 @@ import numpy
 
 module1 = Extension('silatra',
                     extra_compile_args = ['-std=c++14'],
+                    # extra_compile_args = ['-std=c++14 -fpic'],
                     include_dirs = [numpy.get_include()],
                     # extra_objects = ['./HaarCascades/haarcascade_frontalface_default.xml'],
                     libraries = ['stdc++fs',

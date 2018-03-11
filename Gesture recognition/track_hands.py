@@ -1,7 +1,11 @@
 import cv2, numpy as np, time, math
-from utils import segment, get_my_hand, extract_features
 import pickle, pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
+
+import silatra
+from utils import segment, get_my_hand, extract_features
+import filter_time_series
+import gesture_classify
 
 #Open Camera object
 cap = cv2.VideoCapture('good afternoon 2.avi')
@@ -32,8 +36,11 @@ while(1):
     try:
         start_time = time.time()
         ret, frame = cap.read()
+        if not(ret):
+            break
 
-        mask = segment(frame, lower, upper)
+        # mask = segment(frame, lower, upper)
+        mask = silatra.segment(frame)
         _,thresh = cv2.threshold(mask,127,255,0)
 
         hand_contour = get_my_hand(thresh, return_only_contour=True)
@@ -87,8 +94,15 @@ while(1):
         elif k==ord('c'):
             cv2.imwrite('capture.jpg',frame)
     except Exception as e:
-        #print(e)
+        print(e)
         break
+
 print(observations)
+
+print("Calling middle filtering layer for compression and noise elimination:")
+
+observations = filter_time_series.filterTS(observations)
+print("Voila! And the gesture contained in the video is",gesture_classify.recognize(observations))
+
 cap.release()
 cv2.destroyAllWindows()
