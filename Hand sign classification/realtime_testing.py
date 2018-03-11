@@ -1,22 +1,25 @@
-import cv2, numpy as np, time
+import cv2, numpy as np, time, pickle
 from math import ceil
 import pandas as pd
 from sklearn.model_selection import train_test_split as tts
 from sklearn.metrics import confusion_matrix
 from sklearn.neighbors import KNeighborsClassifier
 
-data = pd.read_csv('new_data.csv')
+# data = pd.read_csv('digits_and_letters.csv')
 
-X = data[['f'+str(i) for i in range(400)]].values
-Y = data['label'].values
+# X = data[['f'+str(i) for i in range(400)]].values
+# Y = data['label'].values
 
-classifier = KNeighborsClassifier(n_neighbors=3)
-classifier.fit(X, Y)
+# classifier = KNeighborsClassifier(n_neighbors=3)
+# classifier.fit(X, Y)
+
+# pickle.dump(classifier, open('digits_and_letters_model_new.sav', 'wb'))
+pickle.load(open('digits_and_letters_model_new.sav', 'rb'))
 
 #Open Camera object
 cap = cv2.VideoCapture(0)
-cap.set(3,640); cap.set(4,480)
-cap.set(cv2.CAP_PROP_FPS, 20)
+# cap.set(3,640); cap.set(4,480)
+# cap.set(cv2.CAP_PROP_FPS, 20)
 
 f = open('bounds.txt')
 param = int(f.read().strip())

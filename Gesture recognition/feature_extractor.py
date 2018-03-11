@@ -15,10 +15,10 @@ grid = (20,20)
 dump_file.write('label\n') '''
 
 total_images_parsed = 0
-DATA_LOCS = ['training-images-tejas\\']
+DATA_LOCS = ['''Insert data locations here later''']
 for loc in range(len(DATA_LOCS)):
     DATA_LOC = DATA_LOCS[loc]
-    for label in ['ThumbsUp','Sun_Up','Apple_Finger','Cup_Closed','Cup_Open','Sorry_Fist','That_is_Good_Circle','That_is_Good_Point']:
+    for label in ['''Insert labels here later''']:
         for i in range(1,500):
             try:
                 print(' '*160+'\rProcessing image: %3d, Label = %s, From Location: %s' % (i,label,DATA_LOC),end='\r')
