@@ -4,7 +4,7 @@ import pickle, pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 
 #Open Camera object
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture('good afternoon 2.avi')
 cap.set(3,640); cap.set(4,480)
 cap.set(cv2.CAP_PROP_FPS, 20)
 
@@ -37,15 +37,16 @@ while(1):
         _,thresh = cv2.threshold(mask,127,255,0)
 
         hand_contour = get_my_hand(thresh, return_only_contour=True)
-        hull = cv2.convexHull(hand_contour)
         final_image = np.zeros(frame.shape, np.uint8)
+        x,y,w,h = cv2.boundingRect(hand_contour)
+        cv2.rectangle(final_image, (x,y), (x+w,y+h), (255,255,0), thickness=2)
         cv2.drawContours(final_image, [hand_contour], 0, (0, 255, 0), 2)
         
         M = cv2.moments(hand_contour)
         cx = int(M["m10"] / M["m00"])
         cy = int(M["m01"] / M["m00"])
 
-        if prev_x is 0 and prev_y is 0: prev_x, prev_y = 0, 0
+        if prev_x is 0 and prev_y is 0: prev_x, prev_y = cx, cy
         
         delta_x, delta_y, slope, direction = prev_x-cx, prev_y-cy, 0, 'None'
 
@@ -71,9 +72,9 @@ while(1):
             direction = 'No movement'
             THRESHOLD = 20
         
-        print('Frame %3d -> %-11s'%(frame_n,direction))
+        print('Frame %3d -> %-11s  %-10s'%(frame_n,direction, predicted_sign))
 
-        #cv2.imshow('Tracking hands', final_image)
+        cv2.imshow('Tracking hands', final_image)
         frame_n += 1
         
         #print('Time per frame: '+str((time.time()-start_time)*1000)+'ms\r',end='')
