@@ -5,21 +5,20 @@ from sklearn.model_selection import train_test_split as tts
 from sklearn.metrics import confusion_matrix
 from sklearn.neighbors import KNeighborsClassifier
 
-lower = np.array([0,137,60],np.uint8)
-upper = np.array([255,180,127],np.uint8)
-
 start = time.time()
-dump_file = open('new_data.csv','a')
+dump_file = open('digits_and_letters.csv','w')
 grid = (20,20)   #(rows,columns)
-''' for i in range(grid[0]*grid[1]): dump_file.write('f'+str(i)+',')
-dump_file.write('label\n') '''
+for i in range(grid[0]*grid[1]): dump_file.write('f'+str(i)+',')
+dump_file.write('label\n')
 
 total_images_parsed = 0
-#DATA_LOCS = ['training-images-tejas\\Digits\\', 'training-images-kartik\\Letters\\', 'training-images-tejas\\Backup\\Digits\\']
-#DATA_LOCS = ['training-images-kartik\\Digits\\']
-DATA_LOCS = ['training-images-varun\\Digits\\']
+DATA_LOCS = ['training-images-tejas\\Digits\\', 'training-images-kartik\\Letters\\', 'training-images-tejas\\Backup\\Digits\\', 'training-images-kartik\\Digits\\', 'training-images-varun\\Digits\\']
+params = [145,145,145,135,137]
 for loc in range(len(DATA_LOCS)):
     DATA_LOC = DATA_LOCS[loc]
+    lower = np.array([0,params[loc],60],np.uint8)
+    upper = np.array([255,180,127],np.uint8)
+    
     for label in [str(i) for i in range(10)]+[chr(ord('a')+i) for i in range(26)]:
         for i in range(1,700):
             try:
@@ -47,9 +46,10 @@ for loc in range(len(DATA_LOCS)):
                             ci = i
 
                 x,y,w,h = cv2.boundingRect(contours[ci])
-                hand = np.zeros((image.shape[1], image.shape[0], 1), np.uint8)
-                cv2.drawContours(hand, contours, ci, 255, cv2.FILLED)
-                _,hand = cv2.threshold(hand[y:y+h,x:x+w], 127,255,0)
+                # hand = np.zeros((image.shape[1], image.shape[0], 1), np.uint8)
+                # cv2.drawContours(hand, contours, ci, 255, cv2.FILLED)
+                # _,hand = cv2.threshold(hand[y:y+h,x:x+w], 127,255,0)
+                hand = thresh[y:y+h,x:x+w]
 
                 HEIGHT, WIDTH = hand.shape
                 

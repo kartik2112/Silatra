@@ -15,7 +15,7 @@ grid = (20,20)   #(rows,columns)
 data_loc_changed = False
 #for label in [chr(ord('a')+i) for i in range(26)]:
 try:
-    image = cv2.imread('../Gesture recognition\\training-images-tejas\\ThumbsUp\\199.png')
+    image = cv2.imread('training-images-tejas\\Digits\\1\\199.png')
 
     blur = cv2.blur(image,(3,3))
     ycrcb = cv2.cvtColor(blur,cv2.COLOR_BGR2YCR_CB)
@@ -39,9 +39,10 @@ try:
                 ci = i
 
     x,y,w,h = cv2.boundingRect(contours[ci])
-    hand = np.zeros((image.shape[1], image.shape[0], 1), np.uint8)
-    cv2.drawContours(hand, contours, ci, 255, cv2.FILLED)
-    _,hand = cv2.threshold(hand[y:y+h,x:x+w], 127,255,0)
+    # hand = np.zeros((image.shape[1], image.shape[0], 1), np.uint8)
+    # cv2.drawContours(hand, contours, ci, 255, cv2.FILLED)
+    # _,hand = cv2.threshold(hand[y:y+h,x:x+w], 127,255,0)
+    hand = thresh[y:y+h,x:x+w]
 
     cv2.imshow('hand',hand)
     cv2.waitKey(100000)
