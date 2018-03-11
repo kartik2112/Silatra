@@ -1,5 +1,5 @@
 import socket
-from PIL import Image
+# from PIL import Image
 import sys
 
 
@@ -16,17 +16,22 @@ client, addr = s.accept()
 print 'Got TCP connection from', addr
 
 print "Received:",client.recv(1024).decode('ascii')
-op1 = "HELLO_Hellllooooooooooooooooooooooooooooo1111111111111111111111112222222222222222222233333333333333334444444444444444444444444444444444444444444444444444777777777777777777777777777777777777777777777777777777777777777777777777777777aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaajjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"
+op1 = "HELLO"
 client.send(op1.encode('ascii'))
 print "Sent:",op1
 
-# buf = client.recv(4)
 
     
 # print(buf)
 size = int(client.recv(1024).decode('ascii'))
+print "Receiving image of size:",size
+
 data = client.recv(size,socket.MSG_WAITALL)
 
-client.send(str(sys.getsizeof(data)).encode('ascii'))
+print "Received image"
+
+client.send(str(len(data)).encode('ascii'))
+
+print "ACKing image received of size",len(data)
 
 s.close()
