@@ -69,8 +69,9 @@ for loc in range(len(DATA_LOCS)):
                 for column in range(grid[1]):
                     for row in range(grid[0]):
                         to_write_data += str(data[column][row]) + ','
-                if label in [chr(ord('a')+i) for i in range(26)]: to_write_data += str(ord(label)-ord('a')+10) + '\n'
-                else: to_write_data += str(label) + '\n'
+                # if label in [chr(ord('a')+i) for i in range(26)]: to_write_data += str(ord(label)) + '\n'
+                # else: to_write_data += str(ord(label)) + '\n'
+                to_write_data += str(ord(label)) + '\n'
                 dump_file.write(to_write_data)
                 total_images_parsed += 1
             except Exception as e:
