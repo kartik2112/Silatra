@@ -28,7 +28,7 @@
 // sudo apt-get install libboost-all-dev
 // Reference: https://stackoverflow.com/a/12578564/5370202
 
-#include "PythonInterfacingTrial/cv_cpp_py_interface.h"
+#include "PythonInterfacingEssentials/cv_cpp_py_interface.h"
 
 #if PY_MAJOR_VERSION >= 3
 #define PY3K

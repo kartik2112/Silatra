@@ -19,7 +19,7 @@ module1 = Extension('silatra',
                     library_dirs = ['/usr/local/include','/usr/local/include/opencv'
                                 ],
                     sources = ['SilatraWrapper.cpp',
-                                'PythonInterfacingTrial/cv_cpp_py_interface.cpp',
+                                'PythonInterfacingEssentials/cv_cpp_py_interface.cpp',
                                 './GetMyHand/handDetection.cpp'])
 
 setup (name = 'SiLaTra',

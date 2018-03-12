@@ -2,20 +2,16 @@
 
 import socket
 import struct
+import atexit
+import timeit
 
 import numpy as np
 import cv2
 import imutils
 
-# import test
 
-import atexit
-import timeit
-
-
-import silatra
-
-import detectSign_SK as dsk
+import silatra  #This module is built using SilatraPythonModuleBuilder
+import gridFeatures as gridF
 
 import numpy as np
 from scipy.fftpack import fft, ifft
@@ -25,18 +21,34 @@ from keras.layers import Dense
 from keras.models import model_from_json
 import pickle
 
-faceStabilizerMode = "OFF"
-tracker = cv2.TrackerKCF_create()
 
 
-mode = "TCP"  # TCP | UDP
-port = 49164
+# For stabilization of person, KCF Tracker is used. Now for this face detected using Haar is used as ROI.
+# Sometimes the KCF Tracker fails to locate the ROI. For this purpose, even after waiting for `maxNoOfFramesNotTracked` frames,
+#   if the tracker fails to locate the ROI, the tracker is reinitialized.
+faceStabilizerMode = "OFF"  # This is used to enable/disable the stabilizer using KCF Tracker
+trackingStarted = False     # This is used to indicate whether tracking has started or not
+noOfFramesNotTracked = 0    # This indicates the no of frames that has not been tracked
+maxNoOfFramesNotTracked = 15 # This is the max no of frames that if not tracked, will restart the tracker algo
 
-preds = []
-maxQueueSize = 15
-noOfSigns = 128
-minModality = int(maxQueueSize/2)
 
+
+mode = "TCP"  # TCP | UDP   # This is the type of socket that this server must create for listening
+port = 49164                # This is the port no to which the server socket is attached
+
+
+# These variables form part of the logic that is used for stabilizing the stream of signs
+# From a stream of most recent `maxQueueSize` signs, the sign that has occured most frequently 
+#   with frequency > `minModality` is considered as the consistent sign
+preds = []          # This is used as queue for keeping track of last `maxQueueSize` signs for finding out the consistent sign
+maxQueueSize = 15   # This is the max size of queue `preds`
+noOfSigns = 128     # This is the domain of the values present in the queue `preds`
+minModality = int(maxQueueSize/2)   # This is the minimum number of times a sign must be present in `preds` to be declared as consistent
+noOfFramesCollected = 0     # This is used to keep track of the number of frames received and processed by the server socket
+
+
+
+# These variables are used to keep track of times needed by each individual component
 start_time, start_time_interFrame = 0, 0
 minTimes,maxTimes,avgTimes = {}, {}, {}
 timeKeys = ["OVERALL","DATA_TRANSFER","IMG_CONVERSION","SEGMENT","STABILIZE","CLASSIFICATION","INTERFRAME"]
@@ -49,24 +61,28 @@ timeStrings = {
     "CLASSIFICATION": "   Classification:",
     "INTERFRAME": "   Inter-frame difference"
 }
-
 for key12 in timeStrings.keys():
     minTimes[key12] = 100
     avgTimes[key12] = 0.0
     maxTimes[key12] = 0
 
-noOfFramesCollected = 0
+
+total_captured=601  # This is used as an initial count of frames captured for capturing new frames
+
+
+
 
 
 
 def addToQueue(pred):
     global preds, maxQueueSize, minModality, noOfSigns
+    print("Received Sign:",pred)
     if len(preds) == maxQueueSize:
         preds = preds[1:]
     preds += [pred]
     
 
-def predictSign():
+def getConsistentSign():
     global preds, maxQueueSize, minModality, noOfSigns
     modePrediction = -1
     countModality = minModality
@@ -115,6 +131,8 @@ def recordTimings(start_time,time_key):
 # def processImage():
 
 
+tracker = cv2.TrackerKCF_create()
+
 
 if mode == "TCP":
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         
@@ -131,9 +149,7 @@ else:
     s.bind(('',port))        
     print("UDP Socket binded to %s" %(port))
 
-total_captured=601
-trackingStarted = False
-noOfFramesNotTracked = 0
+
 while True:
     
     ### ---------------------------------Timing here--------------------------------------------------------------------
@@ -230,7 +246,7 @@ while True:
             # cv2.imshow("Stabilized Mask",mask1)
         else:
             noOfFramesNotTracked += 1
-            if noOfFramesNotTracked > 15:
+            if noOfFramesNotTracked > maxNoOfFramesNotTracked:
                 trackingStarted = False
                 noOfFramesNotTracked = 0
 
@@ -239,18 +255,23 @@ while True:
     ### ---------------------------------Timing here--------------------------------------------------------------------
 
 
-    pred = dsk.findSign(mask1)
+    features = gridF.extractFeatures(mask1)
 
-    print("Received Sign:",pred)
+    pred = gridF.predictSign(features)
+    
     addToQueue(pred)
 
-    pred = predictSign()
+    pred = getConsistentSign()
+
     # pred = -1
     print("Stable Sign:",pred)
+
     if pred == -1:
         op1  = "--"+"\r\n"
     else:
         op1 = chr(pred)+"\r\n"
+    
+
     
     if mode == "TCP":
         client.send(op1.encode('ascii'))
@@ -271,15 +292,17 @@ while True:
 
 
 
-    # test.testMe(img_np)
+    
     k = cv2.waitKey(10)
     if k == 'q':
         break
     elif k=='c':
-        if total_captured is 300: break
+        if total_captured >= 300: break
         cv2.imwrite('../training-images/tejas/ThumbsUp/%d.png'%(total_captured))
         total_captured += 1
     
+
+
 
 
 print('Stopped server')
@@ -290,9 +313,16 @@ for key12 in timeKeys:
     print('          Avg Time taken:',"%.4fs"%avgTimes[key12])
     print('          Max Time taken:',"%.4fs"%maxTimes[key12])
 
+
+
+
 # client.close()
 s.close()
 cv2.destroyAllWindows()
+
+
+
+
 
 
 def cleaners():
