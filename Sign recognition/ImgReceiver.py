@@ -1,3 +1,9 @@
+'''
+* ImgReceiver.py is the main function that will setup the socket and after the connection is established (in case of TCP)
+* and the socket starts receiving the frames, it will invoke the required modules for processing.
+'''
+
+
 # Reference: https://stackoverflow.com/a/23312964/5370202
 
 import socket
@@ -22,10 +28,11 @@ from keras.models import model_from_json
 import pickle
 
 
-
-# For stabilization of person, KCF Tracker is used. Now for this face detected using Haar is used as ROI.
-# Sometimes the KCF Tracker fails to locate the ROI. For this purpose, even after waiting for `maxNoOfFramesNotTracked` frames,
-#   if the tracker fails to locate the ROI, the tracker is reinitialized.
+'''
+* For stabilization of person, KCF Tracker is used. Now for this face detected using Haar is used as ROI.
+* Sometimes the KCF Tracker fails to locate the ROI. For this purpose, even after waiting for `maxNoOfFramesNotTracked` frames,
+*   if the tracker fails to locate the ROI, the tracker is reinitialized.
+'''
 faceStabilizerMode = "OFF"  # This is used to enable/disable the stabilizer using KCF Tracker
 trackingStarted = False     # This is used to indicate whether tracking has started or not
 noOfFramesNotTracked = 0    # This indicates the no of frames that has not been tracked
@@ -37,9 +44,12 @@ mode = "TCP"  # TCP | UDP   # This is the type of socket that this server must c
 port = 49164                # This is the port no to which the server socket is attached
 
 
-# These variables form part of the logic that is used for stabilizing the stream of signs
-# From a stream of most recent `maxQueueSize` signs, the sign that has occured most frequently 
-#   with frequency > `minModality` is considered as the consistent sign
+
+'''
+* These variables form part of the logic that is used for stabilizing the stream of signs
+* From a stream of most recent `maxQueueSize` signs, the sign that has occured most frequently 
+*   with frequency > `minModality` is considered as the consistent sign
+'''
 preds = []          # This is used as queue for keeping track of last `maxQueueSize` signs for finding out the consistent sign
 maxQueueSize = 15   # This is the max size of queue `preds`
 noOfSigns = 128     # This is the domain of the values present in the queue `preds`
@@ -47,8 +57,9 @@ minModality = int(maxQueueSize/2)   # This is the minimum number of times a sign
 noOfFramesCollected = 0     # This is used to keep track of the number of frames received and processed by the server socket
 
 
-
-# These variables are used to keep track of times needed by each individual component
+'''
+* These variables are used to keep track of times needed by each individual component
+'''
 start_time, start_time_interFrame = 0, 0
 minTimes,maxTimes,avgTimes = {}, {}, {}
 timeKeys = ["OVERALL","DATA_TRANSFER","IMG_CONVERSION","SEGMENT","STABILIZE","CLASSIFICATION","INTERFRAME"]
@@ -75,6 +86,15 @@ total_captured=601  # This is used as an initial count of frames captured for ca
 
 
 def addToQueue(pred):
+    '''
+    Adds the latest sign recognized to a queue of signs. This queue has maxlength: `maxQueueSize`
+
+    Parameters
+    ----------
+    pred : This is the latest sign recognized by the classifier.
+            This is of type number and the sign is in ASCII format
+
+    '''
     global preds, maxQueueSize, minModality, noOfSigns
     print("Received Sign:",pred)
     if len(preds) == maxQueueSize:
@@ -83,6 +103,16 @@ def addToQueue(pred):
     
 
 def getConsistentSign():
+    '''
+    From the queue of signs, this function returns the sign that has occured most frequently 
+    with frequency > `minModality`. This is considered as the consistent sign.
+
+    Returns
+    -------
+    number
+        This is the modal value among the queue of signs.
+
+    '''
     global preds, maxQueueSize, minModality, noOfSigns
     modePrediction = -1
     countModality = minModality
@@ -104,6 +134,15 @@ def getConsistentSign():
     return modePrediction
 
 def displayTextOnWindow(windowName,textToDisplay):
+    '''
+    This just displays the text provided on the cv2 window with WINDOW_NAME: `windowName`
+
+    Parameters
+    ----------
+    windowName : This is WINDOW_NAME of the cv2 window on which the text will be displayed
+    textToDisplay : This is the text to be displayed on the cv2 window
+
+    '''
     signImage = np.zeros((200,200,1),np.uint8)
 
     cv2.putText(signImage,textToDisplay,(75,100),cv2.FONT_HERSHEY_SIMPLEX,2,(255,255,255),3,8);
@@ -111,13 +150,37 @@ def displayTextOnWindow(windowName,textToDisplay):
     cv2.imshow(windowName,signImage);
 
 def displaySignOnImage(predictSign):
+    '''
+    This abstracts the logic for handling signs that have not been detected in majority.
+
+    Parameters
+    ----------
+    predictSign : This is the recognized sign (in ASCII) to be displayed on the cv2 window
+
+    '''
     dispSign = "--"
     if predictSign != -1:
         dispSign = chr(predictSign)+"";
 
     displayTextOnWindow("Prediction",dispSign)
-    
+
+
 def recordTimings(start_time,time_key):
+    '''
+    This performs the manipulation of average, min, max timings for each of the components
+
+    Parameters
+    ----------
+    start_time : This is the base reference start_time:Timer with reference to which the current time is measured
+                and the difference is the time elapsed which is used for calculation of average, min, max timings
+    time_key : This indicates the timings of which component need to be updated.
+    
+    Returns
+    -------
+    Timer
+        This function returns the current instance of timer so that, this can be used in the next invokation of this function.
+
+    '''
     global minTimes,maxTimes,avgTimes,noOfFramesCollected
     if noOfFramesCollected != 0: 
         elapsed = timeit.default_timer() - start_time

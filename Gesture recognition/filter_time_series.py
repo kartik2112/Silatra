@@ -21,7 +21,7 @@ maxNoiseThreshold = 3 # Must be odd!!
 # Takes as input timeseries in the format:
 # [("Thumbs_Up")]
 def filterTS(ts):
-    """
+    '''
     Returns the filtered and compressed time series from the long time series obtained at the input.
 
     Parameters
@@ -37,7 +37,7 @@ def filterTS(ts):
     list of tuples
         This represents the filtered and compressed time series
 
-    """
+    '''
     signCount = 0
     motionCount = 0
     prevSegmentStart = 0
@@ -89,7 +89,7 @@ def filterTS(ts):
 
 
 def findMode(segment,category):
-    """
+    '''
     Returns the modal tuple that occurs at least half of the times in the current category i.e. "sign" or "motion"
 
     Segment is that part of the original time series that belongs to the same category
@@ -108,7 +108,7 @@ def findMode(segment,category):
     tuple
         This tuple will be the modal tuple in the recognized segment
 
-    """
+    '''
     print("Segment under consideration:",segment,"\nCategory:",category)
 
     dict1 = {}
