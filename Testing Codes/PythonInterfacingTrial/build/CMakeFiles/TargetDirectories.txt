@@ -1,0 +1,3 @@
+/home/kartik/Documents/Projects/BE Project/Silatra/PythonInterfacingTrial/build/CMakeFiles/edit_cache.dir
+/home/kartik/Documents/Projects/BE Project/Silatra/PythonInterfacingTrial/build/CMakeFiles/rebuild_cache.dir
+/home/kartik/Documents/Projects/BE Project/Silatra/PythonInterfacingTrial/build/CMakeFiles/PythonInterfacingTrial.dir
