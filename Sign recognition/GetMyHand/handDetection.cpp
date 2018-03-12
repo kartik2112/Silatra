@@ -57,6 +57,9 @@ extern string subDirName;
 extern char** args_v;
 extern int args_c;
 
+extern Rect faceBBox;
+extern bool faceFound;
+
 extern bool wrapperModeOn;
 
 extern long long predictedSign;
@@ -186,12 +189,15 @@ void detectAndEliminateFace(Mat frame){
 		return;
 	}
 
+	faceFound = true;
+	faceBBox = faces[maxAreaRectInd];
+
 	//Modify face rectangle to eliminate neck and cover bigger part of face so as to eliminate possibility of leaving out some skin area
-	faces[maxAreaRectInd].x -= 10;
-	faces[maxAreaRectInd].y -= 10;
-	faces[maxAreaRectInd].width += 20;
-	faces[maxAreaRectInd].height += 45;
-	rectangle(frame,faces[maxAreaRectInd],Scalar(0,0,0),-1);
+	faceBBox.x -= 10;
+	faceBBox.y -= 10;
+	faceBBox.width += 20;
+	faceBBox.height += 45;
+	rectangle(frame,faceBBox,Scalar(0,0,0),-1);
 
 	//-- Show what you got
 	// imshow( "Framed", frame );

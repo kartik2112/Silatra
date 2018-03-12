@@ -57,6 +57,10 @@ using namespace boost::python;
 long long predictedSign;
 
 
+Rect faceBBox;
+bool faceFound = false;
+
+
 
 
 
@@ -109,20 +113,22 @@ processFrame(PyObject *self, PyObject *args)
     //     return NULL;
     // }
 
-    PyObject *imgIn;
+    PyObject *returnList = PyList_New(3);  //PyList references: https://docs.python.org/3.5/c-api/list.html
+
+    PyObject *PyImg, *PyFaceFound, *faceRect;
 
     // cout<<"H1"<<endl;
 
     // cout<<PyTuple_Check(args)<<endl;
 
-    if (!PyArg_ParseTuple(args, "O", &imgIn)){  //Reference for format string: https://docs.python.org/2.0/ext/parseTuple.html
+    if (!PyArg_ParseTuple(args, "O", &PyImg)){  //Reference for format string: https://docs.python.org/2.0/ext/parseTuple.html
         //Don't mistake it as small o or 0. It is capital 'O' Reference: https://stackoverflow.com/a/13276530/5370202
         return NULL;
     }
 
     Mat image;
 
-    pyopencv_to(imgIn,image,"Incoming image from Python");
+    pyopencv_to(PyImg,image,"Incoming image from Python");
 
     // cout<<"H2"<<endl;
 
@@ -133,7 +139,28 @@ processFrame(PyObject *self, PyObject *args)
     // Py_INCREF(Py_None);
     // return Py_None;  //Reference to none return type: https://docs.python.org/3.5/extending/extending.html#back-to-the-example
     // return PyLong_FromLongLong(predictedSign);
-    return pyopencv_from(dst);
+    // return pyopencv_from(dst);
+
+    PyImg = pyopencv_from(dst);
+
+    if(faceFound){
+        PyFaceFound = Py_True;
+        faceRect = Py_BuildValue("(iiii)", faceBBox.x, faceBBox.y, faceBBox.width, faceBBox.height); //This function is derived from cv_cpp_py_interface.cpp. 
+                                                                    //Instead of this the function could have been uncommented and used. 
+                                                                    //But for having a better understanding, it wasnt uncommented.
+    }
+    else{
+        PyFaceFound = Py_False;
+        faceRect = Py_None;
+    }
+
+    /* Reference: https://docs.python.org/3.5/c-api/list.html */
+    PyList_SetItem(returnList,0,PyImg);
+    PyList_SetItem(returnList,1,PyFaceFound);
+    PyList_SetItem(returnList,2,faceRect);
+
+    return returnList;
+
 }
 
 // registration table
