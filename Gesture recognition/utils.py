@@ -42,9 +42,10 @@ def get_my_hand(img_gray, return_only_contour=False):
     if return_only_contour: return contours[ci]
     else:
         x,y,w,h = cv2.boundingRect(contours[ci])
-        hand = np.zeros((img_gray.shape[1], img_gray.shape[0], 1), np.uint8)
-        cv2.drawContours(hand, contours, ci, 255, cv2.FILLED)
-        _,hand = cv2.threshold(hand[y:y+h,x:x+w], 127,255,0)
+        # hand = np.zeros((img_gray.shape[1], img_gray.shape[0], 1), np.uint8)
+        # cv2.drawContours(hand, contours, ci, 255, cv2.FILLED)
+        # _,hand = cv2.threshold(hand[y:y+h,x:x+w], 127,255,0)
+        hand = img_gray[y:y+h,x:x+w]
         return hand
 
 def extract_features(src_hand, grid):

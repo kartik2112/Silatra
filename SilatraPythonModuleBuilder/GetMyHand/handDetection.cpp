@@ -75,7 +75,7 @@ Mat getMyHand(Mat& imageOG){
 	
 	// imshow("Original Image",imageOG);
 
-	detectAndEliminateFace(imageOG);
+	// detectAndEliminateFace(imageOG);
 
 	Mat image,imageYCrCb;
     

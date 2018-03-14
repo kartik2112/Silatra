@@ -15,10 +15,6 @@ import numpy as np
 import cv2
 import imutils
 
-
-import silatra  #This module is built using SilatraPythonModuleBuilder
-import gridFeatures as gridF
-
 import numpy as np
 from scipy.fftpack import fft, ifft
 from sklearn.neighbors import KNeighborsClassifier
@@ -26,6 +22,14 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.models import model_from_json
 import pickle
+
+import silatra  #This module is built using SilatraPythonModuleBuilder
+import gridFeatures as gridF
+import silatra_utils
+
+# Following modules are used specifically for Gesture recognition
+import Gesture_Modules/filter_time_series
+import Gesture_Modules/gesture_classify
 
 
 '''
@@ -43,6 +47,9 @@ maxNoOfFramesNotTracked = 15 # This is the max no of frames that if not tracked,
 mode = "TCP"  # TCP | UDP   # This is the type of socket that this server must create for listening
 port = 49164                # This is the port no to which the server socket is attached
 
+
+recognitionMode = "SIGN"  # SIGN | GESTURE    # This is the mode of recognition. 
+                            # Currently, we have designed the recognition in 2 different modes
 
 
 '''
@@ -83,114 +90,6 @@ total_captured=601  # This is used as an initial count of frames captured for ca
 
 
 
-
-
-def addToQueue(pred):
-    '''
-    Adds the latest sign recognized to a queue of signs. This queue has maxlength: `maxQueueSize`
-
-    Parameters
-    ----------
-    pred : This is the latest sign recognized by the classifier.
-            This is of type number and the sign is in ASCII format
-
-    '''
-    global preds, maxQueueSize, minModality, noOfSigns
-    print("Received Sign:",pred)
-    if len(preds) == maxQueueSize:
-        preds = preds[1:]
-    preds += [pred]
-    
-
-def getConsistentSign():
-    '''
-    From the queue of signs, this function returns the sign that has occured most frequently 
-    with frequency > `minModality`. This is considered as the consistent sign.
-
-    Returns
-    -------
-    number
-        This is the modal value among the queue of signs.
-
-    '''
-    global preds, maxQueueSize, minModality, noOfSigns
-    modePrediction = -1
-    countModality = minModality
-
-    if len(preds) == maxQueueSize:
-        countPredictions = [0]*noOfSigns
-
-        for pred in preds:
-            if pred != -1:
-                countPredictions[pred]+=1
-        
-        for i in range(noOfSigns):
-            if countPredictions[i]>countModality:
-                modePrediction = i
-                countModality = countPredictions[i]
-
-        displaySignOnImage(modePrediction)
-    
-    return modePrediction
-
-def displayTextOnWindow(windowName,textToDisplay):
-    '''
-    This just displays the text provided on the cv2 window with WINDOW_NAME: `windowName`
-
-    Parameters
-    ----------
-    windowName : This is WINDOW_NAME of the cv2 window on which the text will be displayed
-    textToDisplay : This is the text to be displayed on the cv2 window
-
-    '''
-    signImage = np.zeros((200,200,1),np.uint8)
-
-    cv2.putText(signImage,textToDisplay,(75,100),cv2.FONT_HERSHEY_SIMPLEX,2,(255,255,255),3,8);
-
-    cv2.imshow(windowName,signImage);
-
-def displaySignOnImage(predictSign):
-    '''
-    This abstracts the logic for handling signs that have not been detected in majority.
-
-    Parameters
-    ----------
-    predictSign : This is the recognized sign (in ASCII) to be displayed on the cv2 window
-
-    '''
-    dispSign = "--"
-    if predictSign != -1:
-        dispSign = chr(predictSign)+"";
-
-    displayTextOnWindow("Prediction",dispSign)
-
-
-def recordTimings(start_time,time_key):
-    '''
-    This performs the manipulation of average, min, max timings for each of the components
-
-    Parameters
-    ----------
-    start_time : This is the base reference start_time:Timer with reference to which the current time is measured
-                and the difference is the time elapsed which is used for calculation of average, min, max timings
-    time_key : This indicates the timings of which component need to be updated.
-    
-    Returns
-    -------
-    Timer
-        This function returns the current instance of timer so that, this can be used in the next invokation of this function.
-
-    '''
-    global minTimes,maxTimes,avgTimes,noOfFramesCollected
-    if noOfFramesCollected != 0: 
-        elapsed = timeit.default_timer() - start_time
-        avgTimes[time_key] = avgTimes[time_key] * ((noOfFramesCollected-1)/noOfFramesCollected) + elapsed/noOfFramesCollected
-        minTimes[time_key] = elapsed if elapsed < minTimes[time_key] else minTimes[time_key]
-        maxTimes[time_key] = elapsed if elapsed > maxTimes[time_key] else maxTimes[time_key]
-    return timeit.default_timer()
-
-
-
 # def processImage():
 
 
@@ -216,12 +115,12 @@ else:
 while True:
     
     ### ---------------------------------Timing here--------------------------------------------------------------------
-    start_time_interFrame = recordTimings(start_time_interFrame,"INTERFRAME")
+    start_time_interFrame = silatra_utils.recordTimings(start_time_interFrame,"INTERFRAME")
     start_time1 = timeit.default_timer()
     ### ---------------------------------Timing here--------------------------------------------------------------------
 
     noOfFramesCollected += 1
-    displayTextOnWindow("Frame No",str(noOfFramesCollected))
+    silatra_utils.displayTextOnWindow("Frame No",str(noOfFramesCollected))
     
     if mode == "TCP":
         buf = client.recv(4)
@@ -244,7 +143,7 @@ while True:
         print("Received %d bytes image (UDP Packet) from"%len(data), addr)
 
     ### ---------------------------------Timing here--------------------------------------------------------------------
-    start_time = recordTimings(start_time1,"DATA_TRANSFER")
+    start_time = silatra_utils.recordTimings(start_time1,"DATA_TRANSFER")
     ### ---------------------------------Timing here--------------------------------------------------------------------
 
     # if ctr123 % 5 != 0:
@@ -265,7 +164,7 @@ while True:
     img_np = cv2.resize(img_np,(0,0), fx=0.7, fy=0.7)
 
     ### ---------------------------------Timing here--------------------------------------------------------------------
-    start_time = recordTimings(start_time,"IMG_CONVERSION")
+    start_time = silatra_utils.recordTimings(start_time,"IMG_CONVERSION")
     ### ---------------------------------Timing here--------------------------------------------------------------------
 
     # cv2.resize(img_np,)
@@ -274,7 +173,7 @@ while True:
     mask1, foundFace, faceRect = silatra.segment(img_np)
     
     ### ---------------------------------Timing here--------------------------------------------------------------------
-    start_time = recordTimings(start_time,"SEGMENT")
+    start_time = silatra_utils.recordTimings(start_time,"SEGMENT")
     ### ---------------------------------Timing here--------------------------------------------------------------------
 
     # cv2.imshow("Mask",mask1)
@@ -314,7 +213,7 @@ while True:
                 noOfFramesNotTracked = 0
 
     ### ---------------------------------Timing here--------------------------------------------------------------------
-    start_time = recordTimings(start_time,"STABILIZE")
+    start_time = silatra_utils.recordTimings(start_time,"STABILIZE")
     ### ---------------------------------Timing here--------------------------------------------------------------------
 
 
@@ -322,9 +221,9 @@ while True:
 
     pred = gridF.predictSign(features)
     
-    addToQueue(pred)
+    silatra_utils.addToQueue(pred)
 
-    pred = getConsistentSign()
+    pred = silatra_utils.getConsistentSign()
 
     # pred = -1
     print("Stable Sign:",pred)
@@ -344,13 +243,13 @@ while True:
         clientSock.sendto(Message, (str(addr), port))
 
     ### ---------------------------------Timing here--------------------------------------------------------------------
-    start_time = recordTimings(start_time,"CLASSIFICATION")
+    start_time = silatra_utils.recordTimings(start_time,"CLASSIFICATION")
     ### ---------------------------------Timing here--------------------------------------------------------------------
 
 
 
     ### ---------------------------------Timing here--------------------------------------------------------------------
-    recordTimings(start_time1,"OVERALL")
+    silatra_utils.recordTimings(start_time1,"OVERALL")
     ### ---------------------------------Timing here--------------------------------------------------------------------
 
 
