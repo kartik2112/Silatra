@@ -206,9 +206,9 @@ while True:
         _,thresh = cv2.threshold(mask,127,255,0)
 
         hand_contour = get_my_hand(thresh, return_only_contour=True)
-        hull = cv2.convexHull(hand_contour)
-        final_image = np.zeros(img_np.shape, np.uint8)
-        cv2.drawContours(final_image, [hand_contour], 0, (0, 255, 0), 2)
+        # hull = cv2.convexHull(hand_contour)
+        # final_image = np.zeros(img_np.shape, np.uint8)
+        # cv2.drawContours(final_image, [hand_contour], 0, (0, 255, 0), 2)
         
         M = cv2.moments(hand_contour)
         cx = int(M["m10"] / M["m00"])

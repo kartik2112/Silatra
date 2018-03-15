@@ -82,7 +82,7 @@ def filterTS(ts):
     if temp != None:
         filteredTS += [temp]
 
-    print("The filtered Time Series is",filteredTS)
+    print("\n\n--------------------The filtered Time Series is-----------------\n",filteredTS)
 
     return filteredTS
 
@@ -289,6 +289,44 @@ def test_noisy1_series_of_Good_Morning():
     Expected_TS = [("ThumbsUp","None"), ("None","Up"), ("Cup_Open","None"), ("None","Down"), ("Cup_Closed","None")]
 
     tools.eq_(filterTS(IP_Ts),Expected_TS)
+
+# def test_complex_input():
+IP_Ts = [('None', 'Up'), ('None', 'Up'), 
+        ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), 
+        ('None', 'Up'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), 
+        ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), 
+        ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), 
+        ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), 
+        ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), 
+        ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), 
+        ('None', 'Down'), ('None', 'Down'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), 
+        ('None', 'Down'), ('None', 'Down'), ('None', 'Down'), ('None', 'Down'), ('None', 'Down'), 
+        ('None', 'Down'), ('ThumbsUp', 'None'), ('That_is_Good_Point', 'None'), 
+        ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), 
+        ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('ThumbsUp', 'None'), 
+        ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), 
+        ('That_is_Good_Point', 'None'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), 
+        ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), 
+        ('That_is_Good_Point', 'None'), ('ThumbsUp', 'None'), ('ThumbsUp', 'None'), 
+        ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), 
+        ('None', 'Up'), ('None', 'Up'), ('None', 'Up'), ('None', 'Up'), ('None', 'Up'), 
+        ('None', 'Up'), ('None', 'Up'), ('None', 'Up'), ('None', 'Up'), ('None', 'Up'), 
+        ('None', 'Up'), ('None', 'Up'), ('None', 'Up'), ('None', 'Up'), ('None', 'Up'), 
+        ('None', 'Up'), ('None', 'Up'), 
+        ('Cup_Open', 'None'), ('Cup_Open', 'None'), ('Cup_Open', 'None'), ('Cup_Open', 'None'), 
+        ('None', 'Up'), ('Cup_Open', 'None'), ('Cup_Open', 'None'), ('Cup_Open', 'None'), 
+        ('Cup_Open', 'None'), ('Cup_Open', 'None'), ('Cup_Open', 'None'), ('Cup_Open', 'None'), 
+        ('Cup_Open', 'None'), ('Cup_Open', 'None'), ('Cup_Open', 'None'), ('Cup_Open', 'None'), 
+        ('Cup_Open', 'None'), ('Cup_Open', 'None'), ('Cup_Open', 'None'), ('Cup_Open', 'None'), 
+        ('Cup_Open', 'None'), ('Cup_Open', 'None'), ('Cup_Open', 'None'), ('Cup_Open', 'None'), 
+        ('Cup_Open', 'None'), 
+        ('None', 'Down'), ('None', 'Down'), ('None', 'Left'), ('None', 'Left'), 
+        ('None', 'Right'), ('None', 'Up'), ('None', 'Down'), ('None', 'Up'), ('None', 'Left')]
+        
+Expected_TS = [("ThumbsUp","None"), ("None","Up"), ("Cup_Open","None"), ("None","Down"), ("Cup_Closed","None")]
+
+print(filterTS(IP_Ts))
+# tools.eq_(filterTS(IP_Ts),Expected_TS)
 
 # IP_Ts = [('None', 'Left'), ('Sorry_Fist', 'None'), ('Sorry_Fist', 'None'), ('Sorry_Fist', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('Sorry_Fist', 'None'), ('Sorry_Fist', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('Sorry_Fist', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('None', 'Up'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None'), ('That_is_Good_Point', 'None')]
 

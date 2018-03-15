@@ -72,10 +72,8 @@ This is the main entry point function of this file
 */
 Mat getMyHand(Mat& imageOG){
 	// startTime=(double)getTickCount();  //---Timing related part
-	
-	// imshow("Original Image",imageOG);
 
-	// detectAndEliminateFace(imageOG);
+	detectAndEliminateFace(imageOG);
 
 	Mat image,imageYCrCb;
     

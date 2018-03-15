@@ -2,35 +2,35 @@ import cv2, numpy as np
 from math import ceil
 import silatra
 
-def segment(src_img, lower_bounds, upper_bounds):
-    """
-    ### Segment skin areas from hand using a YCrCb mask.
 
-    This function returns a mask with white areas signifying skin and black areas otherwise.
-    Skin area is defined between `lower_bounds` and `upper_bounds`.
 
-    Returns: mask
-    """
-    # blur = cv2.blur(src_img,(3,3))
-    # ycrcb = cv2.cvtColor(blur,cv2.COLOR_BGR2YCR_CB)
-    # mask = cv2.inRange(ycrcb,lower_bounds,upper_bounds)
-    mask = silatra.segment(src_img)
-    return mask
+'''
+* These variables form part of the logic that is used for stabilizing the stream of signs
+* From a stream of most recent `maxQueueSize` signs, the sign that has occured most frequently 
+*   with frequency > `minModality` is considered as the consistent sign
+'''
+preds = []          # This is used as queue for keeping track of last `maxQueueSize` signs for finding out the consistent sign
+maxQueueSize = 15   # This is the max size of queue `preds`
+noOfSigns = 128     # This is the domain of the values present in the queue `preds`
+minModality = int(maxQueueSize/2)   # This is the minimum number of times a sign must be present in `preds` to be declared as consistent
 
-def get_my_hand(img_gray, return_only_contour=False):
+
+
+def get_my_hand(image_skin_mask):
     """
     ### Hand extractor
 
-    __DO NOT INCLUDE YOUR FACE IN THE `img_gray`__
+    __DO NOT INCLUDE YOUR FACE IN THE `image_skin_mask`__
     
     Provide an image where skin areas are represented by white and black otherwise.
     This function does the hardwork of finding your hand area in the image.
 
-    Returns: *(image)* Your hand.
+    Returns: *(image)* Your hand, *(hand_contour)*.
     """
-    _,contours,_ = cv2.findContours(img_gray,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    _,contours,_ = cv2.findContours(image_skin_mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     length = len(contours)
     maxArea = -1
+    ci = -1
     if length > 0:
         for i in range(length):
             temp = contours[i]
@@ -38,15 +38,18 @@ def get_my_hand(img_gray, return_only_contour=False):
             if area > maxArea:
                 maxArea = area
                 ci = i
+    if ci == -1:
+        return [ False, None, None  ]
+    x,y,w,h = cv2.boundingRect(contours[ci])
+    # hand = np.zeros((image_skin_mask.shape[1], image_skin_mask.shape[0], 1), np.uint8)
+    # cv2.drawContours(hand, contours, ci, 255, cv2.FILLED)
+    # _,hand = cv2.threshold(hand[y:y+h,x:x+w], 127,255,0)
+    hand = image_skin_mask[y:y+h,x:x+w]
 
-    if return_only_contour: return contours[ci]
-    else:
-        x,y,w,h = cv2.boundingRect(contours[ci])
-        # hand = np.zeros((img_gray.shape[1], img_gray.shape[0], 1), np.uint8)
-        # cv2.drawContours(hand, contours, ci, 255, cv2.FILLED)
-        # _,hand = cv2.threshold(hand[y:y+h,x:x+w], 127,255,0)
-        hand = img_gray[y:y+h,x:x+w]
-        return hand
+    return [ True, hand, contours[ci] ]
+
+
+
 
 def extract_features(src_hand, grid):
     HEIGHT, WIDTH = src_hand.shape
@@ -68,6 +71,23 @@ def extract_features(src_hand, grid):
         for row in range(grid[0]):
             features.append(data[column][row])
     return features
+
+
+
+def predictSign(classifier,features):
+    predictions = classifier.predict_proba([features]).tolist()[0]
+    # print(classifier.predict_proba([features]).tolist())
+    for prob in predictions: print('%.2f'%(prob),end=' ')
+    print('')
+
+    pred = classifier.predict([features])[0] 
+    print(pred)
+    return pred
+
+
+
+
+
 
 
 
@@ -119,7 +139,7 @@ def getConsistentSign():
     
     return modePrediction
 
-def displayTextOnWindow(windowName,textToDisplay):
+def displayTextOnWindow(windowName,textToDisplay,xOff=75,yOff=100):
     '''
     This just displays the text provided on the cv2 window with WINDOW_NAME: `windowName`
 
@@ -131,7 +151,7 @@ def displayTextOnWindow(windowName,textToDisplay):
     '''
     signImage = np.zeros((200,200,1),np.uint8)
 
-    cv2.putText(signImage,textToDisplay,(75,100),cv2.FONT_HERSHEY_SIMPLEX,2,(255,255,255),3,8);
+    cv2.putText(signImage,textToDisplay,(xOff,yOff),cv2.FONT_HERSHEY_SIMPLEX,2,(255,255,255),3,8);
 
     cv2.imshow(windowName,signImage);
 
@@ -150,28 +170,4 @@ def displaySignOnImage(predictSign):
 
     displayTextOnWindow("Prediction",dispSign)
 
-
-def recordTimings(start_time,time_key):
-    '''
-    This performs the manipulation of average, min, max timings for each of the components
-
-    Parameters
-    ----------
-    start_time : This is the base reference start_time:Timer with reference to which the current time is measured
-                and the difference is the time elapsed which is used for calculation of average, min, max timings
-    time_key : This indicates the timings of which component need to be updated.
-    
-    Returns
-    -------
-    Timer
-        This function returns the current instance of timer so that, this can be used in the next invokation of this function.
-
-    '''
-    global minTimes,maxTimes,avgTimes,noOfFramesCollected
-    if noOfFramesCollected != 0: 
-        elapsed = timeit.default_timer() - start_time
-        avgTimes[time_key] = avgTimes[time_key] * ((noOfFramesCollected-1)/noOfFramesCollected) + elapsed/noOfFramesCollected
-        minTimes[time_key] = elapsed if elapsed < minTimes[time_key] else minTimes[time_key]
-        maxTimes[time_key] = elapsed if elapsed > maxTimes[time_key] else maxTimes[time_key]
-    return timeit.default_timer()
 
