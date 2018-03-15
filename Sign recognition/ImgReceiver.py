@@ -1,118 +1,82 @@
+'''
+* ImgReceiver.py is the main function that will setup the socket and after the connection is established (in case of TCP)
+* and the socket starts receiving the frames, it will invoke the required modules for processing.
+'''
+
+
 # Reference: https://stackoverflow.com/a/23312964/5370202
 
 import socket
 import struct
+import atexit
+import timeit
+import sys
 
 import numpy as np
 import cv2
 import imutils
 
-# import test
-
-import atexit
-import timeit
-
-
-import silatra
-
-import detectSign_SK as dsk
-
-import numpy as np
-from scipy.fftpack import fft, ifft
+# from scipy.fftpack import fft, ifft
 from sklearn.neighbors import KNeighborsClassifier
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.models import model_from_json
 import pickle
 
-faceStabilizerMode = "OFF"
-tracker = cv2.TrackerKCF_create()
+import silatra  #This module is built using SilatraPythonModuleBuilder
+import silatra_utils
+sys.path.insert(0, "Modules")
+import TimingMod as tm
+import PersonStabilizer
+
+# Following modules are used specifically for Gesture recognition
+sys.path.insert(0, "Gesture_Modules")
+import filter_time_series
+import gesture_classify
+import directionTracker
 
 
-mode = "TCP"  # TCP | UDP
-port = 49164
 
-preds = []
-maxQueueSize = 15
-noOfSigns = 128
-minModality = int(maxQueueSize/2)
 
+mode = "TCP"  # TCP | UDP   # This is the type of socket that this server must create for listening
+port = 49164                # This is the port no to which the server socket is attached
+
+
+recognitionMode = "SIGN"  # SIGN | GESTURE    # This is the mode of recognition. 
+                            # Currently, we have designed the recognition in 2 different modes
+
+
+noOfFramesCollected = 0     # This is used to keep track of the number of frames received and processed by the server socket
+
+
+'''
+* These variables are used to keep track of times needed by each individual component
+'''
 start_time, start_time_interFrame = 0, 0
-minTimes,maxTimes,avgTimes = {}, {}, {}
-timeKeys = ["OVERALL","DATA_TRANSFER","IMG_CONVERSION","SEGMENT","STABILIZE","CLASSIFICATION","INTERFRAME"]
-timeStrings = {
-    "OVERALL": "Overall:",
-    "DATA_TRANSFER": "   Waiting + Data Transfer:",
-    "IMG_CONVERSION": "   Image Conversion:",
-    "SEGMENT": "   Segmentation:",
-    "STABILIZE": "   Stabilizer",
-    "CLASSIFICATION": "   Classification:",
-    "INTERFRAME": "   Inter-frame difference"
-}
-
-for key12 in timeStrings.keys():
-    minTimes[key12] = 100
-    avgTimes[key12] = 0.0
-    maxTimes[key12] = 0
-
-noOfFramesCollected = 0
 
 
 
-def addToQueue(pred):
-    global preds, maxQueueSize, minModality, noOfSigns
-    if len(preds) == maxQueueSize:
-        preds = preds[1:]
-    preds += [pred]
-    
+total_captured=601  # This is used as an initial count of frames captured for capturing new frames
 
-def predictSign():
-    global preds, maxQueueSize, minModality, noOfSigns
-    modePrediction = -1
-    countModality = minModality
-
-    if len(preds) == maxQueueSize:
-        countPredictions = [0]*noOfSigns
-
-        for pred in preds:
-            if pred != -1:
-                countPredictions[pred]+=1
-        
-        for i in range(noOfSigns):
-            if countPredictions[i]>countModality:
-                modePrediction = i
-                countModality = countPredictions[i]
-
-        displaySignOnImage(modePrediction)
-    
-    return modePrediction
-
-def displayTextOnWindow(windowName,textToDisplay):
-    signImage = np.zeros((200,200,1),np.uint8)
-
-    cv2.putText(signImage,textToDisplay,(75,100),cv2.FONT_HERSHEY_SIMPLEX,2,(255,255,255),3,8);
-
-    cv2.imshow(windowName,signImage);
-
-def displaySignOnImage(predictSign):
-    dispSign = "--"
-    if predictSign != -1:
-        dispSign = chr(predictSign)+"";
-
-    displayTextOnWindow("Prediction",dispSign)
-    
-def recordTimings(start_time,time_key):
-    global minTimes,maxTimes,avgTimes,noOfFramesCollected
-    if noOfFramesCollected != 0: 
-        elapsed = timeit.default_timer() - start_time
-        avgTimes[time_key] = avgTimes[time_key] * ((noOfFramesCollected-1)/noOfFramesCollected) + elapsed/noOfFramesCollected
-        minTimes[time_key] = elapsed if elapsed < minTimes[time_key] else minTimes[time_key]
-        maxTimes[time_key] = elapsed if elapsed > maxTimes[time_key] else maxTimes[time_key]
-    return timeit.default_timer()
-
+minNoOfFramesBeforeGestureRecogStart = 140
 
 
 # def processImage():
+
+
+
+
+
+
+### ------------------- GESTURE handling present here -------------------------------------------------------------
+if recognitionMode == "GESTURE":
+    classifier = pickle.load(open('./Models/sign_classifier_knn.sav','rb'))
+    print("Loaded Gesture Recognition KNN Model")
+    observations = []
+elif recognitionMode == "SIGN":
+    classifier = pickle.load(open('./Models/digits_and_letters_model_new.sav','rb'))
+    print("Loaded Sign Recognition KNN Model")
+
 
 
 
@@ -131,18 +95,15 @@ else:
     s.bind(('',port))        
     print("UDP Socket binded to %s" %(port))
 
-total_captured=601
-trackingStarted = False
-noOfFramesNotTracked = 0
+
 while True:
     
     ### ---------------------------------Timing here--------------------------------------------------------------------
-    start_time_interFrame = recordTimings(start_time_interFrame,"INTERFRAME")
-    start_time1 = timeit.default_timer()
+    start_time1 = start_time_interFrame = tm.recordTimings(start_time_interFrame,"INTERFRAME",noOfFramesCollected)
     ### ---------------------------------Timing here--------------------------------------------------------------------
 
     noOfFramesCollected += 1
-    displayTextOnWindow("Frame No",str(noOfFramesCollected))
+    silatra_utils.displayTextOnWindow("Frame No",str(noOfFramesCollected))
     
     if mode == "TCP":
         buf = client.recv(4)
@@ -153,7 +114,20 @@ while True:
         # print(size)
         print("receiving image of size: %s bytes" % size)
 
-        if(size == 0):
+        if(size == 0 and recognitionMode == "SIGN"):
+            op1 = "QUIT\r\n"
+            client.send(op1.encode('ascii'))
+            break
+        elif(size == 0 and recognitionMode == "GESTURE"):
+            ### ------------------- GESTURE handling present here -----------------------------------------------------
+            print("\n\n---------------Recorded observations------------------\n\n",observations)
+            print("\n\n---------------Calling middle filtering layer for compression and noise elimination------------------------\n")
+            observations = filter_time_series.filterTS(observations)
+            gest12 = gesture_classify.recognize(observations)
+            print("\n\nVoila! And the gesture contained in the video is",gest12)
+            # op1 = "GESTURE:"+gest12 + "\r\n"
+            op1 = gest12 + "\r\n"
+            client.send(op1.encode('ascii'))
             op1 = "QUIT\r\n"
             client.send(op1.encode('ascii'))
             break
@@ -165,7 +139,7 @@ while True:
         print("Received %d bytes image (UDP Packet) from"%len(data), addr)
 
     ### ---------------------------------Timing here--------------------------------------------------------------------
-    start_time = recordTimings(start_time1,"DATA_TRANSFER")
+    start_time = tm.recordTimings(start_time1,"DATA_TRANSFER",noOfFramesCollected)
     ### ---------------------------------Timing here--------------------------------------------------------------------
 
     # if ctr123 % 5 != 0:
@@ -186,7 +160,7 @@ while True:
     img_np = cv2.resize(img_np,(0,0), fx=0.7, fy=0.7)
 
     ### ---------------------------------Timing here--------------------------------------------------------------------
-    start_time = recordTimings(start_time,"IMG_CONVERSION")
+    start_time = tm.recordTimings(start_time,"IMG_CONVERSION",noOfFramesCollected)
     ### ---------------------------------Timing here--------------------------------------------------------------------
 
     # cv2.resize(img_np,)
@@ -195,7 +169,7 @@ while True:
     mask1, foundFace, faceRect = silatra.segment(img_np)
     
     ### ---------------------------------Timing here--------------------------------------------------------------------
-    start_time = recordTimings(start_time,"SEGMENT")
+    start_time = tm.recordTimings(start_time,"SEGMENT",noOfFramesCollected)
     ### ---------------------------------Timing here--------------------------------------------------------------------
 
     # cv2.imshow("Mask",mask1)
@@ -206,51 +180,61 @@ while True:
 
     cv2.imshow("OG Img",img_np)
 
-    if not(trackingStarted) and foundFace and noOfFramesCollected >= 100:
-        trackingStarted = True
-        ok = tracker.init(img_np, faceRect)
-        trackerInitFace = faceRect
-    elif trackingStarted:
-        ok, bbox = tracker.update(img_np)
-        if ok:
-            cv2.rectangle(img_np, (int(bbox[0]),int(bbox[1])), (int(bbox[0]+bbox[2]),int(bbox[1]+bbox[3])), (255,0,0), 2)
-            
-            cv2.imshow("OG Img",img_np)
-            rows,cols,_ = img_np.shape
-            tx = int(trackerInitFace[0] - bbox[0])
-            ty = int(trackerInitFace[1] - bbox[1])
-            shiftMatrix = np.float32([[1,0,tx],[0,1,ty]])
-            
-            # Reference: https://www.docs.opencv.org/trunk/da/d6e/tutorial_py_geometric_transformations.html
-            img_np = cv2.warpAffine(img_np,shiftMatrix,(cols,rows))
-            mask1 = cv2.warpAffine(mask1,shiftMatrix,(cols,rows))
+    PersonStabilizer.stabilize(foundFace,noOfFramesCollected,img_np,faceRect,mask1)
 
-            cv2.imshow("Stabilized Image",img_np)
-            noOfFramesNotTracked = 0
-            # cv2.imshow("Stabilized Mask",mask1)
+    ### ---------------------------------Timing here--------------------------------------------------------------------
+    start_time = tm.recordTimings(start_time,"STABILIZE",noOfFramesCollected)
+    ### ---------------------------------Timing here--------------------------------------------------------------------
+
+    handFound, hand, contours_of_hand = silatra_utils.get_my_hand(mask1)
+
+    if recognitionMode == "SIGN":
+        if handFound:
+            cv2.imshow("Your hand",hand)
+            features = silatra_utils.extract_features(hand, (20,20))
+            pred = silatra_utils.predictSign(classifier,features)
         else:
-            noOfFramesNotTracked += 1
-            if noOfFramesNotTracked > 15:
-                trackingStarted = False
-                noOfFramesNotTracked = 0
+            pred = -1
+        silatra_utils.addToQueue(pred)
+        pred = silatra_utils.getConsistentSign()
 
-    ### ---------------------------------Timing here--------------------------------------------------------------------
-    start_time = recordTimings(start_time,"STABILIZE")
-    ### ---------------------------------Timing here--------------------------------------------------------------------
+        # pred = -1
+        print("Stable Sign:",pred)
+
+        if pred == -1:
+            op1  = "--"+"\r\n"
+        else:
+            op1 = chr(pred)+"\r\n"
 
 
-    pred = dsk.findSign(mask1)
+    elif recognitionMode == "GESTURE":
+        if handFound:
+            cv2.imshow("Your hand",hand)
+            direction = directionTracker.trackDirection(contours_of_hand)
+            print('Frame %3d -> %-11s'%(noOfFramesCollected,direction))
+            if direction == "None":
+                features = silatra_utils.extract_features(hand, (20,20))
+                predicted_sign = silatra_utils.predictSign(classifier,features)
+                silatra_utils.displayTextOnWindow("Sign",predicted_sign,10,100)
+                if noOfFramesCollected > minNoOfFramesBeforeGestureRecogStart:
+                    observations.append((predicted_sign,'None'))
+            else:
+                silatra_utils.displayTextOnWindow("Sign",direction,25,100)
+                if noOfFramesCollected > minNoOfFramesBeforeGestureRecogStart:
+                    observations.append(('None',direction))
 
-    print("Received Sign:",pred)
-    addToQueue(pred)
+        if len(observations) == 0:
+            op1 = "--"+"\r\n"
+        elif observations[-1][0] == "None":
+            op1 = observations[-1][1]+"\r\n"
+        else:
+            op1 = observations[-1][0]+"\r\n"
 
-    pred = predictSign()
-    # pred = -1
-    print("Stable Sign:",pred)
-    if pred == -1:
-        op1  = "--"+"\r\n"
     else:
-        op1 = chr(pred)+"\r\n"
+        break
+    
+    
+
     
     if mode == "TCP":
         client.send(op1.encode('ascii'))
@@ -260,39 +244,44 @@ while True:
         clientSock.sendto(Message, (str(addr), port))
 
     ### ---------------------------------Timing here--------------------------------------------------------------------
-    start_time = recordTimings(start_time,"CLASSIFICATION")
+    start_time = tm.recordTimings(start_time,"CLASSIFICATION",noOfFramesCollected)
     ### ---------------------------------Timing here--------------------------------------------------------------------
 
 
 
     ### ---------------------------------Timing here--------------------------------------------------------------------
-    recordTimings(start_time1,"OVERALL")
+    tm.recordTimings(start_time1,"OVERALL",noOfFramesCollected)
     ### ---------------------------------Timing here--------------------------------------------------------------------
 
 
 
-    # test.testMe(img_np)
+    
     k = cv2.waitKey(10)
     if k == 'q':
         break
     elif k=='c':
-        if total_captured is 300: break
+        if total_captured >= 300: break
         cv2.imwrite('../training-images/tejas/ThumbsUp/%d.png'%(total_captured))
         total_captured += 1
     
 
 
-print('Stopped server')
-print('\n\nTimings for %d frames'%noOfFramesCollected)
-for key12 in timeKeys: 
-    print(timeStrings[key12])
-    print('          Min Time taken:',"%.4fs"%minTimes[key12])
-    print('          Avg Time taken:',"%.4fs"%avgTimes[key12])
-    print('          Max Time taken:',"%.4fs"%maxTimes[key12])
+
+
+print('Stopped '+mode+' server of port: '+str(port))
+print(recognitionMode+" recognition stopped")
+tm.displayAllTimings(noOfFramesCollected)
+
+
+
 
 # client.close()
 s.close()
 cv2.destroyAllWindows()
+
+
+
+
 
 
 def cleaners():
