@@ -11,6 +11,8 @@ import struct
 import atexit
 import timeit
 import sys
+import tkinter
+import netifaces as ni
 
 import numpy as np
 import cv2
@@ -58,7 +60,7 @@ start_time, start_time_interFrame = 0, 0
 
 total_captured=601  # This is used as an initial count of frames captured for capturing new frames
 
-minNoOfFramesBeforeGestureRecogStart = 140
+minNoOfFramesBeforeGestureRecogStart = 70
 
 
 # def processImage():
@@ -79,12 +81,30 @@ elif recognitionMode == "SIGN":
 
 
 
+def port_initializer():
+    global port
+    port = int(port_entry.get())
+    opening_window.destroy()
+
+opening_window = tkinter.Tk()
+port_label = tkinter.Label(opening_window, text = "Port to be reserved:")
+port_label.pack(side = tkinter.LEFT)
+port_entry = tkinter.Entry(opening_window, bd=3)
+port_entry.pack(side = tkinter.RIGHT)
+save_button = tkinter.Button(opening_window, command = port_initializer)
+save_button.pack()
+opening_window.mainloop()
+
+
+# Reference: https://stackoverflow.com/a/24196955/5370202
+ni.ifaddresses('wlo1')
+ipAddr = ni.ifaddresses('wlo1')[ni.AF_INET][0]['addr']
 
 if mode == "TCP":
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         
     print("TCP Socket successfully created")
     s.bind(('', port))        
-    print("TCP Socket binded to %s" %(port))
+    print("TCP Socket binded to %s: %s" %(ipAddr,port))
     s.listen(1)     
     print("Socket is listening")
     client, addr = s.accept()     
@@ -93,7 +113,7 @@ else:
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)         
     print("UDP Socket successfully created")
     s.bind(('',port))        
-    print("UDP Socket binded to %s" %(port))
+    print("UDP Socket binded to %s: %s" %(ipAddr,port))
 
 
 while True:
@@ -204,6 +224,8 @@ while True:
         if pred == -1:
             op1  = "--"+"\r\n"
         else:
+            if pred == "2":
+                pred = "2 / v"
             op1 = chr(pred)+"\r\n"
 
 

@@ -11,7 +11,7 @@ def trackDirection(hand_contour):
     cx = int(M["m10"] / M["m00"])
     cy = int(M["m01"] / M["m00"])
 
-    if prev_x is 0 and prev_y is 0: prev_x, prev_y = 0, 0
+    if prev_x is 0 and prev_y is 0: prev_x, prev_y = cx, cy
     
     delta_x, delta_y, slope, direction = prev_x-cx, prev_y-cy, 0, 'None'
 
