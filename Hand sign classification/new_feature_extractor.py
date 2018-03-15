@@ -1,4 +1,4 @@
-import cv2, numpy as np, time, math, winsound
+import cv2, numpy as np, time, math
 from math import ceil
 import pandas as pd
 from sklearn.model_selection import train_test_split as tts
@@ -71,16 +71,16 @@ for loc in range(len(DATA_LOCS)):
                         to_write_data += str(data[column][row]) + ','
                 # if label in [chr(ord('a')+i) for i in range(26)]: to_write_data += str(ord(label)) + '\n'
                 # else: to_write_data += str(ord(label)) + '\n'
-                to_write_data += str(ord(label)) + '\n'
+                to_write_data += str(label) + '\n'
                 dump_file.write(to_write_data)
                 total_images_parsed += 1
             except Exception as e:
-                #print(e)
+                print(e)
                 continue
 total = (time.time() - start)
 print(' '*160+'\rTotal time required = %3.3fs' % (total))
 print('Total images parsed: %d'%(total_images_parsed))
-winsound.Beep(1000, 100)
-winsound.Beep(1200, 100)
-winsound.Beep(1500, 100)
-winsound.Beep(1700, 100)
+# winsound.Beep(1000, 100)
+# winsound.Beep(1200, 100)
+# winsound.Beep(1500, 100)
+# winsound.Beep(1700, 100)
