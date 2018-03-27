@@ -37,7 +37,8 @@ Mat getMyHand(Mat& image);
 // void reduceClusterPoints(vector< vector< Point > > &contours, vector<vector<Point> > &hull);
 // void findClassUsingPythonModels( vector<float> &distVector );
 void detectAndEliminateFace(Mat frame);
-
+bool isInSkinRange(const u_char& B, const u_char& G, const u_char& R);
+Mat extractSkinColorRange(Mat& srcBGR);
 
 
 
@@ -73,7 +74,7 @@ This is the main entry point function of this file
 Mat getMyHand(Mat& imageOG){
 	// startTime=(double)getTickCount();  //---Timing related part
 
-	detectAndEliminateFace(imageOG);
+	// detectAndEliminateFace(imageOG);
 
 	Mat image,imageYCrCb;
     
@@ -86,6 +87,10 @@ Mat getMyHand(Mat& imageOG){
     
     Mat dst;
 	inRange(imageYCrCb,Scalar(YMin,CrMin,CbMin),Scalar(YMax,CrMax,CbMax),dst);
+
+	// dst = extractSkinColorRange(image);
+	imshow("Masked Image",dst);
+	
 
 
 	// frameStepsTimes[ SKIN_COLOR_EXTRACTION ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
@@ -108,7 +113,7 @@ Mat getMyHand(Mat& imageOG){
 	
 	Mat dilateElement = getStructuringElement(MORPH_ELLIPSE,Size(3,3),Point(1,1));
 	/* This will enlarge white areas */
-	dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),1);
+	// dilate(dstEroded,dstEroded,dilateElement,Point(-1,-1),1);
 	
 
 	// frameStepsTimes[ MORPHOLOGY_OPERATIONS ] = (getTickCount()-(double)startTime)/getTickFrequency();   //---Timing related part
@@ -132,7 +137,7 @@ Mat getMyHand(Mat& imageOG){
 	/// Show in a window  
 	// imshow("Contours", contouredImg );	
 	// imwrite("./ContourImages/img.png",contouredImg);
-	// imshow("Morphed Mask",dstEroded);
+	imshow("Morphed Mask",dstEroded);
 	// imshow("Masked Image",maskedImg);
 	// imshow("Final Image",finImg);
 	// imshow("HSV + BGR Mask",dst);
@@ -199,4 +204,37 @@ void detectAndEliminateFace(Mat frame){
 
 	//-- Show what you got
 	// imshow( "Framed", frame );
+}
+
+
+Mat extractSkinColorRange(Mat& srcBGR){
+	int nRows=srcBGR.rows;
+	int nCols=srcBGR.cols*3;
+	
+	Mat dst(nRows,srcBGR.cols,CV_8UC1,Scalar(0));
+		
+	uchar *bgrRow, *dstRow;
+	for(int i=0;i<nRows;i++){
+		bgrRow = srcBGR.ptr<uchar>(i);
+		dstRow = dst.ptr<uchar>(i);
+		
+		for(int j=0;j<nCols;j+=3){
+			if( isInSkinRange(bgrRow[j],bgrRow[j+1],bgrRow[j+2]) ){
+				dstRow[j/3]=255;
+			}
+		}
+	}
+
+	
+	
+	return dst;
+}
+
+
+bool isInSkinRange(const u_char& B, const u_char& G, const u_char& R){
+	int Y = 0.299 * R + 0.587 * G + 0.114 * B;
+	int U = -0.147 * R - 0.289 * G + 0.436 * B + 128;
+	int V = 0.615 * R - 0.515 * G - 0.100 * B + 128;
+	return 80 < U && U < 130 && 136 < V && V < 200 && V > U && R > 80 && G > 30 && B > 15 && abs(R-G) > 15;
+
 }

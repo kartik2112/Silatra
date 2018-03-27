@@ -1,5 +1,6 @@
 import cv2, numpy as np, argparse
 import silatra
+import os
 
 ap = argparse.ArgumentParser()
 ap.add_argument('-s','--sign',help='This is the label and the folder name where your images would be stored')
@@ -12,9 +13,12 @@ cap = cv2.VideoCapture(0)
 #cap.set(3,640); cap.set(4,480)
 #cap.set(cv2.CAP_PROP_FPS, 5)
 
-total_captured = 0
+total_captured = 390
 if args.get('sign'): sign = args.get('sign')
 else: sign = int(input('Ab konsa no: '))
+
+if not os.path.exists("../training-images/tejas/%s/"%(sign)):
+    os.makedirs("../training-images/tejas/%s/"%(sign))
 while True:
     _, frame = cap.read()
     x,y,w,h = 70,50,300,300

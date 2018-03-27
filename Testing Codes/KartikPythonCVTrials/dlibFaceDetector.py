@@ -1,3 +1,5 @@
+# Reference: https://handmap.github.io/dlib-classifier-for-object-detection/
+
 # import the necessary packages
 from imutils import face_utils
 import numpy as np

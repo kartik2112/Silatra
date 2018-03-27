@@ -1,4 +1,5 @@
 import cv2, numpy as np, time, math
+import silatra
 from math import ceil
 import pandas as pd
 from sklearn.model_selection import train_test_split as tts
@@ -6,32 +7,35 @@ from sklearn.metrics import confusion_matrix
 from sklearn.neighbors import KNeighborsClassifier
 
 start = time.time()
-dump_file = open('digits_and_letters.csv','w')
-grid = (20,20)   #(rows,columns)
-for i in range(grid[0]*grid[1]): dump_file.write('f'+str(i)+',')
-dump_file.write('label\n')
+dump_file = open('digits_and_letters.csv','a')
+grid = (20,20)   #(rows,colu        mns)
+# for i in range(grid[0]*grid[1]): dump_file.write('f'+str(i)+',')
+# dump_file.write('label\n')
 
 total_images_parsed = 0
-DATA_LOCS = ['training-images-tejas\\Digits\\', 'training-images-kartik\\Letters\\', 'training-images-tejas\\Backup\\Digits\\', 'training-images-kartik\\Digits\\', 'training-images-varun\\Digits\\']
+# DATA_LOCS = ['training-images-tejas\\Digits\\', 'training-images-kartik\\Letters\\', 'training-images-tejas\\Backup\\Digits\\', 'training-images-kartik\\Digits\\', 'training-images-varun\\Digits\\']
+DATA_LOCS = ['../training-images/tejas/']
 params = [145,145,145,135,137]
 for loc in range(len(DATA_LOCS)):
     DATA_LOC = DATA_LOCS[loc]
     lower = np.array([0,params[loc],60],np.uint8)
     upper = np.array([255,180,127],np.uint8)
     
-    for label in [str(i) for i in range(10)]+[chr(ord('a')+i) for i in range(26)]:
+    # for label in [str(i) for i in range(10)]+[chr(ord('a')+i) for i in range(26)]:
+    for label in ['i']:
         for i in range(1,700):
             try:
-                print(' '*160+'\rProcessing image: %3d, Label = %c, From Location: %s' % (i,label,DATA_LOC),end='\r')
+                print(' '*160+'\rProcessing image: %3d, Label = %c, From Location: %s' % (i,label,DATA_LOC+str(label)+"\\"+str(i)+'.png'),end='\r')
                 #image = cv2.imread(DATA_LOC+label+'\\'+str(i)+'.png')
-                image = cv2.imread(DATA_LOC+str(label)+"\\"+str(i)+'.png')
+                image = cv2.imread(DATA_LOC+str(label)+"/"+str(i)+'.png')
 
                 if image.shape[0] == 0: continue
-                blur = cv2.blur(image,(3,3))
-                ycrcb = cv2.cvtColor(blur,cv2.COLOR_BGR2YCR_CB)
+                # blur = cv2.blur(image,(3,3))
+                # ycrcb = cv2.cvtColor(blur,cv2.COLOR_BGR2YCR_CB)
 
-                #Create a binary image with where white will be skin colors and rest is black
-                mask2 = cv2.inRange(ycrcb,lower,upper)
+                # #Create a binary image with where white will be skin colors and rest is black
+                # mask2 = cv2.inRange(ycrcb,lower,upper)
+                mask2,_,_ = silatra.segment(image)
                 _,thresh = cv2.threshold(mask2,127,255,0)
 
                 _,contours,_ = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
