@@ -124,13 +124,17 @@ def getConsistentSign():
     countModality = minModality
 
     if len(preds) == maxQueueSize:
-        countPredictions = [0]*noOfSigns
+        # countPredictions = [0]*noOfSigns
+        countPredictions = {}
 
         for pred in preds:
             if pred != -1:
-                countPredictions[pred]+=1
+                try:
+                    countPredictions[pred]+=1
+                except:
+                    countPredictions[pred] = 1
         
-        for i in range(noOfSigns):
+        for i in countPredictions.keys():
             if countPredictions[i]>countModality:
                 modePrediction = i
                 countModality = countPredictions[i]
@@ -166,7 +170,7 @@ def displaySignOnImage(predictSign):
     '''
     dispSign = "--"
     if predictSign != -1:
-        dispSign = chr(predictSign)+"";
+        dispSign = predictSign+"";
 
     displayTextOnWindow("Prediction",dispSign)
 

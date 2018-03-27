@@ -17,6 +17,8 @@ import netifaces as ni
 import numpy as np
 import cv2
 import imutils
+import dlib
+from imutils import face_utils
 
 # from scipy.fftpack import fft, ifft
 from sklearn.neighbors import KNeighborsClassifier
@@ -41,7 +43,7 @@ import directionTracker
 
 
 mode = "TCP"  # TCP | UDP   # This is the type of socket that this server must create for listening
-port = 49164                # This is the port no to which the server socket is attached
+port = 9001                 # This is the port no to which the server socket is attached
 
 
 recognitionMode = "SIGN"  # SIGN | GESTURE    # This is the mode of recognition. 
@@ -66,7 +68,8 @@ minNoOfFramesBeforeGestureRecogStart = 70
 # def processImage():
 
 
-
+detector = dlib.get_frontal_face_detector()
+predictor = dlib.shape_predictor("Models/shape_predictor_68_face_landmarks.dat")
 
 
 
@@ -114,7 +117,8 @@ else:
     print("UDP Socket successfully created")
     s.bind(('',port))        
     print("UDP Socket binded to %s: %s" %(ipAddr,port))
-
+    UDP_IP_ADDRESS2 = ""
+    UDP_SEND_PORT_NO = 0
 
 while True:
     
@@ -157,6 +161,7 @@ while True:
     else:
         data, addr = s.recvfrom(65507)
         print("Received %d bytes image (UDP Packet) from"%len(data), addr)
+        UDP_IP_ADDRESS2,UDP_SEND_PORT_NO = addr[0],addr[1]
 
     ### ---------------------------------Timing here--------------------------------------------------------------------
     start_time = tm.recordTimings(start_time1,"DATA_TRANSFER",noOfFramesCollected)
@@ -179,6 +184,10 @@ while True:
     img_np = imutils.rotate_bound(img_np,90)
     img_np = cv2.resize(img_np,(0,0), fx=0.7, fy=0.7)
 
+    # if total_captured >= 50:
+    #     cv2.imwrite('../training-images/kartik/SampleImages/%d.png'%(total_captured),img_np)
+    #     total_captured += 1
+
     ### ---------------------------------Timing here--------------------------------------------------------------------
     start_time = tm.recordTimings(start_time,"IMG_CONVERSION",noOfFramesCollected)
     ### ---------------------------------Timing here--------------------------------------------------------------------
@@ -186,7 +195,29 @@ while True:
     # cv2.resize(img_np,)
     
     # pred = silatra.findMeTheSign(img_np)
-    mask1, foundFace, faceRect = silatra.segment(img_np)
+
+    gray = cv2.cvtColor(img_np, cv2.COLOR_BGR2GRAY)
+
+    # detect faces in the grayscale image
+    rects = detector(gray, 1)
+
+    maxArea1 = 0
+    faceRect = -1
+    foundFace = False
+
+    for (i, rect) in enumerate(rects):
+        (x, y, w, h) = face_utils.rect_to_bb(rect)
+        cv2.rectangle(img_np, (x, y), (x + w, y + h), (0, 0, 0), -1)
+        if w*h > maxArea1:
+            maxArea1 = w*h
+            faceRect = (x,y,w,h)
+            foundFace = True
+            
+
+
+
+    # mask1, foundFace, faceRect = silatra.segment(img_np)
+    mask1, _, _ = silatra.segment(img_np)
     
     ### ---------------------------------Timing here--------------------------------------------------------------------
     start_time = tm.recordTimings(start_time,"SEGMENT",noOfFramesCollected)
@@ -200,7 +231,7 @@ while True:
 
     cv2.imshow("OG Img",img_np)
 
-    PersonStabilizer.stabilize(foundFace,noOfFramesCollected,img_np,faceRect,mask1)
+    # PersonStabilizer.stabilize(foundFace,noOfFramesCollected,img_np,faceRect,mask1)
 
     ### ---------------------------------Timing here--------------------------------------------------------------------
     start_time = tm.recordTimings(start_time,"STABILIZE",noOfFramesCollected)
@@ -226,7 +257,7 @@ while True:
         else:
             if pred == "2":
                 pred = "2 / v"
-            op1 = chr(pred)+"\r\n"
+            op1 = pred+"\r\n"
 
 
     elif recognitionMode == "GESTURE":
@@ -261,9 +292,10 @@ while True:
     if mode == "TCP":
         client.send(op1.encode('ascii'))
     else:
-        Message = bytearray([1,2,3,4,5])
+        Message = str.encode("Hello")
         clientSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        clientSock.sendto(Message, (str(addr), port))
+        clientSock.sendto(Message, (UDP_IP_ADDRESS2, UDP_SEND_PORT_NO))
+        print("Sending data")
 
     ### ---------------------------------Timing here--------------------------------------------------------------------
     start_time = tm.recordTimings(start_time,"CLASSIFICATION",noOfFramesCollected)
@@ -281,10 +313,8 @@ while True:
     k = cv2.waitKey(10)
     if k == 'q':
         break
-    elif k=='c':
-        if total_captured >= 300: break
-        cv2.imwrite('../training-images/tejas/ThumbsUp/%d.png'%(total_captured))
-        total_captured += 1
+    # elif k=='c':
+    
     
 
 

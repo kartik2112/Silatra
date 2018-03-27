@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 
 folders = open('imageSources.txt')
+f = open('hand-dataset.xml','a')
 
 imgNo = 1
 for folderPath in folders:
@@ -13,8 +14,8 @@ for folderPath in folders:
             os.makedirs("./Segmented images/"+folderPath.strip("\n"))
 
     # ctr = 120
-    for img1 in os.listdir("../"+folderPath.strip("\n")):
-        img = cv2.imread("../"+folderPath.strip("\n")+"/"+img1)
+    for img1 in os.listdir(folderPath.strip("\n")):
+        img = cv2.imread(folderPath.strip("\n")+"/"+img1)
         img = cv2.GaussianBlur(img,(5,5),0)
         img = cv2.medianBlur(img,5)
 
@@ -53,37 +54,39 @@ for folderPath in folders:
         # w+=20
         # h+=20
 
-        if w>h:
-            y-=int((w-h)/2)
-            h=w
-        else:
-            x-=int((h-w)/2)
-            w=h
-        iH,iW,iC = img.shape
+        # if w>h:
+        #     y-=int((w-h)/2)
+        #     h=w
+        # else:
+        #     x-=int((h-w)/2)
+        #     w=h
+        # iH,iW,iC = img.shape
 
-        if x<0:
-            x=0
-        if y<0:
-            y=0
+        # if x<0:
+        #     x=0
+        # if y<0:
+        #     y=0
 
-        if y+h>iH:
-            y-=(y+h-iH+1)
-            print("H exceeds!!")
-        if x+w>iW:
-            x-=(x+w-iW+1)
-            print("W exceeds!!")
+        # if y+h>iH:
+        #     y-=(y+h-iH+1)
+        #     print("H exceeds!!")
+        # if x+w>iW:
+        #     x-=(x+w-iW+1)
+        #     print("W exceeds!!")
 
         # print(rect)
         # cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),1)
         # print(img1)
+
+
         roi = img[y:y+h,x:x+w]
-        roi = cv2.resize(roi,(200,200))
+
+        # roi = cv2.resize(roi,(200,200))
         
-        # cv2.imshow("Img1",img)
-        # cv2.imshow("Img",roi)
         
         # cv2.imwrite("./Segmented images/"+folderPath.strip("\n")+str(imgNo)+".png",roi)
-        cv2.imwrite("./Segmented images/"+folderPath.strip("\n")+"/"+img1,roi)
+        # cv2.imwrite("./Segmented images/"+folderPath.strip("\n")+"/"+img1,roi)
+        f.write("<image file='%s'>\n\t<box top='%d' left='%d' width='%d' height='%d'>\n\t\t<label>%s</label>\n\t</box>\n</image>\n"%(img1,y,x,w,h,"hand"))
         print(folderPath.strip("\n")+"/"+img1)
         imgNo+=1
         # ctr-=1

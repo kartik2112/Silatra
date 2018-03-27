@@ -18,7 +18,7 @@ tracker = cv2.TrackerKCF_create()
 
 
 
-def stabilize(foundFace,noOfFramesCollected,img_np,faceRect,mask1):
+def stabilize(foundFace,noOfFramesCollected,img_np,faceRect,mask1,total_captured):
     '''
     * Here is the stabilization logic
     *
@@ -38,7 +38,11 @@ def stabilize(foundFace,noOfFramesCollected,img_np,faceRect,mask1):
         if ok:
             cv2.rectangle(img_np, (int(bbox[0]),int(bbox[1])), (int(bbox[0]+bbox[2]),int(bbox[1]+bbox[3])), (255,0,0), 2)
             
+            # img_np1 = img_np.copy()
+            # cv2.putText(img_np1,str("("+str(int(bbox[0]))+","+str(int(bbox[1]))+")"),(int(bbox[0]-10),int(bbox[1]-20)),cv2.FONT_HERSHEY_SIMPLEX,0.5,(255,255,255),1,8);
+            # cv2.imshow("OG Img",img_np1)
             cv2.imshow("OG Img",img_np)
+            # cv2.imwrite('../training-images/kartik/SampleImages/%d_OG.png'%(total_captured),img_np1)
             rows,cols,_ = img_np.shape
             tx = int(trackerInitFace[0] - bbox[0])
             ty = int(trackerInitFace[1] - bbox[1])
@@ -48,7 +52,9 @@ def stabilize(foundFace,noOfFramesCollected,img_np,faceRect,mask1):
             img_np = cv2.warpAffine(img_np,shiftMatrix,(cols,rows))
             mask1 = cv2.warpAffine(mask1,shiftMatrix,(cols,rows))
 
+            # cv2.putText(img_np,str("("+str(trackerInitFace[0])+","+str(trackerInitFace[1])+")"),(int(trackerInitFace[0]-10),int(trackerInitFace[1]-20)),cv2.FONT_HERSHEY_SIMPLEX,0.5,(255,255,255),1,8);
             cv2.imshow("Stabilized Image",img_np)
+            # cv2.imwrite('../training-images/kartik/SampleImages/%d_Stabilized.png'%(total_captured),img_np)
             noOfFramesNotTracked = 0
             # cv2.imshow("Stabilized Mask",mask1)
         else:
