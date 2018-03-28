@@ -46,7 +46,7 @@ mode = "TCP"  # TCP | UDP   # This is the type of socket that this server must c
 port = 9001                 # This is the port no to which the server socket is attached
 
 
-recognitionMode = "SIGN"  # SIGN | GESTURE    # This is the mode of recognition. 
+recognitionMode = "GESTURE"  # SIGN | GESTURE    # This is the mode of recognition. 
                             # Currently, we have designed the recognition in 2 different modes
 
 
@@ -75,11 +75,11 @@ predictor = dlib.shape_predictor("Models/shape_predictor_68_face_landmarks.dat")
 
 ### ------------------- GESTURE handling present here -------------------------------------------------------------
 if recognitionMode == "GESTURE":
-    classifier = pickle.load(open('./Models/sign_classifier_knn.sav','rb'))
+    classifier = pickle.load(open('./Models/gesture_model_10_10.knn.sav','rb'))
     print("Loaded Gesture Recognition KNN Model")
     observations = []
 elif recognitionMode == "SIGN":
-    classifier = pickle.load(open('./Models/digits_and_letters_model_new.sav','rb'))
+    classifier = pickle.load(open('./Models/digits_and_letters_10_10.sav','rb'))
     print("Loaded Sign Recognition KNN Model")
 
 
@@ -242,7 +242,7 @@ while True:
     if recognitionMode == "SIGN":
         if handFound:
             cv2.imshow("Your hand",hand)
-            features = silatra_utils.extract_features(hand, (20,20))
+            features = silatra_utils.extract_features(hand, (10,10))
             pred = silatra_utils.predictSign(classifier,features)
         else:
             pred = -1
@@ -266,7 +266,7 @@ while True:
             direction = directionTracker.trackDirection(contours_of_hand)
             print('Frame %3d -> %-11s'%(noOfFramesCollected,direction))
             if direction == "None":
-                features = silatra_utils.extract_features(hand, (20,20))
+                features = silatra_utils.extract_features(hand, (10,10))
                 predicted_sign = silatra_utils.predictSign(classifier,features)
                 silatra_utils.displayTextOnWindow("Sign",predicted_sign,10,100)
                 if noOfFramesCollected > minNoOfFramesBeforeGestureRecogStart:
