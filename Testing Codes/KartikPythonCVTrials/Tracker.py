@@ -88,5 +88,5 @@ if __name__ == '__main__' :
         cv2.imshow("Tracking", frame)
  
         # Exit if ESC pressed
-        k = cv2.waitKey(1) & 0xff
-        if k == 27 : break
+        k = cv2.waitKey(10) & 0xff
+        if k == ord('q') : break

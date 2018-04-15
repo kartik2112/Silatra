@@ -271,7 +271,7 @@ def test_stable_series_of_Good_Night():
 
     tools.eq_(filterTS(IP_Ts),Expected_TS)
 
-def test_noisy1_series_of_Good_Morning():
+def test_noisy1_series_of_Good_Night():
     IP_Ts = [("ThumbsUp","None"),("None","Up"),("Apple_Finger","None"),
             ("ThumbsUp","None"),("ThumbsUp","None"),("ThumbsUp","None"),
             ("ThumbsUp","None"),("ThumbsUp","None"),

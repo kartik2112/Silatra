@@ -13,6 +13,9 @@ import timeit
 import sys
 import tkinter
 import netifaces as ni
+import os
+
+import argparse
 
 import numpy as np
 import cv2
@@ -32,12 +35,21 @@ import silatra_utils
 sys.path.insert(0, "Modules")
 import TimingMod as tm
 import PersonStabilizer
+import FaceEliminator
 
 # Following modules are used specifically for Gesture recognition
 sys.path.insert(0, "Gesture_Modules")
 import filter_time_series
 import gesture_classify
 import directionTracker
+import hmmGestureClassify
+
+parser = argparse.ArgumentParser(description='Main Entry Point')
+parser.add_argument('--recordVideos', 
+                    help='Usage: python3 ImgReceiver.py --recordVideos True --subDir GN')
+parser.add_argument('--subDir', 
+                    help='Usage: python3 ImgReceiver.py --recordVideos True --subDir GN')
+args = parser.parse_args()
 
 
 
@@ -64,20 +76,40 @@ total_captured=601  # This is used as an initial count of frames captured for ca
 
 minNoOfFramesBeforeGestureRecogStart = 70
 
+newGestureStarted = False
+
 
 # def processImage():
 
 
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor("Models/shape_predictor_68_face_landmarks.dat")
+# predictor = dlib.shape_predictor("Models/shape_predictor_68_face_landmarks.dat")
 
+videoCounter = 5
+subdir = args.subDir
+mainDir = '../training-images/GestureVideos/GN1'
+if args.recordVideos == None:
+    recordVideos = False
+else:
+    recordVideos = args.recordVideos
+    if not(os.path.isdir(mainDir)):
+        os.makedirs(mainDir)
 
+def videoInitializer():
+    global videoCounter
+    fourcc = cv2.VideoWriter_fourcc(*'DIVX')
+    out = cv2.VideoWriter(mainDir+'/Gesture_'+subdir+'_'+'%03d'%(videoCounter)+'.avi',fourcc, 5, (336,448))
+    videoCounter += 1
+    return out
 
 ### ------------------- GESTURE handling present here -------------------------------------------------------------
 if recognitionMode == "GESTURE":
     classifier = pickle.load(open('./Models/gesture_model_10_10.knn.sav','rb'))
     print("Loaded Gesture Recognition KNN Model")
     observations = []
+    if recordVideos:
+        out = videoInitializer()
+    op1 = "--"+"\r\n"
 elif recognitionMode == "SIGN":
     classifier = pickle.load(open('./Models/digits_and_letters_10_10.sav','rb'))
     print("Loaded Sign Recognition KNN Model")
@@ -88,6 +120,8 @@ def port_initializer():
     global port
     port = int(port_entry.get())
     opening_window.destroy()
+
+
 
 opening_window = tkinter.Tk()
 port_label = tkinter.Label(opening_window, text = "Port to be reserved:")
@@ -183,6 +217,7 @@ while True:
 
     img_np = imutils.rotate_bound(img_np,90)
     img_np = cv2.resize(img_np,(0,0), fx=0.7, fy=0.7)
+    
 
     # if total_captured >= 50:
     #     cv2.imwrite('../training-images/kartik/SampleImages/%d.png'%(total_captured),img_np)
@@ -207,7 +242,7 @@ while True:
 
     for (i, rect) in enumerate(rects):
         (x, y, w, h) = face_utils.rect_to_bb(rect)
-        cv2.rectangle(img_np, (x, y), (x + w, y + h), (0, 0, 0), -1)
+        # cv2.rectangle(img_np, (x, y), (x + w, y + h), (0, 0, 0), -1)
         if w*h > maxArea1:
             maxArea1 = w*h
             faceRect = (x,y,w,h)
@@ -222,6 +257,9 @@ while True:
     ### ---------------------------------Timing here--------------------------------------------------------------------
     start_time = tm.recordTimings(start_time,"SEGMENT",noOfFramesCollected)
     ### ---------------------------------Timing here--------------------------------------------------------------------
+    
+    mask1 = FaceEliminator.eliminateFace(mask1, foundFace, faceRect)
+    cv2.imshow("Mask12",mask1)
 
     # cv2.imshow("Mask",mask1)
     print("Found face at:",foundFace,"as:",faceRect)
@@ -265,19 +303,48 @@ while True:
             cv2.imshow("Your hand",hand)
             direction = directionTracker.trackDirection(contours_of_hand)
             print('Frame %3d -> %-11s'%(noOfFramesCollected,direction))
-            if direction == "None":
+            if direction == "None":                
                 features = silatra_utils.extract_features(hand, (10,10))
                 predicted_sign = silatra_utils.predictSign(classifier,features)
-                silatra_utils.displayTextOnWindow("Sign",predicted_sign,10,100)
+                silatra_utils.displayTextOnWindow("Sign",predicted_sign,10,100,1)
                 if noOfFramesCollected > minNoOfFramesBeforeGestureRecogStart:
+                    if newGestureStarted == False:
+                        newGestureStarted = True
                     observations.append((predicted_sign,'None'))
+                    if recordVideos:
+                        out.write(img_np)
             else:
-                silatra_utils.displayTextOnWindow("Sign",direction,25,100)
-                if noOfFramesCollected > minNoOfFramesBeforeGestureRecogStart:
+                silatra_utils.displayTextOnWindow("Sign",direction,25,100,1.5)
+                if noOfFramesCollected > minNoOfFramesBeforeGestureRecogStart and newGestureStarted == True:
                     observations.append(('None',direction))
+                    if recordVideos:
+                        out.write(img_np)
+        else:
+            if len(observations)>0:
+                ### ------------------- GESTURE handling present here -----------------------------------------------------
+                print("\n\n---------------Recorded observations------------------\n\n",observations)
+                print("\n\n---------------Calling middle filtering layer for compression and noise elimination------------------------\n")
+                hmmGest12 = hmmGestureClassify.classifyGestureByHMM(observations)
+                observations = filter_time_series.filterTS(observations)
+                gest12 = gesture_classify.recognize(observations)
+                silatra_utils.displayTextOnWindow("HMMGesture",hmmGest12[0],10,100,1)
+                # silatra_utils.displayTextOnWindow("Gesture",gest12,10,100,1)
+                print("\n\nVoila! And the gesture contained in the video is",gest12)
+                print("\n\nVoila! And the gesture recognized by HMM is",hmmGest12)
+                # op1 = "GESTURE:"+gest12 + "\r\n"
+                op1 = gest12 + "\r\n"
+                client.send(op1.encode('ascii'))
+                observations = []
+                newGestureStarted = False
+                if recordVideos:
+                    out.release()
+                    out = videoInitializer()
+            else:
+                print("New gesture not yet started")
+                
 
         if len(observations) == 0:
-            op1 = "--"+"\r\n"
+            pass
         elif observations[-1][0] == "None":
             op1 = observations[-1][1]+"\r\n"
         else:

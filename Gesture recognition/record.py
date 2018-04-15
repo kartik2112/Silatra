@@ -12,7 +12,7 @@ out = cv2.VideoWriter('test2.avi',fourcc, 10, (300,300))
 start_rec = False
 while(1):
     _,frame = cap.read()
-    mask = segment(frame, lower, upper)
+    mask,_,_ = segment(frame, lower, upper)
 
     x,y,w,h = 100,100,300,300
     cv2.rectangle(frame, (x,y), (x+w,y+h), (0,255,0), thickness=2)

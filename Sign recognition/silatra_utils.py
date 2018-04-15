@@ -143,7 +143,7 @@ def getConsistentSign():
     
     return modePrediction
 
-def displayTextOnWindow(windowName,textToDisplay,xOff=75,yOff=100):
+def displayTextOnWindow(windowName,textToDisplay,xOff=75,yOff=100,scaleOfText=2):
     '''
     This just displays the text provided on the cv2 window with WINDOW_NAME: `windowName`
 
@@ -153,9 +153,9 @@ def displayTextOnWindow(windowName,textToDisplay,xOff=75,yOff=100):
     textToDisplay : This is the text to be displayed on the cv2 window
 
     '''
-    signImage = np.zeros((200,200,1),np.uint8)
+    signImage = np.zeros((200,400,1),np.uint8)
 
-    cv2.putText(signImage,textToDisplay,(xOff,yOff),cv2.FONT_HERSHEY_SIMPLEX,2,(255,255,255),3,8);
+    cv2.putText(signImage,textToDisplay,(xOff,yOff),cv2.FONT_HERSHEY_SIMPLEX,scaleOfText,(255,255,255),3,8);
 
     cv2.imshow(windowName,signImage);
 

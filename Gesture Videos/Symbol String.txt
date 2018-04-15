@@ -1,0 +1,12 @@
+After - OpenPalmHori Up Down OpenPalmHori
+All The Best - ThumbsUp
+Apple - Apple_Finger Down Up Apple_Finger
+Good Afternoon - ThumbsUp Up Sun_Up
+Good Morning - ThumbsUp Up Cup_Open Down Cup_Closed
+Good Night - ThumbsUp Down Cup_Closed Up Cup_Open
+I Am Sorry - Fist
+Leader - Leader_L Down ThumbsUp Up ThumbsUp
+Please Give Me Your Pen - Cup_Closed Down Cup_Closed Up ThumbsUp Down Cup_Closed
+Strike Fist Up/Left Fist
+That is Good - That_Is_Good_Point That_Is_Good_Circle
+Towards - OpenPalmHori RightUp OpenPalmHori
