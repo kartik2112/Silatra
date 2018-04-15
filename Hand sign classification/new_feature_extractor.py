@@ -7,23 +7,25 @@ from math import ceil
 # from sklearn.neighbors import KNeighborsClassifier
 
 start = time.time()
-dump_file = open('silatra_signs_20x20.csv','w')
-grid = (20,20)   #(rows,columns)
+dump_file = open('silatra_complete.csv','w')
+grid = (10,10)   #(rows,columns)
 for i in range(grid[0]*grid[1]): dump_file.write('f'+str(i)+',')
 dump_file.write('label\n')
 
+print('Labels: ',end='\r')
+print([str(i) for i in range(10)]+[chr(ord('a')+i) for i in range(26)]+['Cup_Closed','Cup_Open','Sun_Up','ThumbsUp'])
 total_images_parsed = 0
-DATA_LOCS = ['..\\training-images\\Tejas\\Digits1\\', '..\\training-images\\Kartik\\Letters\\', '..\\training-images\\Tejas\\Digits2\\', '..\\training-images\\Kartik\\Digits\\', '..\\training-images\\Varun\\Digits\\']
-params = [145,145,145,135,137]
+DATA_LOCS = ['..\\training-images\\Tejas\\Gesture_Signs\\', '..\\training-images\\Kartik\\Gesture_Signs\\','..\\training-images\\Tejas\\Digits1\\', '..\\training-images\\Kartik\\Letters\\', '..\\training-images\\Tejas\\Digits2\\', '..\\training-images\\Kartik\\Digits\\', '..\\training-images\\Varun\\Digits\\']
+params = [137,137,145,145,145,135,137]
 for loc in range(len(DATA_LOCS)):
     DATA_LOC = DATA_LOCS[loc]
     lower = np.array([0,params[loc],60],np.uint8)
     upper = np.array([255,180,127],np.uint8)
     
-    for label in [str(i) for i in range(10)]+[chr(ord('a')+i) for i in range(26)]:
-        for i in range(1,700):
+    for label in ['Cup_Closed','Cup_Open','Sun_Up','ThumbsUp']+[str(i) for i in range(10)]+[chr(ord('a')+i) for i in range(26)]:
+        for i in range(1,2200):
             try:
-                print(' '*160+'\rProcessing image: %3d, Label = %c, From Location: %s' % (i,label,DATA_LOC+str(label)+"\\"+str(i)+'.png'),end='\r')
+                print(' '*160+'\rProcessing image: %3d, Label = %s, From Location: %s' % (i,label,DATA_LOC+str(label)+"\\"+str(i)+'.png'),end='\r')
                 image = cv2.imread(DATA_LOC+label+'\\'+str(i)+'.png')
                 # image = cv2.imread(DATA_LOC+str(label)+"/"+str(i)+'.png')
 
