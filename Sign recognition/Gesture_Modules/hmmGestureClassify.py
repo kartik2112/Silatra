@@ -10,7 +10,7 @@ dir = "./Models/GestureHMMs"
 Models = []
 ModelNames = []
 
-kfMapper = {'Up':0,'Right':1,'Left':2,'Down':3,'ThumbsUp':4, 'Sun_Up':5, 'Cup_Open':6, 'Cup_Closed':7}
+kfMapper = {'Up':0,'Right':1,'Left':2,'Down':3,'ThumbsUp':4, 'Sun_Up':5, 'Cup_Open':6, 'Cup_Closed':7, 'Apple_Finger':8, 'OpenPalmHori':9, 'Leader_L':10, 'Fist':11, 'That_Is_Good_Circle':12}
 
 for model in os.listdir(dir):
     Models += [joblib.load(dir+"/"+model)]
@@ -27,13 +27,14 @@ def classifyGestureByHMM(sequence):
         else:
             testInputSeq += [kfMapper[elem[0]]]
     maxScore = float('-inf')
-    print(testInputSeq)
+    # print(testInputSeq)
     testInputSeq = np.reshape(np.array(testInputSeq),(-1,1))
     # print(testInputSeq)
     recognizedGesture = "--"
     for i in range(len(Models)):
+        # print(ModelNames[i])
         scoreTemp = Models[i].score(testInputSeq)
-        print(ModelNames[i],":",scoreTemp)
+        # print(ModelNames[i],":",scoreTemp)
         if scoreTemp > maxScore:
             maxScore = scoreTemp
             recognizedGesture = ModelNames[i]

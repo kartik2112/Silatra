@@ -85,12 +85,12 @@ newGestureStarted = False
 detector = dlib.get_frontal_face_detector()
 # predictor = dlib.shape_predictor("Models/shape_predictor_68_face_landmarks.dat")
 
-videoCounter = 5
-subdir = args.subDir
-mainDir = '../training-images/GestureVideos/GN1'
+videoCounter = 1
 if args.recordVideos == None:
     recordVideos = False
 else:
+    subdir = args.subDir
+    mainDir = '../training-images/GestureVideos/'+subdir
     recordVideos = args.recordVideos
     if not(os.path.isdir(mainDir)):
         os.makedirs(mainDir)
@@ -104,7 +104,8 @@ def videoInitializer():
 
 ### ------------------- GESTURE handling present here -------------------------------------------------------------
 if recognitionMode == "GESTURE":
-    classifier = pickle.load(open('./Models/gesture_model_10_10.knn.sav','rb'))
+    # classifier = pickle.load(open('./Models/gesture_model_10_10.knn.sav','rb'))
+    classifier = pickle.load(open('./Models/silatra_gesture_signs_apr_15.sav','rb'))
     print("Loaded Gesture Recognition KNN Model")
     observations = []
     if recordVideos:
@@ -231,6 +232,19 @@ while True:
     
     # pred = silatra.findMeTheSign(img_np)
 
+    
+            
+
+
+
+    # mask1, foundFace, faceRect = silatra.segment(img_np)
+    mask1, _, _ = silatra.segment(img_np)
+    
+    ### ---------------------------------Timing here--------------------------------------------------------------------
+    start_time = tm.recordTimings(start_time,"SEGMENT",noOfFramesCollected)
+    ### ---------------------------------Timing here--------------------------------------------------------------------
+    
+
     gray = cv2.cvtColor(img_np, cv2.COLOR_BGR2GRAY)
 
     # detect faces in the grayscale image
@@ -247,19 +261,18 @@ while True:
             maxArea1 = w*h
             faceRect = (x,y,w,h)
             foundFace = True
+
             
-
-
-
-    # mask1, foundFace, faceRect = silatra.segment(img_np)
-    mask1, _, _ = silatra.segment(img_np)
-    
-    ### ---------------------------------Timing here--------------------------------------------------------------------
-    start_time = tm.recordTimings(start_time,"SEGMENT",noOfFramesCollected)
-    ### ---------------------------------Timing here--------------------------------------------------------------------
-    
     mask1 = FaceEliminator.eliminateFace(mask1, foundFace, faceRect)
     cv2.imshow("Mask12",mask1)
+
+    
+
+    ### ---------------------------------Timing here--------------------------------------------------------------------
+    start_time = tm.recordTimings(start_time,"FACEHIDING",noOfFramesCollected)
+    ### ---------------------------------Timing here--------------------------------------------------------------------
+    
+
 
     # cv2.imshow("Mask",mask1)
     print("Found face at:",foundFace,"as:",faceRect)

@@ -66,16 +66,16 @@ newGestureStarted = False
 detector = dlib.get_frontal_face_detector()
 
 
-classifier = pickle.load(open('./Models/gesture_model_10_10.knn.sav','rb'))
+classifier = pickle.load(open('./Models/silatra_gesture_signs_apr_15.sav','rb'))
 print("Loaded Gesture Recognition KNN Model")
 
 
-kfMapper = {'Up':0,'Right':1,'Left':2,'Down':3,'ThumbsUp':4, 'Sun_Up':5, 'Cup_Open':6, 'Cup_Closed':7}
+kfMapper = {'Up':0,'Right':1,'Left':2,'Down':3,'ThumbsUp':4, 'Sun_Up':5, 'Cup_Open':6, 'Cup_Closed':7, 'Apple_Finger':8, 'OpenPalmHori':9, 'Leader_L':10, 'Fist':11, 'That_Is_Good_Circle':12}
 
 
-fileW = open('../HMMTrainer/gestures.csv','w')
+fileW = open('../HMMTrainer/gestures.csv','a')
 
-subdirss = ['GA','GM','GN']
+subdirss = ['After','All The Best','Apple','I Am Sorry','Leader','Please Give Me Your Pen','Strike','That is Good','Towards']
 fullForms = {'GA':'Good Afternoon','GM':'Good Morning','GN':'Good Night'}
 for subdir in subdirss:
     pathDir = '../training-images/GestureVideos/'+subdir
@@ -97,7 +97,8 @@ for subdir in subdirss:
                 print("\n\nVoila! And the gesture contained in the video is",gest12)
                 cap.release()
                 print(observationsOP)
-                fileW.write(fullForms[subdir])
+                # fileW.write(fullForms[subdir])
+                fileW.write(subdir)
                 for obs in observationsOP:
                     fileW.write(','+str(obs))
                 fileW.write('\n')
