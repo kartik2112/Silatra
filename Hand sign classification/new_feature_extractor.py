@@ -12,6 +12,8 @@ grid = (10,10)   #(rows,columns)
 # for i in range(grid[0]*grid[1]): dump_file.write('f'+str(i)+',')
 # dump_file.write('label\n')
 
+print('Labels: ',end='\r')
+print([str(i) for i in range(10)]+[chr(ord('a')+i) for i in range(26)]+['Cup_Closed','Cup_Open','Sun_Up','ThumbsUp'])
 total_images_parsed = 0
 DATA_LOCS = ['../training-images/Gesture_Signs/']
 # TRAINING_LABELS = ['Apple_Finger','Fist','Leader_L','OpenPalmHori','That_Is_Good_Circle','That_Is_Good_Point']
