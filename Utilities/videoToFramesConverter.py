@@ -12,8 +12,24 @@ import imutils
 # videoURI = args.videoURI
 # outputDir = args.outputDir
 
-videoURIs = ['/media/kartik/KARTIK/HandDataset/videos/20180326_175745.mp4']
-outputDir = "/media/kartik/KARTIK/HandDataset/videos"
+videoURIs = [
+'/home/kartik/Documents/Projects/BE_Project/Silatra/training-images/GestureVideos/ObjTrainingVids/Gesture_ObjTrainingVids_001.avi',
+'/home/kartik/Documents/Projects/BE_Project/Silatra/training-images/GestureVideos/ObjTrainingVids/Gesture_ObjTrainingVids_002.avi',
+'/home/kartik/Documents/Projects/BE_Project/Silatra/training-images/GestureVideos/ObjTrainingVids/Gesture_ObjTrainingVids_003.avi',
+'/home/kartik/Documents/Projects/BE_Project/Silatra/training-images/GestureVideos/ObjTrainingVids/Gesture_ObjTrainingVids_004.avi',
+'/home/kartik/Documents/Projects/BE_Project/Silatra/training-images/GestureVideos/ObjTrainingVids/Gesture_ObjTrainingVids_005.avi',
+'/home/kartik/Documents/Projects/BE_Project/Silatra/training-images/GestureVideos/ObjTrainingVids/Gesture_ObjTrainingVids_006.avi',
+'/home/kartik/Documents/Projects/BE_Project/Silatra/training-images/GestureVideos/ObjTrainingVids/Gesture_ObjTrainingVids_007.avi',
+'/home/kartik/Documents/Projects/BE_Project/Silatra/training-images/GestureVideos/ObjTrainingVids/Gesture_ObjTrainingVids_008.avi',
+'/home/kartik/Documents/Projects/BE_Project/Silatra/training-images/GestureVideos/ObjTrainingVids/Gesture_ObjTrainingVids_009.avi',
+'/home/kartik/Documents/Projects/BE_Project/Silatra/training-images/GestureVideos/ObjTrainingVids/Gesture_ObjTrainingVids_010.avi',
+'/home/kartik/Documents/Projects/BE_Project/Silatra/training-images/GestureVideos/ObjTrainingVids/Gesture_ObjTrainingVids_011.avi',
+'/home/kartik/Documents/Projects/BE_Project/Silatra/training-images/GestureVideos/ObjTrainingVids/Gesture_ObjTrainingVids_012.avi',
+'/home/kartik/Documents/Projects/BE_Project/Silatra/training-images/GestureVideos/ObjTrainingVids/Gesture_ObjTrainingVids_013.avi',
+'/home/kartik/Documents/Projects/BE_Project/Silatra/training-images/GestureVideos/ObjTrainingVids/Gesture_ObjTrainingVids_014.avi']
+
+
+outputDir = "/media/kartik/0EAB-5DFB/HandSignsDataset/AllFrames"
 
 for videoURI in videoURIs:
     # print(videoURI)
@@ -32,7 +48,7 @@ for videoURI in videoURIs:
             ret, frame = cap.read()
             if ret == False:
                 break
-            frame = imutils.rotate_bound(frame,90)
+            # frame = imutils.rotate_bound(frame,90)
             print("Processing frame: %d"%(frameNo)+" and writing at "+outputDir+"/"+videoName+"_%06d.png"%(frameNo),end="\r")
             cv2.imwrite(outputDir+"/"+videoName+"_%06d.png"%(frameNo),frame)
             frameNo+=1

@@ -16,6 +16,8 @@ import netifaces as ni
 import os
 
 import argparse
+import pyttsx3
+
 
 import numpy as np
 import cv2
@@ -51,6 +53,8 @@ parser.add_argument('--subDir',
                     help='Usage: python3 ImgReceiver.py --recordVideos True --subDir GN')
 args = parser.parse_args()
 
+
+engine = pyttsx3.init()
 
 
 
@@ -341,6 +345,8 @@ while True:
                 observations = filter_time_series.filterTS(observations)
                 gest12 = gesture_classify.recognize(observations)
                 silatra_utils.displayTextOnWindow("HMMGesture",hmmGest12[0],10,100,1)
+                engine.say(hmmGest12[0])
+                engine.runAndWait()
                 # silatra_utils.displayTextOnWindow("Gesture",gest12,10,100,1)
                 print("\n\nVoila! And the gesture contained in the video is",gest12)
                 print("\n\nVoila! And the gesture recognized by HMM is",hmmGest12)
