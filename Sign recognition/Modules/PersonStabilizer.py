@@ -18,7 +18,7 @@ tracker = cv2.TrackerKCF_create()
 
 
 
-def stabilize(foundFace,noOfFramesCollected,img_np,faceRect,mask1,total_captured):
+def stabilize(foundFace,noOfFramesCollected,img_np,faceRect,mask1):
     '''
     * Here is the stabilization logic
     *

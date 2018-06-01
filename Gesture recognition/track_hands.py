@@ -20,7 +20,7 @@ f.close()
 lower = np.array([0,param,60],np.uint8)
 upper = np.array([255,180,127],np.uint8)
 
-classifier = pickle.load(open('sign_classifier_knn.sav','rb'))
+classifier = pickle.load(open('silatra_gesture_signs_apr_15.sav','rb'))
 ''' data = pd.read_csv('gesture_data.csv')
 X = data[['f'+str(i) for i in range(400)]].values
 Y = data['label'].values
@@ -40,7 +40,7 @@ while(1):
             break
 
         # mask = segment(frame, lower, upper)
-        mask = silatra.segment(frame)
+        mask,_,_ = silatra.segment(frame)
         _,thresh = cv2.threshold(mask,127,255,0)
 
         hand_contour = get_my_hand(thresh, return_only_contour=True)
@@ -73,7 +73,7 @@ while(1):
         else:
             # Classification here
             hand = get_my_hand(mask)
-            features = extract_features(hand, (20,20))
+            features = extract_features(hand, (10,10))
             predicted_sign = classifier.predict([features])[0]
             observations.append((predicted_sign,'None'))
             direction = 'No movement'

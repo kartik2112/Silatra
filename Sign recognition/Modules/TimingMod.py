@@ -4,12 +4,13 @@ import timeit
 * These variables are used to keep track of times needed by each individual component
 '''
 minTimes,maxTimes,avgTimes = {}, {}, {}
-timeKeys = ["OVERALL","DATA_TRANSFER","IMG_CONVERSION","SEGMENT","STABILIZE","CLASSIFICATION","INTERFRAME"]
+timeKeys = ["OVERALL","DATA_TRANSFER","IMG_CONVERSION","SEGMENT","FACEHIDING","STABILIZE","CLASSIFICATION","INTERFRAME"]
 timeStrings = {
     "OVERALL": "Overall:",
     "DATA_TRANSFER": "   Waiting + Data Transfer:",
     "IMG_CONVERSION": "   Image Conversion:",
     "SEGMENT": "   Segmentation:",
+    "FACEHIDING": "   Face Hiding:",
     "STABILIZE": "   Stabilizer",
     "CLASSIFICATION": "   Classification:",
     "INTERFRAME": "   Inter-frame difference"

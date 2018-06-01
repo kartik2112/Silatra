@@ -13,6 +13,7 @@ machineid
 .vscode/*
 Tejas is coding here/*
 */__pycache__/*
+*.pyc
 __pycache__/*
 .ipynb_checkpoints/*
 training-images/*

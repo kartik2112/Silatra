@@ -82,7 +82,7 @@ def filterTS(ts):
     if temp != None:
         filteredTS += [temp]
 
-    print("\n\n--------------------The filtered Time Series is-----------------\n",filteredTS)
+    # print("\n\n--------------------The filtered Time Series is-----------------\n",filteredTS)
 
     return filteredTS
 
@@ -109,7 +109,7 @@ def findMode(segment,category):
         This tuple will be the modal tuple in the recognized segment
 
     '''
-    print("Segment under consideration:",segment,"\nCategory:",category)
+    # print("Segment under consideration:",segment,"\nCategory:",category)
 
     dict1 = {}
     noOfElems = 0
@@ -124,7 +124,7 @@ def findMode(segment,category):
             dict1[elem] = 1
         noOfElems += 1
     
-    print("Filtered Segment",dict1)
+    # print("Filtered Segment",dict1)
 
     minModality = int(noOfElems/2)
 
@@ -271,7 +271,7 @@ def test_stable_series_of_Good_Night():
 
     tools.eq_(filterTS(IP_Ts),Expected_TS)
 
-def test_noisy1_series_of_Good_Morning():
+def test_noisy1_series_of_Good_Night():
     IP_Ts = [("ThumbsUp","None"),("None","Up"),("Apple_Finger","None"),
             ("ThumbsUp","None"),("ThumbsUp","None"),("ThumbsUp","None"),
             ("ThumbsUp","None"),("ThumbsUp","None"),

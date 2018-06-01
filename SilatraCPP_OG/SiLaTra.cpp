@@ -156,7 +156,7 @@ int main(int argc, char** argv){
 			/*cout<<"Enter name of subdirectory for storing the training images: "<<endl;*/
 			subDirName = string(argv[2]);
 			//cin>>subDirName;
-			trainingImagesFolderPath="./training-images/"+subDirName;
+			trainingImagesFolderPath="../training-images/"+subDirName;
 			fs::create_directories(trainingImagesFolderPath);
 			fs::create_directories("./CCDC-Data/"+subDirName);
 			for(auto &tempp1:fs::directory_iterator(trainingImagesFolderPath)){

@@ -89,7 +89,7 @@ Mat getMyHand(Mat& imageOG){
 	inRange(imageYCrCb,Scalar(YMin,CrMin,CbMin),Scalar(YMax,CrMax,CbMax),dst);
 
 	// dst = extractSkinColorRange(image);
-	imshow("Masked Image",dst);
+	// imshow("Masked Image",dst);
 	
 
 
@@ -137,7 +137,7 @@ Mat getMyHand(Mat& imageOG){
 	/// Show in a window  
 	// imshow("Contours", contouredImg );	
 	// imwrite("./ContourImages/img.png",contouredImg);
-	imshow("Morphed Mask",dstEroded);
+	// imshow("Morphed Mask",dstEroded);
 	// imshow("Masked Image",maskedImg);
 	// imshow("Final Image",finImg);
 	// imshow("HSV + BGR Mask",dst);

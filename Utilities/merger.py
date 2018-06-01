@@ -3,13 +3,15 @@ from os.path import isfile
 
 digit1 = 5
 
-newDataPath = "../training-images/Digits_Kartik/"+str(digit1)+"/Right_Hand/Normal/"
-
+# newDataPath = "../training-images/Digits_Kartik/"+str(digit1)+"/Right_Hand/Normal/"
+newDataPath = "../training-images/Digits/0/"
+Fist
 files = listdir(newDataPath)
 files.sort()
 # print(files)
 
-mergeDataPath = "../training-images/Digits/"+str(digit1)+"/Right_Hand/Normal/"
+# mergeDataPath = "../training-images/Digits/"+str(digit1)+"/Right_Hand/Normal/"
+mergeDataPath = "../training-images/Gesture_Signs/That_Is_Good_Circle/"
 
 newCount = len(listdir(mergeDataPath)) + 1
 
