@@ -77,11 +77,11 @@ def extract_features(src_hand, grid):
 def predictSign(classifier,features):
     predictions = classifier.predict_proba([features]).tolist()[0]
     # print(classifier.predict_proba([features]).tolist())
-    for prob in predictions: print('%.2f'%(prob),end=' ')
-    print('')
+    # for prob in predictions: print('%.2f'%(prob),end=' ')
+    # print('')
 
     pred = classifier.predict([features])[0] 
-    print(pred)
+    # print(pred)
     return pred
 
 
@@ -108,7 +108,7 @@ def addToQueue(pred):
     preds += [pred]
     
 
-def getConsistentSign():
+def getConsistentSign(displayWindows):
     '''
     From the queue of signs, this function returns the sign that has occured most frequently 
     with frequency > `minModality`. This is considered as the consistent sign.
@@ -138,8 +138,8 @@ def getConsistentSign():
             if countPredictions[i]>countModality:
                 modePrediction = i
                 countModality = countPredictions[i]
-
-        displaySignOnImage(modePrediction)
+        if displayWindows:
+            displaySignOnImage(modePrediction)
     
     return modePrediction
 
