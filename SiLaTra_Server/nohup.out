@@ -1,0 +1,568 @@
+Loaded Sign Recognition KNN Model
+TCP Socket successfully created
+TCP Socket binded to 192.168.2.5: 40396
+Socket is listening
+Got TCP connection from ('192.168.2.2', 54085)
+[ INFO:0] Initialize OpenCL runtime...
+[ INFO:0] Successfully initialized OpenCL cache directory: /home/kartik/.cache/opencv/3.4.1/opencl_cache/
+[ INFO:0] Preparing OpenCL cache configuration for context: NVIDIA_Corporation--GeForce_840M--390_48
+Traceback (most recent call last):
+  File "/home/kartik/Documents/Silatra/SiLaTra_Server/Receiver.py", line 233, in <module>
+    size = struct.unpack('!i', buf)[0]  
+struct.error: unpack requires a buffer of 4 bytes
+Loaded Sign Recognition KNN Model
+TCP Socket successfully created
+TCP Socket binded to 192.168.2.5: 47613
+Socket is listening
+Got TCP connection from ('192.168.2.2', 47507)
+[ INFO:0] Initialize OpenCL runtime...
+[ INFO:0] Successfully initialized OpenCL cache directory: /home/kartik/.cache/opencv/3.4.1/opencl_cache/
+[ INFO:0] Preparing OpenCL cache configuration for context: NVIDIA_Corporation--GeForce_840M--390_48
+Traceback (most recent call last):
+  File "/home/kartik/Documents/Silatra/SiLaTra_Server/Receiver.py", line 233, in <module>
+    size = struct.unpack('!i', buf)[0]  
+struct.error: unpack requires a buffer of 4 bytes
+Loaded Sign Recognition KNN Model
+TCP Socket successfully created
+TCP Socket binded to 192.168.2.5: 44955
+Socket is listening
+Got TCP connection from ('192.168.2.2', 56056)
+[ INFO:0] Initialize OpenCL runtime...
+[ INFO:0] Successfully initialized OpenCL cache directory: /home/kartik/.cache/opencv/3.4.1/opencl_cache/
+[ INFO:0] Preparing OpenCL cache configuration for context: NVIDIA_Corporation--GeForce_840M--390_48
+Traceback (most recent call last):
+  File "/home/kartik/Documents/Silatra/SiLaTra_Server/Receiver.py", line 233, in <module>
+    size = struct.unpack('!i', buf)[0]  
+struct.error: unpack requires a buffer of 4 bytes
+Loaded Sign Recognition KNN Model
+TCP Socket successfully created
+TCP Socket binded to 192.168.2.5: 43400
+Socket is listening
+Got TCP connection from ('192.168.2.7', 43672)
+receiving image of size: 23101 bytes
+Received Sign: q
+Stable Sign: -1
+receiving image of size: 23983 bytes
+Received Sign: q
+Stable Sign: -1
+receiving image of size: 22888 bytes
+Received Sign: q
+Stable Sign: -1
+receiving image of size: 22115 bytes
+Received Sign: g
+Stable Sign: -1
+receiving image of size: 23514 bytes
+Received Sign: g
+Stable Sign: -1
+receiving image of size: 23963 bytes
+Received Sign: g
+Stable Sign: -1
+receiving image of size: 27222 bytes
+Received Sign: g
+Stable Sign: -1
+receiving image of size: 27598 bytes
+Received Sign: g
+Stable Sign: -1
+receiving image of size: 28242 bytes
+Received Sign: g
+Stable Sign: -1
+receiving image of size: 28436 bytes
+Received Sign: g
+Stable Sign: -1
+receiving image of size: 28921 bytes
+Received Sign: g
+Stable Sign: -1
+receiving image of size: 27897 bytes
+Received Sign: 0
+Stable Sign: -1
+receiving image of size: 22714 bytes
+Received Sign: g
+Stable Sign: -1
+receiving image of size: 22646 bytes
+Received Sign: s
+Stable Sign: -1
+receiving image of size: 22793 bytes
+Received Sign: s
+Stable Sign: g
+receiving image of size: 24404 bytes
+Received Sign: g
+Stable Sign: g
+receiving image of size: 22870 bytes
+Received Sign: 1
+Stable Sign: g
+receiving image of size: 23632 bytes
+Received Sign: 1
+Stable Sign: g
+receiving image of size: 24936 bytes
+Received Sign: g
+Stable Sign: g
+receiving image of size: 26285 bytes
+Received Sign: g
+Stable Sign: g
+receiving image of size: 23717 bytes
+Received Sign: g
+Stable Sign: g
+receiving image of size: 25232 bytes
+Received Sign: g
+Stable Sign: g
+receiving image of size: 25145 bytes
+Received Sign: g
+Stable Sign: g
+receiving image of size: 25844 bytes
+Received Sign: g
+Stable Sign: g
+receiving image of size: 26636 bytes
+Received Sign: g
+Stable Sign: g
+receiving image of size: 26895 bytes
+Received Sign: g
+Stable Sign: g
+receiving image of size: 27422 bytes
+Received Sign: g
+Stable Sign: g
+receiving image of size: 26699 bytes
+Received Sign: g
+Stable Sign: g
+receiving image of size: 27340 bytes
+Received Sign: g
+Stable Sign: g
+receiving image of size: 24935 bytes
+Received Sign: g
+Stable Sign: g
+receiving image of size: 25225 bytes
+Received Sign: g
+Stable Sign: g
+receiving image of size: 0 bytes
+Stopped TCP server of port: 43400
+SIGN recognition stopped
+
+
+Timings for 32 frames
+Overall:
+          Min Time taken: 0.0231s
+          Avg Time taken: 0.1300s
+          Max Time taken: 0.6939s
+   Waiting + Data Transfer:
+          Min Time taken: 0.0000s
+          Avg Time taken: 0.0827s
+          Max Time taken: 0.1235s
+   Image Conversion:
+          Min Time taken: 0.0052s
+          Avg Time taken: 0.0159s
+          Max Time taken: 0.2263s
+   Segmentation:
+          Min Time taken: 0.0033s
+          Avg Time taken: 0.0132s
+          Max Time taken: 0.2872s
+   Face Hiding:
+          Min Time taken: 0.0004s
+          Avg Time taken: 0.0028s
+          Max Time taken: 0.0712s
+   Stabilizer
+          Min Time taken: 0.0000s
+          Avg Time taken: 0.0000s
+          Max Time taken: 0.0000s
+   Classification:
+          Min Time taken: 0.0134s
+          Avg Time taken: 0.0154s
+          Max Time taken: 0.0475s
+   Inter-frame difference
+          Min Time taken: 0.0231s
+          Avg Time taken: 0.1300s
+          Max Time taken: 0.6940s
+[ INFO:0] Initialize OpenCL runtime...
+[ INFO:0] Successfully initialized OpenCL cache directory: /home/kartik/.cache/opencv/3.4.1/opencl_cache/
+[ INFO:0] Preparing OpenCL cache configuration for context: NVIDIA_Corporation--GeForce_840M--390_48
+Loaded Sign Recognition KNN Model
+TCP Socket successfully created
+TCP Socket binded to 192.168.2.5: 49511
+Socket is listening
+Got TCP connection from ('192.168.2.2', 36685)
+receiving image of size: 21856 bytes
+Received Sign: 5
+Stable Sign: -1
+receiving image of size: 21876 bytes
+Received Sign: 1
+Stable Sign: -1
+receiving image of size: 21914 bytes
+Received Sign: 1
+Stable Sign: -1
+receiving image of size: 20912 bytes
+Received Sign: 2
+Stable Sign: -1
+receiving image of size: 19543 bytes
+Received Sign: 1
+Stable Sign: -1
+receiving image of size: 20408 bytes
+Received Sign: 1
+Stable Sign: -1
+receiving image of size: 21175 bytes
+Received Sign: 4
+Stable Sign: -1
+receiving image of size: 21123 bytes
+Received Sign: 1
+Stable Sign: -1
+receiving image of size: 21564 bytes
+Received Sign: 4
+Stable Sign: -1
+receiving image of size: 22053 bytes
+Received Sign: 2
+Stable Sign: -1
+receiving image of size: 23646 bytes
+Received Sign: 2
+Stable Sign: -1
+receiving image of size: 23337 bytes
+Received Sign: 2
+Stable Sign: -1
+receiving image of size: 23582 bytes
+Received Sign: 2
+Stable Sign: -1
+receiving image of size: 23471 bytes
+Received Sign: 2
+Stable Sign: -1
+receiving image of size: 23424 bytes
+Received Sign: 2
+Stable Sign: -1
+receiving image of size: 23327 bytes
+Received Sign: 8
+Stable Sign: -1
+receiving image of size: 23206 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23216 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23085 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23050 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23152 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 22998 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23025 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 22950 bytes
+Received Sign: 5
+Stable Sign: 2
+receiving image of size: 23183 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23142 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23213 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23036 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23023 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23082 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 22990 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23087 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23098 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23277 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23299 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23108 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 22981 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23064 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 22917 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23082 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23151 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23038 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23121 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23259 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23258 bytes
+Received Sign: 2
+Stable Sign: 2
+receiving image of size: 23055 bytes
+Received Sign: 2
+Stable Sign: 2
+[ INFO:0] Initialize OpenCL runtime...
+[ INFO:0] Successfully initialized OpenCL cache directory: /home/kartik/.cache/opencv/3.4.1/opencl_cache/
+[ INFO:0] Preparing OpenCL cache configuration for context: NVIDIA_Corporation--GeForce_840M--390_48
+Traceback (most recent call last):
+  File "/home/kartik/Documents/Silatra/SiLaTra_Server/Receiver.py", line 233, in <module>
+    size = struct.unpack('!i', buf)[0]  
+struct.error: unpack requires a buffer of 4 bytes
+Loaded Sign Recognition KNN Model
+TCP Socket successfully created
+TCP Socket binded to 192.168.2.5: 40292
+Socket is listening
+Got TCP connection from ('192.168.2.2', 41205)
+receiving image of size: 25557 bytes
+Received Sign: 3
+Stable Sign: -1
+receiving image of size: 27812 bytes
+Received Sign: i
+Stable Sign: -1
+receiving image of size: 27370 bytes
+Received Sign: i
+Stable Sign: -1
+receiving image of size: 27381 bytes
+Received Sign: i
+Stable Sign: -1
+receiving image of size: 25914 bytes
+Received Sign: i
+Stable Sign: -1
+receiving image of size: 27514 bytes
+Received Sign: 2
+Stable Sign: -1
+receiving image of size: 26873 bytes
+Received Sign: i
+Stable Sign: -1
+receiving image of size: 26576 bytes
+Received Sign: i
+Stable Sign: -1
+receiving image of size: 27070 bytes
+Received Sign: 6
+Stable Sign: -1
+receiving image of size: 27314 bytes
+Received Sign: 6
+Stable Sign: -1
+receiving image of size: 26395 bytes
+Received Sign: i
+Stable Sign: -1
+receiving image of size: 27117 bytes
+Received Sign: 4
+Stable Sign: -1
+receiving image of size: 27702 bytes
+Received Sign: i
+Stable Sign: -1
+receiving image of size: 26376 bytes
+Received Sign: 6
+Stable Sign: -1
+receiving image of size: 27759 bytes
+Received Sign: i
+Stable Sign: i
+receiving image of size: 27799 bytes
+Received Sign: i
+Stable Sign: i
+receiving image of size: 26910 bytes
+Received Sign: i
+Stable Sign: i
+receiving image of size: 27986 bytes
+Received Sign: i
+Stable Sign: i
+receiving image of size: 27818 bytes
+Received Sign: i
+Stable Sign: i
+receiving image of size: 26956 bytes
+Received Sign: i
+Stable Sign: i
+receiving image of size: 26666 bytes
+Received Sign: 6
+Stable Sign: i
+receiving image of size: 26674 bytes
+Received Sign: i
+Stable Sign: i
+receiving image of size: 26307 bytes
+Received Sign: 4
+Stable Sign: i
+receiving image of size: 26339 bytes
+Received Sign: i
+Stable Sign: i
+receiving image of size: 22167 bytes
+Received Sign: 6
+Stable Sign: i
+receiving image of size: 21361 bytes
+Received Sign: i
+Stable Sign: i
+receiving image of size: 20676 bytes
+Received Sign: 3
+Stable Sign: i
+receiving image of size: 20168 bytes
+Received Sign: 3
+Stable Sign: i
+receiving image of size: 19477 bytes
+Received Sign: 3
+Stable Sign: i
+receiving image of size: 19266 bytes
+Received Sign: 3
+Stable Sign: i
+receiving image of size: 21198 bytes
+Received Sign: 3
+Stable Sign: -1
+receiving image of size: 23010 bytes
+Received Sign: 3
+Stable Sign: -1
+receiving image of size: 22822 bytes
+Received Sign: 3
+Stable Sign: -1
+receiving image of size: 21964 bytes
+Received Sign: y
+Stable Sign: -1
+receiving image of size: 20890 bytes
+Received Sign: a
+Stable Sign: -1
+receiving image of size: 20049 bytes
+Received Sign: a
+Stable Sign: -1
+receiving image of size: 19334 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 19547 bytes
+Received Sign: y
+Stable Sign: 3
+receiving image of size: 20028 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 20439 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 21007 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 21705 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 22321 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 21627 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 21821 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 22700 bytes
+Received Sign: 6
+Stable Sign: 3
+receiving image of size: 22565 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 21985 bytes
+Received Sign: 6
+Stable Sign: 3
+receiving image of size: 21716 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 21166 bytes
+Received Sign: 6
+Stable Sign: 3
+receiving image of size: 22336 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 22367 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 22642 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 22197 bytes
+Received Sign: 2
+Stable Sign: 3
+receiving image of size: 22715 bytes
+Received Sign: 4
+Stable Sign: 3
+receiving image of size: 22482 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 22449 bytes
+Received Sign: 2
+Stable Sign: 3
+receiving image of size: 22718 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 22822 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 22732 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 22730 bytes
+Received Sign: 2
+Stable Sign: 3
+receiving image of size: 22213 bytes
+Received Sign: 3
+Stable Sign: 3
+receiving image of size: 22410 bytes
+Received Sign: u
+Stable Sign: 3
+receiving image of size: 22506 bytes
+Received Sign: u
+Stable Sign: 3
+receiving image of size: 22828 bytes
+Received Sign: u
+Stable Sign: 3
+receiving image of size: 22803 bytes
+Received Sign: 5
+Stable Sign: -1
+receiving image of size: 22715 bytes
+Received Sign: i
+Stable Sign: -1
+receiving image of size: 22644 bytes
+Received Sign: u
+Stable Sign: -1
+receiving image of size: 22616 bytes
+Received Sign: 1
+Stable Sign: -1
+receiving image of size: 22415 bytes
+Received Sign: u
+Stable Sign: -1
+receiving image of size: 22723 bytes
+Received Sign: 1
+Stable Sign: -1
+receiving image of size: 22857 bytes
+Received Sign: 2
+Stable Sign: -1
+receiving image of size: 22789 bytes
+Received Sign: 1
+Stable Sign: -1
+receiving image of size: 22693 bytes
+Received Sign: 1
+Stable Sign: -1
+receiving image of size: 22249 bytes
+Received Sign: 2
+Stable Sign: -1
+receiving image of size: 22115 bytes
+Received Sign: 1
+Stable Sign: -1
+receiving image of size: 20796 bytes
+Received Sign: 2
+Stable Sign: -1
+[ INFO:0] Initialize OpenCL runtime...
+[ INFO:0] Successfully initialized OpenCL cache directory: /home/kartik/.cache/opencv/3.4.1/opencl_cache/
+[ INFO:0] Preparing OpenCL cache configuration for context: NVIDIA_Corporation--GeForce_840M--390_48
+Traceback (most recent call last):
+  File "/home/kartik/Documents/Silatra/SiLaTra_Server/Receiver.py", line 233, in <module>
+    size = struct.unpack('!i', buf)[0]  
+struct.error: unpack requires a buffer of 4 bytes

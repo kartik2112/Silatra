@@ -1,0 +1,3 @@
+/home/kartik/Documents/Projects/BE_Project/Silatra/SilatraCPP_OG/build/CMakeFiles/edit_cache.dir
+/home/kartik/Documents/Projects/BE_Project/Silatra/SilatraCPP_OG/build/CMakeFiles/rebuild_cache.dir
+/home/kartik/Documents/Projects/BE_Project/Silatra/SilatraCPP_OG/build/CMakeFiles/SiLaTra.dir

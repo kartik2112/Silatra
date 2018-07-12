@@ -1,0 +1,1508 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<?xml-stylesheet type='text/xsl' href='image_metadata_stylesheet.xsl'?>
+<dataset>
+<name>imglab dataset</name>
+<comment>Created by imglab tool.</comment>
+<images>
+<image file='155.png'>
+	<box top='233' left='303' width='153' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='61.png'>
+	<box top='243' left='350' width='143' height='141'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='121.png'>
+	<box top='226' left='289' width='161' height='138'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='99.png'>
+	<box top='236' left='344' width='141' height='130'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='150.png'>
+	<box top='223' left='301' width='147' height='136'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='15.png'>
+	<box top='269' left='282' width='130' height='117'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='138.png'>
+	<box top='211' left='306' width='129' height='140'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='159.png'>
+	<box top='236' left='301' width='153' height='130'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='196.png'>
+	<box top='238' left='334' width='137' height='128'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='182.png'>
+	<box top='245' left='317' width='141' height='125'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='63.png'>
+	<box top='237' left='353' width='145' height='145'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='172.png'>
+	<box top='221' left='330' width='137' height='139'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='133.png'>
+	<box top='208' left='314' width='126' height='153'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='156.png'>
+	<box top='234' left='304' width='152' height='130'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='238.png'>
+	<box top='238' left='327' width='129' height='142'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='30.png'>
+	<box top='264' left='287' width='129' height='120'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='76.png'>
+	<box top='217' left='325' width='151' height='145'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='272.png'>
+	<box top='253' left='312' width='119' height='116'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='8.png'>
+	<box top='246' left='256' width='152' height='153'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='276.png'>
+	<box top='271' left='326' width='102' height='114'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='296.png'>
+	<box top='266' left='328' width='119' height='120'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='16.png'>
+	<box top='271' left='285' width='129' height='116'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='35.png'>
+	<box top='265' left='291' width='131' height='122'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='254.png'>
+	<box top='215' left='303' width='126' height='143'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='258.png'>
+	<box top='231' left='313' width='122' height='142'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='292.png'>
+	<box top='270' left='318' width='123' height='114'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='28.png'>
+	<box top='240' left='283' width='143' height='134'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='210.png'>
+	<box top='241' left='339' width='144' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='49.png'>
+	<box top='235' left='342' width='145' height='133'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='230.png'>
+	<box top='235' left='322' width='129' height='134'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='274.png'>
+	<box top='265' left='313' width='115' height='114'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='65.png'>
+	<box top='238' left='356' width='139' height='142'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='174.png'>
+	<box top='227' left='328' width='140' height='134'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='12.png'>
+	<box top='265' left='273' width='134' height='119'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='204.png'>
+	<box top='242' left='340' width='133' height='126'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='145.png'>
+	<box top='213' left='293' width='135' height='151'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='26.png'>
+	<box top='226' left='275' width='153' height='146'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='127.png'>
+	<box top='211' left='303' width='156' height='139'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='104.png'>
+	<box top='243' left='327' width='143' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='273.png'>
+	<box top='257' left='309' width='121' height='115'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='269.png'>
+	<box top='242' left='291' width='134' height='124'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='109.png'>
+	<box top='245' left='298' width='167' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='175.png'>
+	<box top='230' left='327' width='142' height='137'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='90.png'>
+	<box top='219' left='325' width='149' height='160'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='190.png'>
+	<box top='241' left='329' width='141' height='133'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='246.png'>
+	<box top='226' left='307' width='130' height='135'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='79.png'>
+	<box top='220' left='323' width='152' height='147'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='18.png'>
+	<box top='268' left='281' width='129' height='117'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='82.png'>
+	<box top='219' left='325' width='153' height='146'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='47.png'>
+	<box top='254' left='359' width='133' height='130'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='260.png'>
+	<box top='233' left='319' width='128' height='149'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='147.png'>
+	<box top='212' left='296' width='144' height='142'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='128.png'>
+	<box top='208' left='304' width='154' height='154'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='101.png'>
+	<box top='242' left='334' width='144' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='203.png'>
+	<box top='241' left='342' width='129' height='125'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='267.png'>
+	<box top='243' left='288' width='134' height='139'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='126.png'>
+	<box top='213' left='297' width='158' height='140'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='93.png'>
+	<box top='220' left='338' width='130' height='139'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='107.png'>
+	<box top='232' left='311' width='152' height='139'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='55.png'>
+	<box top='232' left='300' width='149' height='131'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='84.png'>
+	<box top='217' left='325' width='154' height='147'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='103.png'>
+	<box top='243' left='329' width='144' height='131'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='202.png'>
+	<box top='239' left='338' width='134' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='241.png'>
+	<box top='257' left='312' width='122' height='124'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='188.png'>
+	<box top='242' left='326' width='138' height='128'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='207.png'>
+	<box top='241' left='334' width='135' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='170.png'>
+	<box top='221' left='331' width='138' height='136'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='251.png'>
+	<box top='211' left='294' width='140' height='166'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='72.png'>
+	<box top='283' left='368' width='109' height='79'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='173.png'>
+	<box top='221' left='328' width='140' height='138'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='124.png'>
+	<box top='218' left='290' width='159' height='143'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='32.png'>
+	<box top='276' left='281' width='121' height='117'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='257.png'>
+	<box top='232' left='310' width='120' height='141'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='223.png'>
+	<box top='247' left='344' width='109' height='117'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='171.png'>
+	<box top='223' left='330' width='138' height='139'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='87.png'>
+	<box top='218' left='324' width='149' height='143'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='75.png'>
+	<box top='219' left='325' width='151' height='154'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='239.png'>
+	<box top='251' left='313' width='131' height='135'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='279.png'>
+	<box top='274' left='306' width='122' height='113'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='59.png'>
+	<box top='240' left='338' width='144' height='137'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='160.png'>
+	<box top='236' left='304' width='149' height='130'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='184.png'>
+	<box top='240' left='319' width='142' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='236.png'>
+	<box top='223' left='334' width='129' height='140'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='5.png'>
+	<box top='226' left='244' width='166' height='155'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='287.png'>
+	<box top='274' left='309' width='140' height='113'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='212.png'>
+	<box top='240' left='345' width='141' height='125'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='262.png'>
+	<box top='242' left='319' width='123' height='145'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='224.png'>
+	<box top='247' left='322' width='124' height='120'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='41.png'>
+	<box top='251' left='331' width='136' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='197.png'>
+	<box top='238' left='336' width='135' height='130'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='51.png'>
+	<box top='227' left='313' width='150' height='136'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='284.png'>
+	<box top='268' left='311' width='132' height='118'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='3.png'>
+	<box top='226' left='244' width='167' height='154'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='179.png'>
+	<box top='247' left='310' width='136' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='233.png'>
+	<box top='230' left='323' width='131' height='135'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='216.png'>
+	<box top='230' left='346' width='132' height='122'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='131.png'>
+	<box top='208' left='309' width='133' height='142'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='198.png'>
+	<box top='238' left='334' width='138' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='248.png'>
+	<box top='220' left='298' width='134' height='163'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='2.png'>
+	<box top='226' left='245' width='167' height='155'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='119.png'>
+	<box top='238' left='280' width='167' height='148'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='27.png'>
+	<box top='234' left='279' width='148' height='140'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='266.png'>
+	<box top='243' left='285' width='135' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='220.png'>
+	<box top='237' left='324' width='128' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='288.png'>
+	<box top='268' left='315' width='135' height='119'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='140.png'>
+	<box top='213' left='303' width='130' height='139'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='11.png'>
+	<box top='258' left='272' width='136' height='123'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='208.png'>
+	<box top='240' left='335' width='136' height='128'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='213.png'>
+	<box top='234' left='354' width='137' height='131'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='33.png'>
+	<box top='273' left='280' width='122' height='118'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='148.png'>
+	<box top='219' left='300' width='139' height='140'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='277.png'>
+	<box top='276' left='323' width='98' height='109'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='299.png'>
+	<box top='268' left='328' width='126' height='116'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='161.png'>
+	<box top='234' left='307' width='145' height='132'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='44.png'>
+	<box top='252' left='347' width='134' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='29.png'>
+	<box top='251' left='287' width='136' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='245.png'>
+	<box top='232' left='308' width='128' height='134'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='91.png'>
+	<box top='216' left='328' width='146' height='157'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='67.png'>
+	<box top='230' left='348' width='147' height='141'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='151.png'>
+	<box top='227' left='299' width='153' height='133'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='135.png'>
+	<box top='211' left='310' width='130' height='162'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='285.png'>
+	<box top='269' left='308' width='139' height='115'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='20.png'>
+	<box top='253' left='270' width='138' height='128'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='13.png'>
+	<box top='269' left='275' width='132' height='119'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='56.png'>
+	<box top='232' left='299' width='150' height='132'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='116.png'>
+	<box top='239' left='296' width='173' height='134'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='191.png'>
+	<box top='241' left='329' width='141' height='126'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='242.png'>
+	<box top='244' left='318' width='118' height='131'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='153.png'>
+	<box top='231' left='300' width='153' height='131'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='205.png'>
+	<box top='243' left='338' width='134' height='125'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='139.png'>
+	<box top='211' left='306' width='130' height='142'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='112.png'>
+	<box top='240' left='309' width='169' height='133'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='6.png'>
+	<box top='231' left='247' width='163' height='157'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='168.png'>
+	<box top='223' left='326' width='140' height='136'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='282.png'>
+	<box top='271' left='308' width='123' height='113'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='177.png'>
+	<box top='242' left='318' width='142' height='128'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='78.png'>
+	<box top='217' left='322' width='150' height='145'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='80.png'>
+	<box top='220' left='323' width='151' height='147'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='271.png'>
+	<box top='247' left='302' width='129' height='120'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='125.png'>
+	<box top='219' left='293' width='158' height='136'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='165.png'>
+	<box top='227' left='324' width='139' height='136'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='120.png'>
+	<box top='233' left='279' width='166' height='163'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='194.png'>
+	<box top='240' left='327' width='139' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='235.png'>
+	<box top='224' left='328' width='141' height='141'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='275.png'>
+	<box top='270' left='315' width='112' height='113'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='111.png'>
+	<box top='243' left='306' width='169' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='297.png'>
+	<box top='269' left='328' width='126' height='116'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='278.png'>
+	<box top='275' left='312' width='114' height='111'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='286.png'>
+	<box top='275' left='307' width='140' height='111'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='46.png'>
+	<box top='256' left='357' width='134' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='222.png'>
+	<box top='248' left='339' width='107' height='120'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='100.png'>
+	<box top='238' left='342' width='142' height='139'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='185.png'>
+	<box top='239' left='318' width='143' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='45.png'>
+	<box top='257' left='358' width='135' height='130'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='228.png'>
+	<box top='235' left='312' width='123' height='133'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='232.png'>
+	<box top='235' left='319' width='133' height='135'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='215.png'>
+	<box top='228' left='356' width='129' height='126'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='123.png'>
+	<box top='223' left='289' width='161' height='137'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='180.png'>
+	<box top='246' left='309' width='138' height='128'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='193.png'>
+	<box top='240' left='327' width='140' height='128'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='195.png'>
+	<box top='239' left='330' width='139' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='89.png'>
+	<box top='218' left='324' width='148' height='145'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='295.png'>
+	<box top='267' left='328' width='120' height='117'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='36.png'>
+	<box top='262' left='301' width='135' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='58.png'>
+	<box top='234' left='309' width='152' height='146'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='97.png'>
+	<box top='242' left='339' width='133' height='124'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='62.png'>
+	<box top='240' left='357' width='143' height='148'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='132.png'>
+	<box top='205' left='313' width='129' height='166'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='255.png'>
+	<box top='218' left='307' width='121' height='143'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='108.png'>
+	<box top='234' left='310' width='152' height='137'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='40.png'>
+	<box top='250' left='324' width='136' height='128'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='129.png'>
+	<box top='206' left='306' width='148' height='155'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='283.png'>
+	<box top='269' left='310' width='127' height='114'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='38.png'>
+	<box top='255' left='316' width='137' height='147'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='102.png'>
+	<box top='241' left='331' width='144' height='126'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='264.png'>
+	<box top='248' left='278' width='138' height='128'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='243.png'>
+	<box top='244' left='317' width='120' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='149.png'>
+	<box top='221' left='300' width='142' height='139'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='118.png'>
+	<box top='239' left='286' width='170' height='134'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='206.png'>
+	<box top='243' left='335' width='134' height='130'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='94.png'>
+	<box top='229' left='339' width='131' height='133'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='209.png'>
+	<box top='239' left='337' width='141' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='117.png'>
+	<box top='237' left='292' width='173' height='136'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='186.png'>
+	<box top='239' left='322' width='140' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='1.png'>
+	<box top='228' left='247' width='167' height='170'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='110.png'>
+	<box top='242' left='299' width='167' height='146'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='281.png'>
+	<box top='271' left='306' width='123' height='115'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='270.png'>
+	<box top='244' left='297' width='130' height='121'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='169.png'>
+	<box top='222' left='328' width='139' height='141'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='54.png'>
+	<box top='231' left='302' width='150' height='133'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='253.png'>
+	<box top='213' left='298' width='132' height='158'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='291.png'>
+	<box top='270' left='320' width='123' height='114'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='142.png'>
+	<box top='211' left='304' width='130' height='160'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='249.png'>
+	<box top='216' left='296' width='139' height='164'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='136.png'>
+	<box top='211' left='306' width='133' height='143'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='70.png'>
+	<box top='221' left='327' width='160' height='142'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='25.png'>
+	<box top='222' left='273' width='157' height='147'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='199.png'>
+	<box top='238' left='333' width='138' height='128'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='234.png'>
+	<box top='228' left='323' width='139' height='138'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='141.png'>
+	<box top='212' left='303' width='131' height='140'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='167.png'>
+	<box top='224' left='324' width='141' height='136'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='134.png'>
+	<box top='208' left='312' width='128' height='146'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='178.png'>
+	<box top='247' left='318' width='136' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='157.png'>
+	<box top='233' left='303' width='153' height='130'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='22.png'>
+	<box top='236' left='268' width='151' height='141'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='144.png'>
+	<box top='222' left='297' width='134' height='133'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='226.png'>
+	<box top='223' left='303' width='125' height='130'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='152.png'>
+	<box top='228' left='300' width='153' height='136'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='115.png'>
+	<box top='242' left='306' width='169' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='37.png'>
+	<box top='259' left='309' width='137' height='128'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='290.png'>
+	<box top='266' left='320' width='127' height='117'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='98.png'>
+	<box top='239' left='344' width='135' height='126'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='105.png'>
+	<box top='238' left='317' width='148' height='132'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='227.png'>
+	<box top='233' left='306' width='125' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='154.png'>
+	<box top='232' left='301' width='154' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='217.png'>
+	<box top='228' left='341' width='133' height='130'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='9.png'>
+	<box top='251' left='266' width='146' height='139'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='280.png'>
+	<box top='272' left='303' width='123' height='117'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='69.png'>
+	<box top='218' left='332' width='155' height='160'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='7.png'>
+	<box top='238' left='250' width='158' height='150'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='158.png'>
+	<box top='236' left='301' width='153' height='130'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='39.png'>
+	<box top='251' left='320' width='136' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='237.png'>
+	<box top='224' left='332' width='129' height='142'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='247.png'>
+	<box top='223' left='305' width='132' height='157'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='289.png'>
+	<box top='267' left='320' width='126' height='119'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='77.png'>
+	<box top='220' left='325' width='150' height='164'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='137.png'>
+	<box top='212' left='306' width='130' height='147'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='17.png'>
+	<box top='272' left='285' width='129' height='116'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='85.png'>
+	<box top='215' left='323' width='153' height='147'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='130.png'>
+	<box top='206' left='306' width='142' height='146'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='294.png'>
+	<box top='268' left='326' width='113' height='117'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='240.png'>
+	<box top='255' left='309' width='125' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='259.png'>
+	<box top='228' left='317' width='125' height='144'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='43.png'>
+	<box top='250' left='337' width='136' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='176.png'>
+	<box top='232' left='318' width='151' height='134'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='10.png'>
+	<box top='253' left='270' width='140' height='128'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='300.png'>
+	<box top='267' left='329' width='125' height='111'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='211.png'>
+	<box top='240' left='341' width='141' height='128'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='201.png'>
+	<box top='240' left='337' width='134' height='126'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='71.png'>
+	<box top='219' left='326' width='157' height='144'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='50.png'>
+	<box top='228' left='323' width='150' height='130'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='162.png'>
+	<box top='232' left='314' width='138' height='134'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='225.png'>
+	<box top='228' left='301' width='127' height='126'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='189.png'>
+	<box top='241' left='330' width='136' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='163.png'>
+	<box top='228' left='319' width='136' height='141'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='83.png'>
+	<box top='218' left='325' width='155' height='152'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='164.png'>
+	<box top='228' left='325' width='136' height='137'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='88.png'>
+	<box top='215' left='323' width='150' height='149'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='244.png'>
+	<box top='237' left='314' width='121' height='131'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='19.png'>
+	<box top='261' left='274' width='135' height='122'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='219.png'>
+	<box top='233' left='324' width='133' height='130'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='263.png'>
+	<box top='242' left='302' width='127' height='136'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='218.png'>
+	<box top='231' left='333' width='132' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='31.png'>
+	<box top='275' left='284' width='84' height='115'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='268.png'>
+	<box top='243' left='289' width='133' height='123'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='74.png'>
+	<box top='224' left='327' width='151' height='136'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='183.png'>
+	<box top='243' left='319' width='141' height='125'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='114.png'>
+	<box top='241' left='309' width='170' height='133'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='214.png'>
+	<box top='231' left='358' width='135' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='14.png'>
+	<box top='269' left='278' width='131' height='118'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='60.png'>
+	<box top='242' left='345' width='142' height='139'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='106.png'>
+	<box top='234' left='314' width='151' height='135'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='113.png'>
+	<box top='239' left='309' width='170' height='131'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='192.png'>
+	<box top='241' left='328' width='140' height='132'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='48.png'>
+	<box top='249' left='358' width='135' height='136'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='229.png'>
+	<box top='233' left='322' width='121' height='128'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='95.png'>
+	<box top='235' left='335' width='135' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='42.png'>
+	<box top='251' left='335' width='136' height='127'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='34.png'>
+	<box top='268' left='279' width='128' height='123'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='181.png'>
+	<box top='246' left='308' width='144' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='66.png'>
+	<box top='235' left='349' width='143' height='142'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='298.png'>
+	<box top='268' left='328' width='128' height='118'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='81.png'>
+	<box top='222' left='324' width='150' height='142'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='68.png'>
+	<box top='224' left='343' width='150' height='145'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='265.png'>
+	<box top='244' left='276' width='138' height='132'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='73.png'>
+	<box top='222' left='328' width='149' height='141'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='293.png'>
+	<box top='268' left='323' width='116' height='115'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='146.png'>
+	<box top='210' left='294' width='137' height='143'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='250.png'>
+	<box top='212' left='292' width='141' height='147'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='52.png'>
+	<box top='230' left='306' width='151' height='133'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='166.png'>
+	<box top='226' left='324' width='139' height='137'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='86.png'>
+	<box top='216' left='322' width='153' height='155'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='122.png'>
+	<box top='224' left='289' width='160' height='138'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='256.png'>
+	<box top='224' left='308' width='121' height='161'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='4.png'>
+	<box top='225' left='243' width='167' height='161'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='200.png'>
+	<box top='238' left='335' width='136' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='96.png'>
+	<box top='237' left='330' width='141' height='130'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='143.png'>
+	<box top='212' left='299' width='131' height='143'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='24.png'>
+	<box top='221' left='272' width='158' height='150'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='57.png'>
+	<box top='234' left='296' width='149' height='130'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='53.png'>
+	<box top='234' left='299' width='151' height='133'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='221.png'>
+	<box top='243' left='327' width='119' height='129'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='64.png'>
+	<box top='233' left='346' width='147' height='143'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='261.png'>
+	<box top='239' left='320' width='124' height='160'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='231.png'>
+	<box top='238' left='321' width='132' height='131'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='92.png'>
+	<box top='221' left='332' width='137' height='139'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='187.png'>
+	<box top='240' left='325' width='137' height='128'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='23.png'>
+	<box top='226' left='272' width='155' height='162'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='21.png'>
+	<box top='244' left='267' width='145' height='133'>
+		<label>hand</label>
+	</box>
+</image>
+<image file='252.png'>
+	<box top='209' left='295' width='138' height='154'>
+		<label>hand</label>
+	</box>
+</image>
+</images>
+</dataset>
