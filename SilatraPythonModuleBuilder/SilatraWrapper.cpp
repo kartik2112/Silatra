@@ -4,14 +4,13 @@
 // #include <Python.h>
 
 
-#include <python3.5/Python.h>
+#include <python3.6/Python.h>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
 #include "GetMyHand/handDetection.hpp"
-// #include "GetMyHand/Classification/classifyPythonAPI.hpp"
 
 #include <iostream>
 #include <ctime>
@@ -62,40 +61,9 @@ bool faceFound = false;
 
 
 
-
-
-// int maxNoOfSamples = 300;
-
-// void processFrame(Mat& image);
-// void maintainTrackOfTimings();
-
-string subDirName;
-
-string tempTimesLabels[] = 
-					{"Overall",
-					"  Skin Color Extraction",
-					"  Morphology Operations",
-					"  Modified Image Generation",
-					"  Hand Contours Generation",
-					"    Contours Pre-processing (Canny, ApproxPolyDP)",
-					"    Contours Improvement (Connect, reduce cluster points)",
-					"    Contours Post-processing (Convex Hull, Normalized CCDC computation n storage)",
-					"    Contour Classification (Python invocation)"};
-
-vector<string> timesLabels(tempTimesLabels, tempTimesLabels + sizeof(tempTimesLabels)/sizeof(string));
-vector<double> maxTimes(timesLabels.size(),0);
-vector<double> minTimes(timesLabels.size(),10000);
-vector<double> avgTimes(timesLabels.size(),0);
-vector<double> frameStepsTimes(timesLabels.size());
-double noOfFramesCollected = 0;
-
 char** args_v;
 int args_c;
 
-bool wrapperModeOn = true;
-
-
-// static PyObject *SpamError;
 
 
 // module functions
@@ -177,7 +145,7 @@ static PyMethodDef SilatraMethods[] = {
 // module definition structure for python3
 static struct PyModuleDef silatramodule = {
    PyModuleDef_HEAD_INIT,
-   "silatra",   /* name of module */
+   "silatra_cpp",   /* name of module */
    "Sign Language Translation",/*spam_doc,  module documentation, may be NULL */
    -1,       /* size of per-interpreter state of the module,
                 or -1 if the module keeps state in global variables. */
@@ -187,7 +155,7 @@ static struct PyModuleDef silatramodule = {
 
 
 
-PyMODINIT_FUNC PyInit_silatra(void)
+PyMODINIT_FUNC PyInit_silatra_cpp(void)
 {
     return PyModule_Create(&silatramodule);
 }
@@ -198,7 +166,7 @@ PyMODINIT_FUNC PyInit_silatra(void)
 
 // module initializer for python2
 PyMODINIT_FUNC initsilatra() {
-    Py_InitModule3("silatra", SilatraMethods, "Sign Language Translation");
+    Py_InitModule3("silatra_cpp", SilatraMethods, "Sign Language Translation");
 }
 
 #endif
