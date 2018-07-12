@@ -388,7 +388,7 @@ lengths ={
 }
 
 
-with open('gestures.csv') as fileR:
+with open('gestures_june_2 (copy).csv') as fileR:
     while True:
         line = fileR.readline()
         if line == '': break
@@ -410,8 +410,8 @@ print(lengths)
 
 for key1 in Models.keys():
     print(key1)
-    if key1 == 'Apple':
-        continue
+    # if key1 == 'Apple':
+    #     continue
     Models[key1].fit(trainData[key1],lengths[key1])
     print(Models[key1].startprob_)
     print(Models[key1].transmat_)
@@ -453,13 +453,13 @@ for key1 in Models.keys():
     print('Good Morning',Models[key1].score(test4))
     elapsed4 = timeit.default_timer() - start_time
 
-    # print('Stroke',Models[key1].score(test5,lengths=[len(test5)]))
+    print('Stroke',Models[key1].score(test5,lengths=[len(test5)]))
 
     print('PGMYP',Models[key1].score(test6))
 
-    # print('Leader',Models[key1].score(test7))
+    print('Leader',Models[key1].score(test7))
 
-    # print('I am Sorry',Models[key1].score(test8))
+    print('I am Sorry',Models[key1].score(test8))
     
     print("Average time taken for this model",(elapsed1+elapsed2+elapsed3+elapsed4)/4)
 

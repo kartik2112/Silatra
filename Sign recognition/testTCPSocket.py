@@ -48,6 +48,7 @@ print('Got TCP connection from', addr)
 while True:
 
     buf = client.recv(4)
+    print(buf)
     size = struct.unpack('!i', buf)[0]  
     print("receiving image of size: %s bytes" % size)
 
@@ -69,6 +70,10 @@ while True:
     img_np = imutils.rotate_bound(img_np,90)
     img_np = cv2.resize(img_np,(0,0), fx=0.7, fy=0.7)
     cv2.imshow("Img",img_np)
+
+    k = cv2.waitKey(10)
+    if k == 'q':
+        break
 
 
 print('Stopped TCP server of port: '+str(port))

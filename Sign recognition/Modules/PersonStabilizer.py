@@ -12,7 +12,7 @@ faceStabilizerMode = "OFF"  # This is used to enable/disable the stabilizer usin
 trackingStarted = False     # This is used to indicate whether tracking has started or not
 noOfFramesNotTracked = 0    # This indicates the no of frames that has not been tracked
 maxNoOfFramesNotTracked = 15 # This is the max no of frames that if not tracked, will restart the tracker algo
-minNoOfFramesBeforeStabilizationStart = 50
+minNoOfFramesBeforeStabilizationStart = 70
 trackerInitFace = (0,0,0,0)
 tracker = cv2.TrackerKCF_create()
 

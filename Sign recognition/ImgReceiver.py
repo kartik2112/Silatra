@@ -76,7 +76,7 @@ port = 49164                 # This is the port no to which the server socket is
 
 recognitionMode = "GESTURE"  # SIGN | GESTURE    # This is the mode of recognition. 
                             # Currently, we have designed the recognition in 2 different modes
-
+stabilizeEnabled = True
 
 noOfFramesCollected = 0     # This is used to keep track of the number of frames received and processed by the server socket
 
@@ -129,7 +129,8 @@ def videoInitializer():
 ### ------------------- GESTURE handling present here -------------------------------------------------------------
 if recognitionMode == "GESTURE":
     # classifier = pickle.load(open('./Models/gesture_model_10_10.knn.sav','rb'))
-    classifier = pickle.load(open('./Models/silatra_gesture_signs_apr_15.sav','rb'))
+    # classifier = pickle.load(open('./Models/silatra_gesture_signs_apr_15.sav','rb'))
+    classifier = pickle.load(open('./Models/silatra_gesture_signs_june_2.sav','rb'))
     print("Loaded Gesture Recognition KNN Model")
     observations = []
     if recordVideos:
@@ -207,22 +208,23 @@ while True:
             ### ------------------- GESTURE handling present here -----------------------------------------------------
             # print("\n\n---------------Recorded observations------------------\n\n",observations)
             # print("\n\n---------------Calling middle filtering layer for compression and noise elimination------------------------\n")
-            hmmGest12 = hmmGestureClassify.classifyGestureByHMM(observations)
-            if displayWindows:
-                silatra_utils.displayTextOnWindow("HMMGesture",hmmGest12[0],10,100,1)
-            engine.say(hmmGest12[0])
-            engine.runAndWait()
-            # silatra_utils.displayTextOnWindow("Gesture",gest12,10,100,1)
-            # print("\n\nVoila! And the gesture contained in the video is",gest12)
-            print("\n\nVoila! And the gesture recognized by HMM is",hmmGest12)
-            # op1 = "GESTURE:"+gest12 + "\r\n"
-            op1 = hmmGest12[0] + "\r\n"
-            # observations = filter_time_series.filterTS(observations)
-            # gest12 = gesture_classify.recognize(observations)
-            # print("\n\nVoila! And the gesture contained in the video is",gest12)
-            # op1 = "GESTURE:"+gest12 + "\r\n"
-            # op1 = gest12 + "\r\n"
-            client.send(op1.encode('ascii'))
+            if len(observations) > 0:
+                hmmGest12 = hmmGestureClassify.classifyGestureByHMM(observations)
+                if displayWindows:
+                    silatra_utils.displayTextOnWindow("HMMGesture",hmmGest12[0],10,100,1)
+                engine.say(hmmGest12[0])
+                engine.runAndWait()
+                # silatra_utils.displayTextOnWindow("Gesture",gest12,10,100,1)
+                # print("\n\nVoila! And the gesture contained in the video is",gest12)
+                print("\n\nVoila! And the gesture recognized by HMM is",hmmGest12)
+                # op1 = "GESTURE:"+gest12 + "\r\n"
+                op1 = hmmGest12[0] + "\r\n"
+                # observations = filter_time_series.filterTS(observations)
+                # gest12 = gesture_classify.recognize(observations)
+                # print("\n\nVoila! And the gesture contained in the video is",gest12)
+                # op1 = "GESTURE:"+gest12 + "\r\n"
+                # op1 = gest12 + "\r\n"
+                client.send(op1.encode('ascii'))
             op1 = "QUIT\r\n"
             client.send(op1.encode('ascii'))
             break
@@ -328,7 +330,8 @@ while True:
     if displayWindows:
         cv2.imshow("OG Img",img_np)
 
-    # PersonStabilizer.stabilize(foundFace,noOfFramesCollected,img_np,faceRect,mask1)
+    if stabilizeEnabled:
+        PersonStabilizer.stabilize(foundFace,noOfFramesCollected,img_np,faceRect,mask1)
 
     ### ---------------------------------Timing here--------------------------------------------------------------------
     start_time = tm.recordTimings(start_time,"STABILIZE",noOfFramesCollected)
