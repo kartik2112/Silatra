@@ -1,2 +1,0 @@
-# SiLaTra (Sign Language Translation)
-

@@ -14,26 +14,20 @@ import struct
 import atexit
 import timeit
 import sys
-# import tkinter
 import netifaces as ni
 import os
 import distutils
 
 import argparse
-# import pyttsx3
 
 
 import numpy as np
 import cv2
 import imutils
-# import dlib
+import dlib
 from imutils import face_utils
 
-# from scipy.fftpack import fft, ifft
 from sklearn.neighbors import KNeighborsClassifier
-# from keras.models import Sequential
-# from keras.layers import Dense
-# from keras.models import model_from_json
 import pickle
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -53,30 +47,50 @@ import hmmGestureClassify
 currentModuleName = __file__.split(os.path.sep)[-1]
 
 parser = argparse.ArgumentParser(description='Main Entry Point')
-parser.add_argument('--recordVideos', 
-                    help='Usage: python3 Receiver.py --recordVideos True --subDir GN')
-parser.add_argument('--subDir', 
-                    help='Usage: python3 Receiver.py --recordVideos True --subDir GN')
 parser.add_argument('--portNo', 
                     help='Usage: python3 Receiver.py --portNo 12345')
 parser.add_argument('--displayWindows', 
-                    help='Usage: python3 Receiver.py --displayWindows True')
+                    help='Usage: python3 Receiver.py --displayWindows True | False')
+parser.add_argument('--recognitionMode', 
+                    help='Usage: python3 Receiver.py --recognitionMode SIGN | GESTURE')
+parser.add_argument('--socketTimeOutEnable', 
+                    help='Usage: python3 Receiver.py --socketTimeOutEnable True | False')
+parser.add_argument('--stabilize', 
+                    help='Usage: python3 Receiver.py --stabilize True | False')
+parser.add_argument('--recordVideos', 
+                    help='Usage: python3 Receiver.py --recordVideos True | False --subDir GN')
+parser.add_argument('--subDir', 
+                    help='Usage: python3 Receiver.py --recordVideos True | False --subDir GN')
 args = parser.parse_args()
 
 
-# engine = pyttsx3.init()
 
 gridSize = (10,10)
 
 
 
-mode = "TCP"  # TCP | UDP   # This is the type of socket that this server must create for listening
 port = 49164                 # This is the port no to which the server socket is attached
 
 
 recognitionMode = "SIGN"  # SIGN | GESTURE    # This is the mode of recognition. 
                             # Currently, we have designed the recognition in 2 different modes
-stabilizeEnabled = False
+
+if args.recognitionMode != None and args.recognitionMode in ('SIGN','GESTURE'):
+    recognitionMode = args.recognitionMode
+
+
+if args.stabilize == None:
+    stabilizeEnabled = False
+else:
+    stabilizeEnabled = bool(distutils.util.strtobool(args.stabilize))
+
+
+if args.socketTimeOutEnable == None:
+    socketTimeOutEnable = False
+else:
+    socketTimeOutEnable = bool(distutils.util.strtobool(args.socketTimeOutEnable))
+
+
 
 noOfFramesCollected = 0     # This is used to keep track of the number of frames received and processed by the server socket
 
@@ -97,11 +111,8 @@ newGestureStarted = False
 lastMsgSentOut = '--\r\n'
 
 
-# def processImage():
 
-
-# detector = dlib.get_frontal_face_detector()
-# predictor = dlib.shape_predictor("Models/shape_predictor_68_face_landmarks.dat")
+detector = dlib.get_frontal_face_detector()
 
 videoCounter = 1
 if args.recordVideos == None:
@@ -128,8 +139,6 @@ def videoInitializer():
 
 ### ------------------- GESTURE handling present here -------------------------------------------------------------
 if recognitionMode == "GESTURE":
-    # classifier = pickle.load(open('./Models/gesture_model_10_10.knn.sav','rb'))
-    # classifier = pickle.load(open('./Models/silatra_gesture_signs_apr_15.sav','rb'))
     classifier = pickle.load(open(dir_path+'/Models/silatra_gesture_signs.sav','rb'))
     print("Loaded Gesture Recognition KNN Model")
     observations = []
@@ -149,15 +158,7 @@ def port_initializer():
 
 
 if args.portNo == None:
-    # opening_window = tkinter.Tk()
-    # port_label = tkinter.Label(opening_window, text = "Port to be reserved:")
-    # port_label.pack(side = tkinter.LEFT)
-    # port_entry = tkinter.Entry(opening_window, bd=3)
-    # port_entry.pack(side = tkinter.RIGHT)
-    # save_button = tkinter.Button(opening_window, command = port_initializer)
-    # save_button.pack()
-    # opening_window.mainloop()
-    pass
+    port = int(input("Enter port no: "))
 else:
     port = int(args.portNo)
 
@@ -165,24 +166,20 @@ else:
 ni.ifaddresses('wlo1')
 ipAddr = ni.ifaddresses('wlo1')[ni.AF_INET][0]['addr']
 
-if mode == "TCP":
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+if socketTimeOutEnable:
     s.settimeout(20)
-    print("TCP Socket successfully created")
-    s.bind(('', port))
-    print("TCP Socket binded to %s: %s" %(ipAddr,port))
-    s.listen(1)
-    print("Socket is listening")
-    client, addr = s.accept()     
-    print('Got TCP connection from', addr)
+print("TCP Socket successfully created")
+s.bind(('', port))
+print("TCP Socket binded to %s: %s" %(ipAddr,port))
+s.listen(1)
+print("Socket is listening")
+client, addr = s.accept()     
+print('Got TCP connection from', addr)
+if socketTimeOutEnable:
     s.settimeout(10)
-else:
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)         
-    print("UDP Socket successfully created")
-    s.bind(('',port))        
-    print("UDP Socket binded to %s: %s" %(ipAddr,port))
-    UDP_IP_ADDRESS2 = ""
-    UDP_SEND_PORT_NO = 0
+
 
 
 def segment(src_img):
@@ -210,7 +207,6 @@ def segment(src_img):
     close_kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (7,7))
     mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, open_kernel)
     mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, close_kernel)
-    # mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
 
     return mask
 
@@ -226,66 +222,45 @@ while True:
     if displayWindows:
         silatra_utils.displayTextOnWindow("Frame No",str(noOfFramesCollected))
     
-    if mode == "TCP":
-        buf = client.recv(4)
     
-        # print(buf)
-        size = struct.unpack('!i', buf)[0]  
-        #Reference: https://stackoverflow.com/a/37601966/5370202, https://docs.python.org/3/library/struct.html
-        # print(size)
-        print("receiving image of size: %s bytes" % size)
+    buf = client.recv(4)
 
-        if(size == 0 and recognitionMode == "SIGN"):
-            op1 = "QUIT\r\n"
+    # print(buf)
+    size = struct.unpack('!i', buf)[0]  
+    #Reference: https://stackoverflow.com/a/37601966/5370202, https://docs.python.org/3/library/struct.html
+    # print(size)
+    print("receiving image of size: %s bytes" % size)
+
+    if(size == 0 and recognitionMode == "SIGN"):
+        op1 = "QUIT\r\n"
+        client.send(op1.encode('ascii'))
+        break
+    elif(size == 0 and recognitionMode == "GESTURE"):
+        ### ------------------- GESTURE handling present here -----------------------------------------------------
+        if len(observations) > 0:
+            hmmGest12 = hmmGestureClassify.classifyGestureByHMM(observations)
+            if displayWindows:
+                silatra_utils.displayTextOnWindow("HMMGesture",hmmGest12[0],10,100,1)
+            
+            print("\n\nVoila! And the gesture recognized by HMM is",hmmGest12)
+            op1 = hmmGest12[0] + "\r\n"
             client.send(op1.encode('ascii'))
-            break
-        elif(size == 0 and recognitionMode == "GESTURE"):
-            ### ------------------- GESTURE handling present here -----------------------------------------------------
-            # print("\n\n---------------Recorded observations------------------\n\n",observations)
-            # print("\n\n---------------Calling middle filtering layer for compression and noise elimination------------------------\n")
-            if len(observations) > 0:
-                hmmGest12 = hmmGestureClassify.classifyGestureByHMM(observations)
-                if displayWindows:
-                    silatra_utils.displayTextOnWindow("HMMGesture",hmmGest12[0],10,100,1)
-                # engine.say(hmmGest12[0])
-                # engine.runAndWait()
-                # silatra_utils.displayTextOnWindow("Gesture",gest12,10,100,1)
-                # print("\n\nVoila! And the gesture contained in the video is",gest12)
-                print("\n\nVoila! And the gesture recognized by HMM is",hmmGest12)
-                # op1 = "GESTURE:"+gest12 + "\r\n"
-                op1 = hmmGest12[0] + "\r\n"
-                # observations = filter_time_series.filterTS(observations)
-                # gest12 = gesture_classify.recognize(observations)
-                # print("\n\nVoila! And the gesture contained in the video is",gest12)
-                # op1 = "GESTURE:"+gest12 + "\r\n"
-                # op1 = gest12 + "\r\n"
-                client.send(op1.encode('ascii'))
-            op1 = "QUIT\r\n"
-            client.send(op1.encode('ascii'))
-            break
+        op1 = "QUIT\r\n"
+        client.send(op1.encode('ascii'))
+        break
 
-        data = client.recv(size,socket.MSG_WAITALL)  #Reference: https://www.binarytides.com/receive-full-data-with-the-recv-socket-function-in-python/
+    data = client.recv(size,socket.MSG_WAITALL)  #Reference: https://www.binarytides.com/receive-full-data-with-the-recv-socket-function-in-python/
 
-    else:
-        data, addr = s.recvfrom(65507)
-        print("Received %d bytes image (UDP Packet) from"%len(data), addr)
-        UDP_IP_ADDRESS2,UDP_SEND_PORT_NO = addr[0],addr[1]
+    
 
     ### ---------------------------------Timing here--------------------------------------------------------------------
     start_time = tm.recordTimings(start_time1,"DATA_TRANSFER",noOfFramesCollected)
     ### ---------------------------------Timing here--------------------------------------------------------------------
 
-    # if ctr123 % 5 != 0:
-    #     continue
 
-
-    # with open('tst.jpeg', 'wb') as img:
-    #         img.write(data)
-
-
-    # Instead of storing this image as mentioned in the 1st reference: https://stackoverflow.com/a/23312964/5370202
+    # Instead of storing the image as mentioned in the 1st reference: https://stackoverflow.com/a/23312964/5370202
     # we can directly convert it to Opencv Mat format
-    #Reference: https://stackoverflow.com/a/17170855/5370202
+    # Reference: https://stackoverflow.com/a/17170855/5370202
     nparr = np.fromstring(data, np.uint8)
     img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
@@ -293,23 +268,13 @@ while True:
     img_np = cv2.resize(img_np,(0,0), fx=0.7, fy=0.7)
     
 
-    # if total_captured >= 50:
-    #     cv2.imwrite('../training-images/kartik/SampleImages/%d_1.png'%(total_captured),img_np)
-    #     total_captured += 1
 
     ### ---------------------------------Timing here--------------------------------------------------------------------
     start_time = tm.recordTimings(start_time,"IMG_CONVERSION",noOfFramesCollected)
     ### ---------------------------------Timing here--------------------------------------------------------------------
 
-    # cv2.resize(img_np,)
-    
-
-    
-            
 
 
-
-    # mask1, foundFace, faceRect = silatra_cpp.segment(img_np)
     # mask1, _, _ = silatra_cpp.segment(img_np)
     mask1 = segment(img_np)
 
@@ -324,29 +289,23 @@ while True:
     gray = cv2.cvtColor(img_np, cv2.COLOR_BGR2GRAY)
 
     # detect faces in the grayscale image
-    # rects = detector(gray, 1)
+    rects = detector(gray, 1)
 
     maxArea1 = 0
     faceRect = -1
     foundFace = False
 
-    # for (i, rect) in enumerate(rects):
-    #     (x, y, w, h) = face_utils.rect_to_bb(rect)
-    #     # cv2.rectangle(img_np, (x, y), (x + w, y + h), (0, 0, 0), -1)
-    #     if w*h > maxArea1:
-    #         maxArea1 = w*h
-    #         faceRect = (x,y,w,h)
-    #         foundFace = True
+    for (i, rect) in enumerate(rects):
+        (x, y, w, h) = face_utils.rect_to_bb(rect)
+        if w*h > maxArea1:
+            maxArea1 = w*h
+            faceRect = (x,y,w,h)
+            foundFace = True
 
             
     mask1 = FaceEliminator.eliminateFace(mask1, foundFace, faceRect)
     if displayWindows:
         cv2.imshow("Mask12",mask1)
-
-        # if total_captured >= 50:
-        #     cv2.imwrite('../training-images/kartik/SampleImages/%d_3Blackened_Face.png'%(total_captured),cv2.bitwise_and(img_np,img_np,mask=faceMask))
-        #     cv2.imwrite('../training-images/kartik/SampleImages/%d_2Segmentation.png'%(total_captured),mask1)
-
 
     
 
@@ -354,13 +313,6 @@ while True:
     start_time = tm.recordTimings(start_time,"FACEHIDING",noOfFramesCollected)
     ### ---------------------------------Timing here--------------------------------------------------------------------
     
-
-    # if displayWindows:
-        # cv2.imshow("Mask",mask1)
-    # print("Found face at:",foundFace,"as:",faceRect)
-    
-    # if foundFace:
-    #     cv2.rectangle(img_np, (int(faceRect[0]),int(faceRect[1])), (int(faceRect[0]+faceRect[2]),int(faceRect[1]+faceRect[3])), (0,0,255), 2)
 
     if displayWindows:
         cv2.imshow("OG Img",img_np)
@@ -378,8 +330,6 @@ while True:
         if handFound:
             if displayWindows:
                 cv2.imshow("Your hand",hand)
-                # if total_captured >= 50:
-                #     cv2.imwrite('../training-images/kartik/SampleImages/%d_4Hand.png'%(total_captured),hand)
                 
             features = silatra_utils.extract_features(hand, gridSize)
             pred = silatra_utils.predictSign(classifier,features)
@@ -424,22 +374,13 @@ while True:
                     if recordVideos:
                         out.write(img_np)
         else:
-            if len(observations)>0:
+            if len(observations)>5:
                 ### ------------------- GESTURE handling present here -----------------------------------------------------
-                # print("\n\n---------------Recorded observations------------------\n\n",observations)
-                # print("\n\n---------------Calling middle filtering layer for compression and noise elimination------------------------\n")
                 hmmGest12 = hmmGestureClassify.classifyGestureByHMM(observations)
-                # observations = filter_time_series.filterTS(observations)
-                # gest12 = gesture_classify.recognize(observations)
                 if displayWindows:
                     silatra_utils.displayTextOnWindow("HMMGesture",hmmGest12[0],10,100,1)
-                # engine.say(hmmGest12[0])
-                # engine.runAndWait()
-                # if displayWindows:
-                    # silatra_utils.displayTextOnWindow("Gesture",gest12,10,100,1)
-                # print("\n\nVoila! And the gesture contained in the video is",gest12)
+                
                 print("\n\nVoila! And the gesture recognized by HMM is",hmmGest12)
-                # op1 = "GESTURE:"+gest12 + "\r\n"
                 op1 = hmmGest12[0] + "\r\n"
                 client.send(op1.encode('ascii'))
                 observations = []
@@ -447,6 +388,9 @@ while True:
                 if recordVideos:
                     out.release()
                     out = videoInitializer()
+            elif len(observations)>0:
+                print("Observation sequence too small")
+                pass
             else:
                 print("New gesture not yet started")
                 
@@ -468,18 +412,14 @@ while True:
     
 
     
-    if mode == "TCP":
-        if recognitionMode =="SIGN":
-            client.send(op1.encode('ascii'))
-            lastMsgSentOut = op1
-        elif recognitionMode == "GESTURE" or lastMsgSentOut != op1:
-            client.send(op1.encode('ascii'))
-            lastMsgSentOut = op1
-    else:
-        Message = str.encode("Hello")
-        clientSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        clientSock.sendto(Message, (UDP_IP_ADDRESS2, UDP_SEND_PORT_NO))
-        # print("Sending data")
+
+    if recognitionMode =="SIGN":
+        client.send(op1.encode('ascii'))
+        lastMsgSentOut = op1
+    elif recognitionMode == "GESTURE" or lastMsgSentOut != op1:
+        client.send(op1.encode('ascii'))
+        lastMsgSentOut = op1
+    
 
     ### ---------------------------------Timing here--------------------------------------------------------------------
     start_time = tm.recordTimings(start_time,"CLASSIFICATION",noOfFramesCollected)
@@ -497,21 +437,19 @@ while True:
     k = cv2.waitKey(10)
     if k == 'q':
         break
-    # elif k=='c':
     
     
 
 
 
 
-print('Stopped '+mode+' server of port: '+str(port))
+print('Stopped TCP server of port: '+str(port))
 print(recognitionMode+" recognition stopped")
 tm.displayAllTimings(noOfFramesCollected)
 
 
 
 
-# client.close()
 s.close()
 cv2.destroyAllWindows()
 

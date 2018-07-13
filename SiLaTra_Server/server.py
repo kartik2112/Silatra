@@ -1,10 +1,13 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from random import randint
 import os
 import socket
 from contextlib import closing
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
+
+silatra_app_path = dir_path+'/Receiver.py'
+pythonExecPath = '/home/kartik/.virtualenvs/cv/bin/python3'
 
 app = Flask(__name__)
 
@@ -18,25 +21,14 @@ def check_socket(port):
         return False
 
 
-
-silatra_app_path = dir_path+'/Receiver.py'
-pythonExecPath = '/home/kartik/.virtualenvs/cv/bin/python3'
-
-# @app.route('/')
-# def index():
-#   return render_template('template.html')
-
-portsInUseBySilatra = {}
-
-@app.route('/get-port-number/')
+@app.route('/get-port-number')
 def my_link():
+    recognitionMode = request.args.get('recognitionMode', default='SIGN', type=str)
     while(True):
         portNo = randint(40000,50000)
-        if portNo not in portsInUseBySilatra:
-            if(check_socket(portNo)):
-                os.system('nohup '+pythonExecPath+' '+silatra_app_path+' --portNo '+str(portNo)+' --displayWindows False &')
-                portsInUseBySilatra[portNo] = '1'
-                break
+        if(check_socket(portNo)):
+            os.system('nohup '+pythonExecPath+' '+silatra_app_path+' --portNo '+str(portNo)+' --displayWindows False --recognitionMode '+recognitionMode+' --socketTimeOutEnable True &')
+            break
     
     return str(portNo)
 
