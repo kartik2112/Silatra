@@ -9,8 +9,8 @@ This zip file has
 
 ## Dependency Details
 
-The dependencies used in python and that can be directly installed using ``pip install libName`` are hmmlearn, sklearn (for kNN), pandas, netifaces, argparse, numpy, imutils, dlib (For face
-detection), Flask. OpenCV library cannot be installed on Ubuntu directly using pip install command. For the latest build a lot of steps are involved which are specified well by PyImageSearch here: [Ubuntu 16.04: How to install OpenCV - PyImageSearch](https://www.pyimagesearch.com/2016/10/24/ubuntu-16-04-how-to-install-opencv/)
+The dependencies used in python and that can be directly installed using ``pip install libName`` are ``hmmlearn``, ``sklearn`` (for kNN), ``pandas``, ``netifaces``, ``argparse``, ``numpy``, ``imutils``, ``dlib`` (For face
+detection), ``Flask``. OpenCV library cannot be installed on Ubuntu directly using ``pip install`` command. For the latest build a lot of steps are involved which are specified well by PyImageSearch here: [Ubuntu 16.04: How to install OpenCV - PyImageSearch](https://www.pyimagesearch.com/2016/10/24/ubuntu-16-04-how-to-install-opencv/)
 
 ## Folder Content Description
 
@@ -52,4 +52,4 @@ Open terminal here and install this module using command: ``python3 setup.py ins
 
 ### Utilities
 
-Detailed description of the contents within this folder is provided in the README.md file inside the [Utilities Folder]().
+Detailed description of the contents within this folder is provided in the README.md file inside the [Utilities Folder](/Utilities/).
