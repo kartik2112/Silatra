@@ -7,18 +7,18 @@ Currently, the system supports recognition of:
     * 23 letters (A-Z except H, J. These 2 letters are conveyed through gestures. Hence, wasn't covered. V hand pose is equivalent to 2, hence not counted in letters)
     * 10 digits (0-9)
 * **12 Gestures (whose recognition needs a sequence of at least 5 frames):**
-    * After
-    * All The Best
-    * Apple
-    * Good Afternoon
-    * Good Morning
-    * Good Night
-    * I Am Sorry
-    * Leader
-    * Please Give Me Your Pen
-    * Strike
-    * That is Good
-    * Towards
+    1.  After
+    2.  All The Best
+    3.  Apple
+    4.  Good Afternoon
+    5.  Good Morning
+    6.  Good Night
+    7.  I Am Sorry
+    8.  Leader
+    9.  Please Give Me Your Pen
+    10. Strike
+    11. That is Good
+    12. Towards
 
 ## Sign Language Translator (SiLaTra) Client-Side
 
@@ -151,3 +151,10 @@ Contain the older versions of these codes in the outer directory. These have bee
 ### Gesture Videos By TalkingHands
 
 These contain gesture videos which have been downloaded from Talking Hands website. These were the ones that were referred for creating training videos. Some of them were considered finally for gestures because they were easy. (These gestures that are supported in the final version are 1-handed and do not involve the hand overlapping the face any time).
+
+## Developers
+
+* [Kartik Shenoy](https://github.com/kartik2112)
+* [Tejas Dastane](https://github.com/dev-td7)
+* [Varun Rao](https://github.com/vrr-21)
+* [Devendra Vyavaharkar](https://github.com/DevendraVyavaharkar)
