@@ -1,11 +1,39 @@
-## Dataset
+# Sign Language Translator (SiLaTra) Server-Side
 
-The training images, videos can be found here: [Hand Poses, Gestures Dataset - SiLaTra](https://drive.google.com/file/d/1BkINAqq8-Fknoo4WKkJu733RtTWQ9po4/view?usp=sharing)
+This is the server-side of the SiLaTra System. This system is targetted towards the hearing and speech impaired community that use sign language for communicating with each other. But when they communicate with other people outside this community, there is a communication gap. This system is an attempt towards bridging this gap.
 
-This zip file has 
-* **Dataset/Hand_Poses_Dataset** which consist of all static signs (Letters, Digits and Gesture Signs (which are intermediate signs of gestures))
-* **Dataset/Gesture_Videos_Dataset** which are videos of gestures used for training HMM
-* **Dataset/TalkingHands_Original_Videos_Not Used For Training_Just For Reference** consists of videos downloaded from Talking Hands which were used as a reference for generating training videos which are stored in **Dataset/Gesture_Videos_Dataset**.
+Currently, the system supports recognition of:
+* **33 hand poses (whose recognition needs only 1 frame):**
+    * 23 letters (A-Z except H, J. These 2 letters are conveyed through gestures. Hence, wasn't covered. V hand pose is equivalent to 2, hence not counted in letters)
+    * 10 digits (0-9)
+* **12 Gestures (whose recognition needs a sequence of at least 5 frames):**
+    * After
+    * All The Best
+    * Apple
+    * Good Afternoon
+    * Good Morning
+    * Good Night
+    * I Am Sorry
+    * Leader
+    * Please Give Me Your Pen
+    * Strike
+    * That is Good
+    * Towards
+
+## Sign Language Translator (SiLaTra) Client-Side
+
+The system can be experienced using the latest version of [Sign Language Translator (SiLaTra) Client-Side Android Application](https://github.com/DevendraVyavaharkar/SiLaTra-UDP)
+
+## Demo Videos
+
+The Demo Videos of this application can be found here:
+
+* [Video: Android Application GESTURE Recognition Mode](https://drive.google.com/file/d/1YH6i5OYm3zrSTE-fvWF-zeas9-wiPObo/preview)
+
+* [Video: Android Application SIGN Recognition Mode](https://drive.google.com/file/d/1nrDSmnbonpNWM9grgfg7baCJIL-cQAWX/preview)
+
+* [Video: Deprecated Android Application Client Server Screen Recording GESTURE Recognition Mode](https://drive.google.com/file/d/1KgJbSvABfCukhtKDfdMRi8h6vzNzIKTq/preview)
+
 
 ## Installation and Usage
 
@@ -64,6 +92,16 @@ Now, we needed to run server.py on Flask server that would assign port No and in
 
 
 
+## Dataset
+
+The training images, videos can be found here: [Hand Poses, Gestures Dataset - SiLaTra](https://drive.google.com/file/d/1BkINAqq8-Fknoo4WKkJu733RtTWQ9po4/view?usp=sharing)
+
+This zip file has 
+* **Dataset/Hand_Poses_Dataset** which consist of all static signs (Letters, Digits and Gesture Signs (which are intermediate signs of gestures))
+* **Dataset/Gesture_Videos_Dataset** which are videos of gestures used for training HMM
+* **Dataset/TalkingHands_Original_Videos_Not Used For Training_Just For Reference** consists of videos downloaded from Talking Hands which were used as a reference for generating training videos which are stored in **Dataset/Gesture_Videos_Dataset**.
+
+
 ## Folder Content Description
 
 ### SiLaTra_Server
@@ -100,7 +138,7 @@ videos.
 
 ### SilatraPythonModuleBuilder
 
-Open terminal here and install this module using command: ``python3 setup.py install``. This installs the silatra_cpp module used for segmentation.
+Open terminal here and install this module using command: ``python3 setup.py install``. This installs the silatra_cpp module used for segmentation. This is used for faster skin segmentation. It has the same morphology operations as the python code but uses RGB+YUV Colour Models for skin segmentation. To be fast, it is implemented completely in C++ with Python Wrapper. If you want to use this silatra_cpp module, you need to modify the code in appropriate places.
 
 ### Utilities
 
