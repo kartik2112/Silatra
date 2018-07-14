@@ -91,7 +91,6 @@ AWS Ubuntu 16.04 server free-tier image was chosen with 30 GB SSD. This has 1 GB
 Now, we needed to run server.py on Flask server that would assign port No and invoke server socket for recognition. And for remote execution, server.py needs to run in background. Using & proved to be of no use since, once we quit the remote shell, the server is terminated as it will be a child of the remote shell. For this purpose we used ``supervisorctl``. For installation and configuring invocation of this server, we referred: [How To Install and Manage Supervisor on Ubuntu and Debian VPS - Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-install-and-manage-supervisor-on-ubuntu-and-debian-vps). The ``conf`` file that has been stored can be found [here (silatra_server.conf)](/SiLaTra_Server/silatra_server.conf). This ``conf`` file has been stored at **/etc/supervisor/conf.d/silatra_server.conf** on the AWS Linux. After this you can hit the commands specified on [How To Install and Manage Supervisor on Ubuntu and Debian VPS - Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-install-and-manage-supervisor-on-ubuntu-and-debian-vps). By using ``sudo supervisorctl``, you can see that this server is running.
 
 
-
 ## Dataset
 
 The training images, videos can be found here: [Hand Poses, Gestures Dataset - SiLaTra](https://drive.google.com/file/d/1BkINAqq8-Fknoo4WKkJu733RtTWQ9po4/view?usp=sharing)
@@ -102,10 +101,30 @@ This zip file has
 * **Dataset/TalkingHands_Original_Videos_Not Used For Training_Just For Reference** consists of videos downloaded from Talking Hands which were used as a reference for generating training videos which are stored in **Dataset/Gesture_Videos_Dataset**.
 
 
-## Folder Content Description
+## Constraints
+
+* The sign demonstrator must wear full-sleeved shirt.
+* The lighting conditions must be good for segmentation.
+* The hand pose should not be outlier i.e. angle of hand should not be extremely far from that of ideal pose.
+* The background must have at most small-sized skin-coloured objects. For gesture recognition to work correctly, it must not have skin-colored objects.
+* The gestures must not be too fast or too slow.
+* The head must be completely present in gestures.
+* While demonstrating gestures or hand poses, the face should not be occluded (covered) by hand.
+
+
+## Repo Structure Description
+
+### Archived Codes
+
+Contain the older versions of these codes in the outer directory. These have been deprecated. These codes have the remnants of the older versions such as "Feature Extraction Using Fourier Descriptors - C++ implementation", "Gesture Recognition using Automata" and other such temporary testing codes for experimentation. They have been kept so as to go back in time to revisit the efforts in the hope that someday it could help anyone in some way.
+
+### Gesture Videos By TalkingHands
+
+These contain gesture videos which have been downloaded from Talking Hands website. These were the ones that were referred for creating training videos. Some of them were considered finally for gestures because they were easy. (These gestures that are supported in the final version are 1-handed and do not involve the hand overlapping the face any time).
 
 ### SiLaTra_Server
-The folder **SiLaTra_Server** is the entry point into the server module. The Server developed is very modular. All the models, modules, dependency files are stored in this folder. When you download this folder, all these code dependencies will already be present. The entry point into this server module is server.py. The server.py code decides a port no randomly, checks if it is open and invokes Receiver.py to start TCP socket on this port. Receiver.py will manage recognition. The description of these resources used by Receiver.py in SiLaTra_Server folder are:
+
+The folder **SiLaTra_Server** is the entry point into the server module. The Server developed is very modular. All the models, modules, dependency files are stored in this folder. When you download this folder, all these code dependencies will already be present. The entry point into this server module is server.py. The server.py code decides a port no randomly, checks if it is open and invokes Receiver.py to start TCP socket on this port. Receiver.py will manage recognition. The description of these resources used by Receiver.py in **SiLaTra_Server** folder are:
 
 * silatra_utils.py: Contains functions for feature extraction from segmented hand, managing sign prediction by finding modal values in a stream of predictions and functions dealing with displaying signs on screen through windows.
 
@@ -143,14 +162,6 @@ Open terminal here and install this module using command: ``python3 setup.py ins
 ### Utilities
 
 Detailed description of the contents within this folder is provided in the README.md file inside the [Utilities Folder](/Utilities/).
-
-### Archived Codes
-
-Contain the older versions of these codes in the outer directory. These have been deprecated. These codes have the remnants of the older versions such as "Feature Extraction Using Fourier Descriptors - C++ implementation", "Gesture Recognition using Automata" and other such temporary testing codes for experimentation. They have been kept so as to go back in time to revisit the efforts in the hope that someday it could help anyone in some way.
-
-### Gesture Videos By TalkingHands
-
-These contain gesture videos which have been downloaded from Talking Hands website. These were the ones that were referred for creating training videos. Some of them were considered finally for gestures because they were easy. (These gestures that are supported in the final version are 1-handed and do not involve the hand overlapping the face any time).
 
 ## Developers
 
