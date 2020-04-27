@@ -43,10 +43,10 @@ The Demo Videos of this application can be found here:
 
 ### Dependency Details
 
-The dependencies used in python3 and that can be directly installed using ``pip3 install libName`` are ``hmmlearn``, ``sklearn`` (for kNN), ``pandas``, ``netifaces``, ``argparse``, ``numpy``, ``imutils``, ``dlib`` (For face detection), ``Flask``, ``atexit``, ``pickle``. OpenCV library cannot be installed on Ubuntu directly using ``pip3 install`` command. 
+The dependencies used in python3 and that can be directly installed using ``pip3 install libName`` are ``hmmlearn``, ``sklearn`` (for kNN), ``pandas``, ``netifaces``, ``argparse``, ``numpy``, ``imutils``, ``dlib`` (For face detection), ``Flask``, ``atexit``, ``pickle``, ``nose``. OpenCV library cannot be installed on Ubuntu directly using ``pip3 install`` command. 
 
 ```
-pip3 install hmmlearn sklearn pandas netifaces argparse numpy imutils dlib Flask atexit pickle
+pip3 install hmmlearn sklearn pandas netifaces argparse numpy imutils dlib Flask atexit pickle nose
 ```
 
 For the latest build a lot of steps are involved which are specified well by PyImageSearch here: [Ubuntu 16.04: How to install OpenCV - PyImageSearch](https://www.pyimagesearch.com/2016/10/24/ubuntu-16-04-how-to-install-opencv/)
