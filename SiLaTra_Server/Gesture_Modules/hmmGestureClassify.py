@@ -6,7 +6,8 @@ from nose import tools
 import numpy as np
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-dir = dir_path+"/../Models/GestureHMMs"
+# dir = dir_path+"/../Models/GestureHMMs"
+dir = dir_path+"/../../Utilities/TempHMMModels/GestureHMMs"
 
 Models = []
 ModelNames = []

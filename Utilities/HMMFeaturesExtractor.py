@@ -18,7 +18,7 @@ from imutils import face_utils
 from sklearn.neighbors import KNeighborsClassifier
 import pickle
 
-import silatra  #This module is built using SilatraPythonModuleBuilder
+# import silatra  #This module is built using SilatraPythonModuleBuilder
 sys.path.insert(0, "../SiLaTra_Server")
 import silatra_utils
 sys.path.insert(0, "../SiLaTra_Server/Modules")
@@ -28,6 +28,34 @@ import FaceEliminator
 sys.path.insert(0, "../SiLaTra_Server/Gesture_Modules")
 import directionTracker
 
+
+def segment(src_img):
+    """
+    ### Segment skin areas from hand using a YCrCb mask.
+
+    This function returns a mask with white areas signifying skin and black areas otherwise.
+
+    Returns: mask
+    """
+
+    import cv2
+    from numpy import array, uint8
+
+    blurred_img = cv2.GaussianBlur(src_img,(5,5),0)
+    blurred_img = cv2.medianBlur(blurred_img,5)
+    
+    blurred_img = cv2.cvtColor(blurred_img, cv2.COLOR_BGR2YCrCb)
+
+    lower = array([0,137,100], uint8)
+    upper = array([255,200,150], uint8)
+    mask = cv2.inRange(blurred_img, lower, upper)
+
+    open_kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (5,5))
+    close_kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (7,7))
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, open_kernel)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, close_kernel)
+
+    return mask
 
 
 noOfFramesCollected = 0     # This is used to keep track of the number of frames received and processed by the server socket
@@ -54,7 +82,8 @@ detector = dlib.get_frontal_face_detector()
 
 
 # Change the filename to "your" features file
-classifier = pickle.load(open('./SampleKNNModels/silatra_gesture_signs_pregenerated_sample.sav','rb'))
+# classifier = pickle.load(open('./SampleKNNModels/silatra_gesture_signs_pregenerated_sample.sav','rb'))
+classifier = pickle.load(open('./TempKNNModels/silatra_gesture_signs_pregenerated_sample.sav','rb'))
 print("Loaded Gesture Recognition KNN Model")
 
 
@@ -113,7 +142,8 @@ for subdir in subdirss:
                     faceRect = (x,y,w,h)
                     foundFace = True
                     
-            mask1, _, _ = silatra.segment(img_np)
+            # mask1, _, _ = silatra.segment(img_np)
+            mask1 = segment(img_np)
             
             mask1 = FaceEliminator.eliminateFace(mask1, foundFace, faceRect)
 

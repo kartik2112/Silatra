@@ -17,6 +17,7 @@ import sys
 import netifaces as ni
 import os
 import distutils
+from distutils import util
 
 import argparse
 
@@ -139,14 +140,17 @@ def videoInitializer():
 
 ### ------------------- GESTURE handling present here -------------------------------------------------------------
 if recognitionMode == "GESTURE":
-    classifier = pickle.load(open(dir_path+'/Models/silatra_gesture_signs.sav','rb'))
+    # classifier = pickle.load(open(dir_path+'/Models/silatra_gesture_signs.sav','rb'))
+    classifier = pickle.load(open('/home/kartikshenoy/Documents/Silatra Stuff/Silatra/Utilities/TempKNNModels/silatra_gesture_signs.sav','rb'))
     print("Loaded Gesture Recognition KNN Model")
     observations = []
     if recordVideos:
         out = videoInitializer()
     op1 = "Wait..."+"\r\n"
 elif recognitionMode == "SIGN":
-    classifier = pickle.load(open(dir_path+'/Models/silatra_digits_and_letters_10_10.sav','rb'))
+    print("Check 1")
+    classifier = pickle.load(open('/home/kartikshenoy/Documents/Silatra Stuff/Silatra/Utilities/TempKNNModels/silatra_digits_and_letters_10_10.sav','rb'))
+    print("Check 2")
     print("Loaded Sign Recognition KNN Model")
 
 

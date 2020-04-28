@@ -6,6 +6,35 @@ import silatra
 from math import ceil
 import os.path
 
+def segment(src_img):
+    """
+    ### Segment skin areas from hand using a YCrCb mask.
+
+    This function returns a mask with white areas signifying skin and black areas otherwise.
+
+    Returns: mask
+    """
+
+    import cv2
+    from numpy import array, uint8
+
+    blurred_img = cv2.GaussianBlur(src_img,(5,5),0)
+    blurred_img = cv2.medianBlur(blurred_img,5)
+    
+    blurred_img = cv2.cvtColor(blurred_img, cv2.COLOR_BGR2YCrCb)
+
+    lower = array([0,137,100], uint8)
+    upper = array([255,200,150], uint8)
+    mask = cv2.inRange(blurred_img, lower, upper)
+
+    open_kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (5,5))
+    close_kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (7,7))
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, open_kernel)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, close_kernel)
+
+    return mask
+
+
 
 start = time.time()
 
@@ -34,16 +63,16 @@ total_images_parsed = 0
 
 # Gesture Signs data should be stored in 1 csv file. Example: gestures_pregenerated_sample.csv
 
-DATA_LOCS = ['../Dataset/Hand_Poses_Dataset/Gesture_Signs/']
-TRAINING_LABELS = ['Leader_L','Apple_Finger','Cup_Closed','Cup_Open','ThumbsUp','Sun_Up','Fist','OpenPalmHori','That_Is_Good_Circle','That_Is_Good_Point']
+# DATA_LOCS = ['../Dataset/Hand_Poses_Dataset/Gesture_Signs/']
+# TRAINING_LABELS = ['Leader_L','Apple_Finger','Cup_Closed','Cup_Open','ThumbsUp','Sun_Up','Fist','OpenPalmHori','That_Is_Good_Circle','That_Is_Good_Point']
 
 
 
 
 # Digits and letters data should be stored together in 1 csv file. Example: silatra_signs_pregenerated_sample
 
-# DATA_LOCS = ['../Dataset/Hand_Poses_Dataset/Digits/']
-# TRAINING_LABELS = ['0','1','2','3','4','5','6','7','8','9']
+DATA_LOCS = ['../Dataset/Hand_Poses_Dataset/Digits/']
+TRAINING_LABELS = ['0','1','2','3','4','5','6','7','8','9']
 
 # DATA_LOCS = ['../Dataset/Hand_Poses_Dataset/Letters/']
 # TRAINING_LABELS = [chr(ord('a')+i) for i in range(26)]
@@ -81,7 +110,9 @@ for loc in range(len(DATA_LOCS)):
                 # Replacement for above block. If this silatra module is not installed using 
                 #   python3 setup.py install 
                 # from inside of SilatraPythonModuleBuilder, then uncomment above block of code
-                mask,_,_ = silatra.segment(image)
+                # mask,_,_ = silatra.segment(image)
+
+                mask = segment(image)
 
                 _,thresh = cv2.threshold(mask,127,255,0)
 

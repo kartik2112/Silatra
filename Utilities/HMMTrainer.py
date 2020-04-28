@@ -10,7 +10,8 @@ from hmmlearn import hmm
 from sklearn.externals import joblib
 
 
-IP_fName = './SampleFeatureSetFiles/silatra_gestures_pregenerated_sample.csv'
+# IP_fName = './SampleFeatureSetFiles/silatra_gestures_pregenerated_sample.csv'
+IP_fName = './TempFeatureSetFiles/silatra_gestures_temp.csv'
 OPDir = './TempHMMModels/GestureHMMs'
 
 np.random.seed(42)
