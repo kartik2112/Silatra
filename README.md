@@ -43,7 +43,43 @@ The Demo Videos of this application can be found here:
 
 ## Installation and Usage
 
-### Dependency Details
+### Quick Installation
+
+You can quickly see the working functionality by unzipping Receiver.zip. You could either directly execute it or get it invoked using server.py (which will randomly allocate the port nos for socket connection. Few changes in server.py will be needed). The main advantage of this zip is that you can save hours of configuration by directly executing the executable `./Receiver` on linux. This has been compiled using [pyInstaller](https://pyinstaller.readthedocs.io/en/stable/). You can execute this executable directly as follows:
+
+    Receiver [-h] [--portNo PORTNO] [--displayWindows DISPLAYWINDOWS]
+                    [--recognitionMode RECOGNITIONMODE]
+                    [--socketTimeOutEnable SOCKETTIMEOUTENABLE]
+                    [--stabilize STABILIZE] [--recordVideos RECORDVIDEOS]
+                    [--subDir SUBDIR]
+
+    Main Entry Point
+
+    optional arguments:
+    -h, --help            show this help message and exit
+    --portNo PORTNO       
+                            Usage: python3 Receiver.py --portNo 12345
+    --displayWindows DISPLAYWINDOWS
+                            Usage: python3 Receiver.py --displayWindows True | False
+    --recognitionMode RECOGNITIONMODE
+                            Usage: python3 Receiver.py --recognitionMode SIGN | GESTURE
+    --socketTimeOutEnable SOCKETTIMEOUTENABLE
+                            Usage: python3 Receiver.py --socketTimeOutEnable True | False
+    --stabilize STABILIZE
+                            Usage: python3 Receiver.py --stabilize True | False
+    --recordVideos RECORDVIDEOS
+                            Usage: python3 Receiver.py --recordVideos True | False --subDir GN
+    --subDir SUBDIR       
+                            Usage: python3 Receiver.py --recordVideos True | False --subDir GN
+    
+Example usage:
+``./Receiver --portNo 49164 --displayWindows False --recognitionMode SIGN --socketTimeOutEnable True``
+
+### Detailed Installation
+
+If you want to install all the dependencies so that you could tweak this model and modify the code, follow the following steps:
+
+#### Dependency Details
 
 The dependencies used in python3 and that can be directly installed using ``pip3 install libName`` are ``hmmlearn``, ``sklearn`` (for kNN), ``pandas``, ``netifaces``, ``argparse``, ``numpy``, ``imutils``, ``dlib`` (For face detection), ``Flask``, ``atexit``, ``pickle``, ``nose``. OpenCV library cannot be installed on Ubuntu directly using ``pip3 install`` command. 
 
@@ -53,7 +89,7 @@ pip3 install hmmlearn sklearn pandas netifaces argparse numpy imutils dlib Flask
 
 For the latest build a lot of steps are involved which are specified well by PyImageSearch here: [Ubuntu 16.04: How to install OpenCV - PyImageSearch](https://www.pyimagesearch.com/2016/10/24/ubuntu-16-04-how-to-install-opencv/)
 
-### Local Usage
+#### Local Usage
 
 You can start the Flask server on the local machine by giving command: ``python3 server.py``. Now you can start using these services by using the latest [Silatra Android App](https://github.com/DevendraVyavaharkar/SiLaTra-UDP). The IP Address of the local machine needs to be specified in Settings. **Keep Direct Connection unchecked.** Now, you can click on Message icon and click on Capture button. This will start the transmission feed. Before clicking on the Capture button, you can select the mode - **SIGN** or **GESTURE**. After the need is over, click on Stop button. You can use the flash button to switch on flash. 
 
@@ -64,7 +100,7 @@ You can start the Flask server on the local machine by giving command: ``python3
 
 ``server.py`` eases your work by just needing you to invoke using command ``python3 server.py`` and specifying only the IP address in Settings. The socket invocation is internally handled by ``server.py``.
 
-### Receiver.py arguments Usage
+#### Receiver.py arguments Usage
 
     Receiver.py [-h] [--portNo PORTNO] [--displayWindows DISPLAYWINDOWS]
                     [--recognitionMode RECOGNITIONMODE]
