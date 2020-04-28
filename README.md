@@ -24,6 +24,8 @@ Currently, the system supports recognition of:
 
 The system can be experienced using the latest version of [Sign Language Translator (SiLaTra) Client-Side Android Application](https://github.com/DevendraVyavaharkar/SiLaTra-UDP)
 
+Download the Android App by clicking [here](https://github.com/DevendraVyavaharkar/SiLaTra-UDP/releases/download/6.0/Silatra_28_April_2020.apk). This application is working as of 28 April, 2020. Let us know in case of any issues.
+
 ## IEEE Conference Paper
 
 The research done for this project and all the findings have been compiled in the paper: [Kartik Shenoy, Tejas Dastane, Varun Rao, Devendra Vyavaharkar, "Real-time Indian Sign Language (ISL) Recognition", *2018 9th International Conference on Computing, Communication and Networking Technologies (ICCCNT)*, July 2018](https://ieeexplore.ieee.org/document/8493808/)
