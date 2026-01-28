@@ -2,10 +2,6 @@
 
 This is the server-side of the SiLaTra System. This system is targetted towards the hearing and speech impaired community that use sign language for communicating with each other. But when they communicate with other people outside this community, there is a communication gap. This system is an attempt towards bridging this gap.
 
-## 📚 Examples and Tutorials
-
-New to multi-task learning or preparing for ML interviews? Check out our **[Multi-Task Learning Tutorial](/examples/)** - a comprehensive Jupyter notebook that demonstrates implementing 4 tasks simultaneously using PyTorch on MNIST. Perfect for learning MTL concepts and interview preparation!
-
 Currently, the system supports recognition of:
 * **33 hand poses (whose recognition needs only 1 frame):**
     * 23 letters (A-Z except H, J. These 2 letters are conveyed through gestures. Hence, wasn't covered. V hand pose is equivalent to 2, hence not counted in letters)
